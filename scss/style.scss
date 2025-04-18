@@ -1,0 +1,51 @@
+// SCSS Starter Kit
+// Version: 0.1.0-beta
+// Author: Tony Nguyen
+
+@use 'abstracts' as *;
+@use 'base';
+@use 'effects';
+@use 'components';
+@use 'layout';
+@use 'utilities';
+// @use 'components/nav-offcanvas';
+// @use 'components/backdrop';
+// @use 'components/tabs';
+
+.f-1 {
+  font-size: fluid(80, 20, sm, xl);
+}
+
+.f-2 {
+  font-size: fluid(20, 80, sm, xl);
+}
+
+.f-revert {
+  font-size: clamp(1.25rem, 8.4615rem + -9.6154vw, 5rem);
+}
+.f-test {
+  font-size: clamp(1.25rem, -2.2115rem + 9.6154vw, 5rem);
+}
+// .f-3 {
+//   font-size: fluid(18, 50, 576, 1400, 'px', 'px');
+// }
+
+// .f-4 {
+//   font-size: fluid(18, 50, 576, 1400, 'px', 'rem');
+// }
+
+.pfy-1 {
+  padding-block: fluid(32, 150, sm, lg);
+}
+
+.pfy-2 {
+  padding-block: fluid(32, 150, sm, lg, 'rem', 'px');
+}
+
+.pfy-3 {
+  padding-block: fluid(32, 150, sm, lg, 'px', 'px');
+}
+
+.pfy-4 {
+  padding-block: fluid(32, 150, sm, lg, 'px', 'rem');
+}
