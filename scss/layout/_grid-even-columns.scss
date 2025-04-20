@@ -1,23 +1,41 @@
 @use '../abstracts' as *;
+@use 'sass:map';
 
-.grid-cols {
+// breakpoints free
+.grid-even-cols {
   /* == configuration == */
-  --min-col-size: 275px;
-  --auto-mode: auto-fill;
+  --_min-col-size: 275px;
+  --_auto-mode: auto-fill;
   /* =================== */
 
   padding: 12px;
-  background-color: #3674b5;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(
-    var(--auto-mode),
-    minmax(min(var(--min-col-size), 100%), 1fr)
-  );
+  grid-template-columns: repeat(var(--_auto-mode), minmax(min(var(--_min-col-size), 100%), 1fr));
 
   /* modifiers */
   &--auto-fit {
-    --auto-mode: auto-fit;
+    --_auto-mode: auto-fit;
+  }
+}
+
+// width breakpoints;
+.grid-even-columns {
+  --_col-default: 1;
+  --_gap: 16px;
+
+  padding: 12px;
+  display: grid;
+  gap: var(--_gap);
+  grid-template-columns: repeat(var(--_col-default), 1fr);
+
+  $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
+
+  @each $bp in map.keys($grid-breakpoints-without-xs) {
+    @include mq($bp) {
+      grid-template-columns: repeat(var(--_col-#{$bp}, --_col-default), 1fr);
+      background-color: blue;
+    }
   }
 }
 

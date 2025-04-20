@@ -621,7 +621,7 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-custom-properties($map: (), $cp-prefix: $prefix) {
+@mixin generate-custom-properties($map: (), $local-prefix: '') {
   @if $map != null {
     @if map.has-key($map, custom-property-name) {
       $_name: map.get($map, custom-property-name);
@@ -640,14 +640,14 @@ Modifications may have been made to the original mixins.
 
           @if ($key != 'none') {
             $_key: if($key != null, if($key == 0, '-0', -$key), '');
-            --#{$cp-prefix}#{$_name}#{$_key}: #{$value};
+            --#{$prefix}#{$local-prefix}#{$_name}#{$_key}: #{$value};
           }
         }
       }
     } @else {
       @each $key, $value in $map {
         @if $key != xs {
-          --#{$cp-prefix}#{$key}: #{$value};
+          --#{$prefix}#{$local-prefix}#{$key}: #{$value};
         }
       }
     }

@@ -4,13 +4,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: var(--z-3);
+  z-index: var(--z-2);
   width: 100vw;
   height: 100vh;
   background-color: var(--clr-black);
-  transition: opacity var(--transitionDuration, 150ms) linear;
 
   &.fade {
+    transition: opacity var(--fade-duration, 200ms) linear;
     opacity: 0;
   }
 

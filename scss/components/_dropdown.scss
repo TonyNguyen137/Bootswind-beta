@@ -8,6 +8,10 @@
     cursor: pointer;
     border: none;
     white-space: nowrap;
+    padding: 8px 0;
+    width: 100%;
+    text-align: left;
+    transition: var(--box-shadow-focus);
 
     &::after {
       display: inline-block;
@@ -21,9 +25,14 @@
     }
   }
 
-  &__toggle:focus + &__list {
-    visibility: visible;
-    opacity: 1;
+  // &__toggle:focus + &__list {
+  //   visibility: visible;
+  //   opacity: 1;
+  // }
+
+  &__toggle:focus-visible {
+    outline: 0;
+    box-shadow: var(--box-shadow-focus);
   }
 
   &__list {

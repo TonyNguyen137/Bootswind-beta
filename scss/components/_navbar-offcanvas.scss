@@ -3,8 +3,7 @@
 
 .navbar {
   --_offcanvas-width: 400px;
-  --_border: 1px solid #000;
-  --_gap: 1rem;
+  --_border: 1px solid black;
 
   &__container {
     display: flex;
@@ -17,12 +16,16 @@
     border: none;
     background-color: transparent;
     cursor: pointer;
+    padding: 0;
 
-    // &:focus-visible,
-    // &:focus {
-    //   outline: 0;
-    //   box-shadow: var(--box-shadow-focus);
-    // }
+    &:focus-visible {
+      outline: 0;
+      box-shadow: var(--box-shadow-focus);
+    }
+  }
+
+  &__btn-close {
+    float: right;
   }
 
   &__svg {
@@ -30,12 +33,15 @@
   }
 
   &__btn-open[aria-expanded='true'] + .navbar__offcanvas {
-    transform: translate(0);
+    transform: none;
   }
 
   &__list {
     list-style: none;
+    padding-left: 0;
+    margin: 0;
     display: flex;
+    // align-items: start;
     flex-direction: column;
   }
 
@@ -43,11 +49,10 @@
     text-decoration: none;
   }
 
-  &__dropdown-toggle,
   &__link {
     padding-block: 8px;
     display: block;
-    color: var(--clr-primary);
+    color: var(--clr-black);
 
     &:focus-visible {
       outline: 0;
@@ -56,9 +61,8 @@
   }
 
   &__offcanvas {
-    outline: 5px dashed black;
+    visibility: hidden;
     padding: 1rem;
-    padding-inline: 16px;
 
     width: var(--_offcanvas-width);
     max-width: 100%;
@@ -69,18 +73,30 @@
     position: fixed;
     bottom: 0;
 
-    z-index: var(--z-2);
+    z-index: var(--z-1);
 
     display: flex;
+    row-gap: 16px;
     flex-direction: column;
-    row-gap: 32px;
-    transition: transform var(--transDur, 300ms) ease;
 
     // offcanvas direction - default end
     top: 0;
     right: 0;
     border-left: var(--_border);
     transform: translateX(100%);
+
+    &.showing {
+      transition: transform var(--offcanvas-transition-duration, 300ms) ease-in-out;
+    }
+
+    &.showing,
+    &.show {
+      visibility: visible;
+    }
+
+    &:focus {
+      outline: 0;
+    }
   }
 
   &__offcanvas-header {
@@ -101,17 +117,16 @@
   @each $bp in map.keys($grid-breakpoints-without-xs) {
     @include mq($bp) {
       &[data-expand='#{$bp}'] {
+        --_gap: 16px;
         .navbar__offcanvas {
           all: unset;
         }
 
-        // Apply styles when the search bar is present
         .navbar__offcanvas-body {
           display: flex;
           align-items: center;
           column-gap: var(--_gap);
         }
-        //
 
         .navbar__btn-open,
         .navbar__btn-close {
@@ -122,6 +137,7 @@
           flex-direction: row;
           column-gap: var(--_gap);
           overflow-y: revert;
+          align-items: center;
         }
       }
     }

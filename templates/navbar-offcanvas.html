@@ -1,0 +1,46 @@
+<header class="header py-3 bg-success sticky-top">
+  <nav class="navbar bg-white" data-expand="lg">
+    <div class="container navbar__container">
+      <a href="/" aria-label="homepage" class="navbar__link">
+        <img src="src/assets/logo/image.png" alt="" style="width: 150px" />
+      </a>
+      <button class="navbar__btn-open" aria-expanded="false" aria-controls="offcanvas" aria-label="open menu">
+        <svg class="d-block" width="35" height="35" aria-hidden="true">
+          <use href="src/assets/sprite.svg#hamburger"></use>
+        </svg>
+      </button>
+      <div class="navbar__offcanvas" tabindex="-1" id="offcanvas" aria-label="" aria-modal="true" role="dialog">
+        <div class="navbar__offcanvas-header">
+          <button class="navbar__btn-close" aria-label="close">
+            <svg class="d-block" width="20" height="20" aria-hidden="true">
+              <use href="src/assets/sprite.svg#close"></use>
+            </svg>
+          </button>
+        </div>
+        <div class="navbar__offcanvas-body">
+          <ul class="navbar__list">
+            <li class="navbar__item">
+              <a href="#" class="navbar__link"> Home </a>
+            </li>
+
+            <li class="navbar__item">
+              <a href="#" class="navbar__link"> About Us </a>
+            </li>
+
+            <li class="navbar__item">
+              <a href="#" class="navbar__link"> Pricing </a>
+            </li>
+            <li class="navbar__item dropdown">
+              <button class="navbar__dropdown-toggle dropdown__toggle">Dropdown</button>
+              <ul class="dropdown__list list-none-deep">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another Action</a></li>
+                <li><a href="#">Something else here</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

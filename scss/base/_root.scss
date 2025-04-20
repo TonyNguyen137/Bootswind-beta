@@ -5,7 +5,7 @@
 @use 'sass:math';
 
 :root {
-  @include generate-custom-properties(if(meta.variable-exists(grid-breakpoints), $grid-breakpoints, null));
+  @include generate-custom-properties(if(meta.variable-exists(grid-breakpoints), $grid-breakpoints, null), 'bp-');
   @include generate-custom-properties(if(meta.variable-exists(font-families), $font-families, null));
   @include generate-custom-properties(if(meta.variable-exists(box-shadows), $box-shadows, null));
   @include generate-custom-properties(if(meta.variable-exists(z-indexes), $z-indexes, null));
