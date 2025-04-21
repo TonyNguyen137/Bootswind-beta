@@ -12,16 +12,6 @@ export const breakPoints = {
  */
 
 export class Utils {
-  static getBreakpoints() {
-    const style = getComputedStyle(document.documentElement);
-    return {
-      sm: style.getPropertyValue('--bp-sm'),
-      md: style.getPropertyValue('--bp-md'),
-      lg: style.getPropertyValue('--bp-lg'),
-      xl: style.getPropertyValue('--bp-xl'),
-      xxl: style.getPropertyValue('--bp-xxl'),
-    };
-  }
   /**
    * Selects the first element within the document (or a specified scope) that matches the given CSS selector.
    *
@@ -68,6 +58,10 @@ export class Utils {
    */
 
   static $$(selector, scope = document) {
+    return scope.querySelectorAll(selector);
+  }
+
+  static selectAll(selector, scope = document) {
     return scope.querySelectorAll(selector);
   }
 

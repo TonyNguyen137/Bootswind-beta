@@ -1,7 +1,5 @@
 import { Utils } from '../utils';
 import { Tabber } from '../modules';
-// import { Tabber } from '../modules/nav-offcanvas/Tabber';
-// import { Bodylocker } from '../modules/nav-offcanvas/Bodylocker';
 
 // Breakpoints defined in CSS custom properties (see :root).
 // Used to determine responsive behavior (e.g., when to expand the navbar based on navbar[data-expand={bp}]).
@@ -22,7 +20,6 @@ const BREAKPOINTS = {
  * - onOpen():   Called when the offcanvas menu is opened.
  * - onClose():  Called when the menu is closed.
  * - onExpand(): Called when the expand media query breakpoint is true.
- * - onExpand(): Called when the expand media query breakpoint is false.
 
  * These methods are optional. The system checks if they exist before calling them.
  */

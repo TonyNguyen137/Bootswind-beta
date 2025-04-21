@@ -1,270 +1,98 @@
 import { Utils } from '../utils';
-// accordion-grid
 export class Accordion {
-  constructor(selector, config = {}) {
-    this._accordionEl =
-      typeof selector === 'string' ? Utils.select(selector) : selector;
-    this._currentToggleEl = null;
-    this._currentGridEl = null;
-    this._prevToggleEl = null;
-    this._prevGridEl = null;
-    this._isTransitioning = false;
-    this._config = {
-      // possible type: 'free-expand' or 'one-in-group' else default behavior
-      type: config.type,
-      // transition Duration values come from css file, needed for setTimeout to block double Click
-      transitionDuration: {
-        default:
-          parseFloat(
-            getComputedStyle(this._accordionEl).getPropertyValue(
-              '--transition-duration-default'
-            )
-          ) || 0,
-        open:
-          parseFloat(
-            getComputedStyle(this._accordionEl).getPropertyValue(
-              '--transition-duration-open'
-            )
-          ) || undefined,
-        close:
-          parseFloat(
-            getComputedStyle(this._accordionEl).getPropertyValue(
-              '--transition-duration-close'
-            )
-          ) || undefined,
-      },
-    };
-
-    this._initEventHandlers();
+  constructor(rootElSelector = '.accordion', config = {}) {
+    this._rootEls = Utils.toArray(rootElSelector);
+    if (!this._rootEls.length) return;
+    this._rootEls.forEach((rootEl) => this._initRootEl(rootEl));
   }
 
-  get _expanded() {
-    return this._currentToggleEl.getAttribute('aria-expanded') === 'true';
+  _initRootEl(rootEl) {
+    rootEl._itemEls = Utils.toArray('.accordion__item', rootEl);
+    rootEl._isTransitioning = false;
+    rootEl._currentActiveItem = rootEl.querySelector('[aria-expanded=true]') || null;
+    rootEl.addEventListener('click', this._handleClick.bind(this));
+    rootEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));
   }
 
-  // The _expanded setter manage the opening and closing of the accordion item.
+  /* == Event Handler == */
+  _handleClick(e) {
+    const togglerEl = e.target.closest('.accordion__toggler');
+    const rootEl = e.currentTarget;
 
-  set _expanded({
-    accordionItem = null,
-    state,
-    transitionDuration,
-    blockClick = true,
-  }) {
-    if (accordionItem) {
-      accordionItem.toggleEl.setAttribute('aria-expanded', state);
-      accordionItem.gridEl.setAttribute('aria-hidden', !state);
+    if (!togglerEl || rootEl._isTransitioning) return;
+
+    const isSameToggler = rootEl._currentActiveItem === togglerEl;
+    const isExpanded = togglerEl.ariaExpanded === 'true';
+
+    rootEl._isTransitioning = true;
+
+    if (isSameToggler) {
+      // Collapse current
+      console.log('same');
+
+      this._toggleAccordionItem(togglerEl, false);
+      rootEl._currentActiveItem = null;
     } else {
-      this._currentToggleEl.setAttribute('aria-expanded', state);
-      this._currentGridEl.setAttribute('aria-hidden', !state);
-    }
+      // expand new
+      this._toggleAccordionItem(togglerEl, !isExpanded);
 
-    // Not required when closing a previous accordion__item while opening a new one, as _open() already calls _blockClickDuringTransition()
-    blockClick && this._blockClickDuringTransition(transitionDuration);
-
-    this._config.type === 'one-in-group' &&
-      this._blockInteractionOnOtherAccordions(transitionDuration);
-  }
-
-  _initEventHandlers() {
-    this._accordionEl.addEventListener('click', this._toggle.bind(this));
-  }
-
-  _open(transitionDuration = this._config.transitionDuration.default) {
-    this._expanded = { state: true, transitionDuration };
-  }
-
-  _close({
-    accordionItem,
-    transitionDuration = this._config.transitionDuration.default,
-    blockClick,
-  }) {
-    this._expanded = {
-      accordionItem,
-      state: false,
-      transitionDuration: transitionDuration,
-      blockClick,
-    };
-  }
-
-  _isDefaultType() {
-    return (
-      this._config.type !== 'one-in-group' &&
-      this._config.type !== 'always-open'
-    );
-  }
-
-  // prevent double clicks
-  _blockClickDuringTransition(duration) {
-    setTimeout(() => {
-      this._isTransitioning = false;
-    }, duration);
-  }
-
-  _blockInteractionOnOtherAccordions(duration) {
-    let accordions = document.querySelectorAll('.accordion-group .accordion');
-    let className = 'accordion--block-interaction';
-    accordions.forEach((accordion) => {
-      accordion !== this._accordionEl && accordion.classList.add(className);
-    });
-
-    setTimeout(() => {
-      accordions.forEach((accordion) => {
-        accordion !== this._accordionEl &&
-          accordion.classList.remove(className);
-      });
-    }, duration);
-  }
-
-  // event Handler
-  _toggle(e) {
-    // only execute if toggleEl is clicked
-    const clickedToggleEl = e.target.closest('.accordion__toggle');
-    if (!clickedToggleEl || this._isTransitioning) return;
-
-    this._isTransitioning = true;
-
-    // cache the toggleEl & gridEl of the selected accordion__item
-    if (this._currentToggleEl !== clickedToggleEl) {
-      // only need prev Elements for the default accordion type
-      if (this._isDefaultType) {
-        this._prevToggleEl = this._currentToggleEl;
-        this._prevGridEl = this._currentGridEl;
+      // Collapse previous if exists
+      if (rootEl._currentActiveItem) {
+        this._toggleAccordionItem(rootEl._currentActiveItem, false);
       }
 
-      this._currentToggleEl = clickedToggleEl;
-      this._currentGridEl = this._currentToggleEl
-        .closest('.accordion__item')
-        .querySelector('.accordion__grid');
+      // Update reference to the currently expanded toggler
+      rootEl._currentActiveItem = togglerEl;
     }
+  }
 
-    if (this._expanded) {
-      this._close({
-        transitionDuration: this._config.transitionDuration.close,
-      });
+  _handleTransitionEnd(e) {
+    if (e.propertyName !== 'height') return;
+
+    const collapseEl = e.target;
+    collapseEl.classList.remove('collapsing');
+
+    if (collapseEl.style.height) {
+      collapseEl.classList.add('show');
     } else {
-      switch (this._config.type) {
-        // close accordion item when another item is opened inside a group element
-        // class .accordion-group is required on the group element
-        case 'one-in-group':
-          const accordionGroup = document.querySelector('.accordion-group');
-
-          const toggleEl = accordionGroup.querySelector(
-            '.accordion__toggle[aria-expanded=true]'
-          );
-
-          if (!toggleEl) break;
-
-          const gridEl = accordionGroup.querySelector(
-            '.accordion__grid[aria-hidden=false]'
-          );
-
-          const activeAccordionItemInGroup = {
-            toggleEl,
-            gridEl,
-          };
-
-          this._close({
-            accordionItem: activeAccordionItemInGroup,
-            blockClick: false,
-          });
-
-          break;
-
-        // make accordion item stay open when another item is opened.
-        case 'alway-open':
-          break;
-
-        // close accordion item when another item is opened.
-        default:
-          if (this._prevToggleEl) {
-            const activeAccordionItemLocal = {
-              toggleEl: this._prevToggleEl,
-              gridEl: this._prevGridEl,
-            };
-
-            this._close({
-              accordionItem: activeAccordionItemLocal,
-              blockClick: false,
-            });
-          }
-
-          break;
-      }
-
-      this._open(this._config.transitionDuration.open);
+      collapseEl.classList.add('collapse');
     }
+    collapseEl.style.height = '';
+
+    e.currentTarget._isTransitioning = false;
+  }
+
+  /* == helper methods == */
+
+  _toggleAccordionItem(togglerEl, expand) {
+    const itemEl = togglerEl.closest('.accordion__item');
+    const collapseEl = itemEl.querySelector('.accordion__collapse');
+
+    togglerEl.ariaExpanded = expand;
+
+    if (expand) {
+      // Opening
+      this._prepareCollapseTransition(collapseEl, 'collapse');
+      this._setCollapseHeight(collapseEl);
+    } else {
+      // Closing
+      this._setCollapseHeight(collapseEl);
+
+      // Force reflow
+      collapseEl.offsetHeight;
+
+      this._prepareCollapseTransition(collapseEl, 'show');
+
+      collapseEl.style.height = '';
+    }
+  }
+
+  _prepareCollapseTransition(el, classToRemove) {
+    el.classList.remove(classToRemove);
+    el.classList.add('collapsing');
+  }
+
+  _setCollapseHeight(el) {
+    el.style.height = `${el.scrollHeight}px`;
   }
 }
-
-// Accordion Grid light
-/*
-export class Accordion {
-  constructor(selector) {
-    this._accordionEl = typeof selector === 'string' ? $(selector) : selector;
-    this._currentToggleEl = null;
-    this._currentGridEl = null;
-    this._initEventHandlers();
-  }
-  get _expanded() {
-    return this._currentToggleEl.getAttribute('aria-expanded') === 'true';
-  }
-
-  set _expanded({ previousAccordionItem = null, state }) {
-    if (previousAccordionItem) {
-      const { prevToggleEl, prevGridEl } = previousAccordionItem;
-      prevToggleEl.setAttribute('aria-expanded', state);
-      prevGridEl.setAttribute('aria-hidden', !state);
-    } else {
-      this._currentToggleEl.setAttribute('aria-expanded', state);
-      this._currentGridEl.setAttribute('aria-hidden', !state);
-    }
-  }
-  _initEventHandlers() {
-    this._accordionEl.addEventListener('click', this._toggle.bind(this));
-  }
-
-  // event Handler
-  _toggle(e) {
-    const clickedToggleEl = e.target.closest('.accordion__toggle');
-    // only execute if toggleEl is clicked
-    if (!clickedToggleEl || this._isTransitioning) return;
-
-    // cache current toggleEl & gridEl
-    if (this._currentToggleEl !== clickedToggleEl) {
-      this._currentToggleEl = clickedToggleEl;
-      this._currentGridEl = this._currentToggleEl
-        .closest('.accordion__item')
-        .querySelector('.accordion__grid');
-    }
-
-    if (this._expanded) {
-      // close accordion__item
-      this._expanded = { state: false };
-    } else {
-      // close previous accordion__item if exist
-      const prevToggleEl = document.querySelector(
-        '.accordion-group .accordion__toggle[aria-expanded=true]'
-      );
-      if (prevToggleEl) {
-        const prevGridEl = prevToggleEl
-          .closest('.accordion__item')
-          .querySelector('.accordion__grid');
-
-        const previousAccordionItem = {
-          prevToggleEl,
-          prevGridEl,
-        };
-
-        this._expanded = {
-          previousAccordionItem,
-          state: false,
-        };
-      }
-
-      // open accordion__item
-      this._expanded = { state: true };
-    }
-  }
-}
-
-*/
