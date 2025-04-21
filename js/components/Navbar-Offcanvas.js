@@ -107,10 +107,8 @@ export class Navbar {
     this._toggleOffcanvasClasses(this._isExpanded);
     this._isTransitioning = false;
   }
-  /* ==================== */
 
   /* == helper methods == */
-
   _setExpandedState(isExpanded) {
     this._openBtnEl.ariaExpanded = isExpanded;
     this._isExpanded = isExpanded;
