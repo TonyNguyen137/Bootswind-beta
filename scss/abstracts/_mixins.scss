@@ -675,7 +675,7 @@ Modifications may have been made to the original mixins.
       $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
 
       $threshold-unit: if(map.has-key($map, threshold-unit), map.get($map, threshold-unit), 'px');
-      $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'px');
+      $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
 
       $threshold-keys: map.keys(map.get($map, threshold));
       $threshold-map: map.get($map, threshold);
@@ -829,7 +829,8 @@ Modifications may have been made to the original mixins.
 
 @mixin generate-color-custom-properties-rgb($color-theme-map: (), $color-prefix: 'clr-') {
   // Only loop if the map has entries
-  @if list.length(map.keys($color-theme-map)) > 0 {
+
+  @if $color-theme-map != null and list.length(map.keys($color-theme-map)) > 0 {
     @each $color, $rgb-value in $color-theme-map {
       $type: meta.type-of($rgb-value);
 

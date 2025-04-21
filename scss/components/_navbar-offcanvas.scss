@@ -4,6 +4,7 @@
 .navbar {
   --_offcanvas-width: 400px;
   --_border: 1px solid black;
+  --_transition-duration: 300ms;
 
   &__container {
     display: flex;
@@ -86,7 +87,7 @@
     transform: translateX(100%);
 
     &.showing {
-      transition: transform var(--offcanvas-transition-duration, 300ms) ease-in-out;
+      transition: transform var(--_transition-duration, 300ms) ease-in-out;
     }
 
     &.showing,

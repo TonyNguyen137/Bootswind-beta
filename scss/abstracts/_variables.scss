@@ -126,7 +126,7 @@ $selected-theme-hex-colors: if(
 );
 
 $enable-rgb-colors: true;
-$enable-color-themes: true;
+$enable-color-themes: false;
 
 /* ************************************************************* */
 /*  Custom properties using clamp() for responsive values
@@ -172,7 +172,7 @@ $spacing-clamp: (
     // default px
     threshold-unit: 'px',
     // default px
-    preferred-unit: 'px',
+    preferred-unit: 'rem',
     // default viewport
     relative-to: 'viewport',
   ),
@@ -282,33 +282,6 @@ $font-families: (
 );
 
 /* ****************************************************** */
-/* Font weights
-/* ****************************************************** */
-
-$font-weights: (
-  thin: 100,
-  extra-light: 200,
-  light: 300,
-  regular: 400,
-  medium: 500,
-  semibold: 600,
-  bold: 700,
-  extra-bold: 800,
-  'black': 900,
-);
-
-/* ****************************************************** */
-/* Line-heights 
-/* ****************************************************** */
-
-$line-heights: (
-  base: 1.5,
-  heading: 1.1,
-  sm: 1.25,
-  lg: 2,
-);
-
-/* ****************************************************** */
 /* Box shadows 
 /* ****************************************************** */
 
@@ -345,37 +318,37 @@ $z-indexes: (
 /* Borders  
 /* ****************************************************** */
 
-$borders: (
-  custom-property-name: 'border',
-  values: (
-    solid-black: 1px solid var(--#{$prefix}clr-zero),
-  ),
-);
+// $borders: (
+//   custom-property-name: 'border',
+//   values: (
+//     solid-black: 1px solid var(--#{$prefix}clr-zero),
+//   ),
+// );
 
-$border-widths: (
-  custom-property-name: 'border-width',
-  values: (
-    0: 0,
-    1: 1px,
-  ),
-);
+// $border-widths: (
+//   custom-property-name: 'border-width',
+//   values: (
+//     0: 0,
+//     1: 1px,
+//   ),
+// );
 
-$border-styles: (
-  custom-property-name: 'border-style',
-  values: solid dashed dotted,
-);
+// $border-styles: (
+//   custom-property-name: 'border-style',
+//   values: solid dashed dotted,
+// );
 
 /* ****************************************************** */
 /* Border radius 
 /* ****************************************************** */
 
-$border-radius: (
-  custom-property-name: 'radius',
-  values: (
-    base: 5px,
-    10: 10px,
-  ),
-);
+// $border-radius: (
+//   custom-property-name: 'radius',
+//   values: (
+//     base: 5px,
+//     10: 10px,
+//   ),
+// );
 
 /* ****************************************************** */
 /* Transitions
@@ -396,12 +369,12 @@ $transitions: (
 /* Focus rings
 /* ****************************************************** */
 
-$focus-rings: (
-  custom-property-name: 'focus-ring',
-  values: (
-    primary: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
-  ),
-);
+// $focus-rings: (
+//   custom-property-name: 'focus-ring',
+//   values: (
+//     primary: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
+//   ),
+// );
 
 /* ****************************************************** */
 /* Maps
@@ -411,6 +384,13 @@ $transition-base: all 0.2s ease-in-out !default;
 $transition-fade: opacity 0.15s linear !default;
 $transition-collapse: height 0.35s ease !default;
 $transition-collapse-width: width 0.35s ease !default;
+
+$line-heights: (
+  base: 1.5,
+  heading: 1.1,
+  sm: 1.25,
+  lg: 2,
+);
 
 $percentage-values: (
   0: 0,

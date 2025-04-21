@@ -91,7 +91,9 @@ Modifications may have been made to the original functions.
     $max-size: $temp;
   }
 
-  @return clamp(#{$min-size}, calc(#{$preferred} #{if($should-swap, '-', '+')} #{$rate-of-change}), #{$max-size});
+  $preferred-value: calc(#{$preferred} #{if($should-swap, '-', '+')} #{$rate-of-change});
+
+  @return clamp(#{$min-size}, #{$preferred-value}, #{$max-size});
 }
 
 @function fluid-px($min-size, $max-size, $min-viewport, $max-viewport, $relative-to: 'viewport') {

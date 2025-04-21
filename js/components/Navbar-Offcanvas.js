@@ -35,6 +35,8 @@ export class Navbar {
 
     if (!this._rootEl) return;
 
+    console.log('here');
+
     this._openBtnEl = this._rootEl.querySelector('.navbar__btn-open');
     this._closeBtnEl = this._rootEl.querySelector('.navbar__btn-close');
     this._containerEl = this._rootEl.querySelector('.navbar__container');
@@ -48,18 +50,17 @@ export class Navbar {
 
     this._boundHandleDocumentClick = this._handleDocumentClick.bind(this);
     this._boundHandleKeydown = this._handleKeydown.bind(this);
-    this._modules = [Tabber, ...(options?.modules || [])];
-    this._moduleInstances = this._modules.map(
-      (Mod) =>
-        new Mod({
-          rootEl: this._rootEl,
-          offcanvasEl: this._offcanvasEl,
-          containerEl: this._containerEl,
-          isPositionFixed: this._isPositionFixed,
-          openBtnEl: this._openBtnEl,
-          closeBtnEl: this._closeBtnEl,
-        })
-    );
+    this._options = options;
+    this._modules = [Tabber, ...(this._options?.modules || [])];
+    this._context = {
+      rootEl: this._rootEl,
+      offcanvasEl: this._offcanvasEl,
+      containerEl: this._containerEl,
+      isPositionFixed: this._isPositionFixed,
+      openBtnEl: this._openBtnEl,
+      closeBtnEl: this._closeBtnEl,
+    };
+    this._moduleInstances = this._modules.map((Mod) => new Mod(this._context));
 
     this._initEventListener();
   }
@@ -104,6 +105,8 @@ export class Navbar {
   }
 
   _handleTransitionEnd(e) {
+    if (e.target != this._offcanvasEl) return;
+
     this._toggleOffcanvasClasses(this._isExpanded);
     this._isTransitioning = false;
   }
@@ -139,6 +142,7 @@ export class Navbar {
 
     const lifecycleMethod = isOpen ? 'onOpen' : 'onClose';
     this._callModuleLifecycleMethod(lifecycleMethod);
+    this._options['onToggle']?.({ ...this._context, isOpen });
   }
 
   _onExpand(state) {

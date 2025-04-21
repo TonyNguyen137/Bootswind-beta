@@ -25,15 +25,16 @@
   // custom properties for default hover color
   @include generate-color-custom-properties(
     if(map.get($color-theme, $selected-theme, hover), map.get($color-theme, $selected-theme, hover), ()),
-    $hover-prefix
+    if(meta.variable-exists(hover-prefix), $hover-prefix, '')
   );
+
   @include generate-color-custom-properties-rgb(
     if(
       map.get($color-theme, $selected-theme, hover),
       map-loop(map.get($color-theme, $selected-theme, hover), to-rgb, '$value'),
       ()
     ),
-    $hover-prefix
+    if(meta.variable-exists(hover-prefix), $hover-prefix, '')
   );
 
   // Generates CSS custom properties for sizes using clamp() values.
