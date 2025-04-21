@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body,
+      html {
+        height: 100%;
+      }
+      body {
+        font-family: Arial, sans-serif;
+      }
+      h2 {
+        width: 400px;
+        text-align: center;
+        line-height: 1.5em;
+        font-weight: normal;
+        color: black;
+      }
+      button {
+        margin-top: 20px;
+        cursor: pointer;
+      }
+
+      .circle {
+        text-align: center;
+        line-height: 50px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: red;
+        color: white;
+        position: relative;
+        left: -100px;
+      }
+      .wrapper {
+        width: 400px;
+        height: 300px;
+        background: #111;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #hoverBtn {
+        color: black;
+      }
+      #body {
+        stroke-dasharray: 27.124601364135742;
+        stroke-dashoffset: 0;
+      }
+
+      #head {
+        stroke-dasharray: 14.282170295715332;
+        stroke-dashoffset: 14.282170295715332;
+        animation: 3s drawArrow 1.5s infinite cubic-bezier(0.68, 0.39, 0.04, 0.76) forwards;
+      }
+
+      .my-button,
+      .btn {
+        padding: 4px;
+        outline: 1px solid black;
+        display: inline-flex;
+        align-items: center;
+        column-gap: 8px;
+      }
+
+      @keyframes drawArrow {
+        20% {
+          stroke-dashoffset: 14.282170295715332;
+        }
+
+        60% {
+          stroke-dashoffset: 0;
+        }
+
+        90% {
+          stroke-dashoffset: 0;
+        }
+
+        100% {
+          stroke-dashoffset: -14.2821;
+        }
+      }
+
+      @media screen and (prefers-reduced-motion: no-preference) {
+        #body {
+          animation: 3s drawStem 1.5s infinite cubic-bezier(0.68, 0.39, 0.04, 0.76) forwards;
+          stroke-dashoffset: 27.1246;
+        }
+      }
+
+      :root {
+        --time: 1.5s;
+      }
+
+      .arrow-head {
+        stroke-dasharray: 20;
+        stroke-dashoffset: 0;
+        /* animation: var(--time) moveHead 0.5s infinite forwards; */
+      }
+
+      .arrow-body {
+        stroke-dasharray: 14;
+        stroke-dashoffset: 0;
+        /* animation: var(--time) move infinite forwards; */
+      }
+
+      .btn.active .arrow-head {
+        animation: var(--time) moveHead 0.5s;
+      }
+
+      .btn.active .arrow-body {
+        animation: var(--time) moveBody;
+      }
+
+      @keyframes moveBody {
+        0% {
+          stroke-dashoffset: 0;
+        }
+
+        33.333% {
+          stroke-dashoffset: -14;
+        }
+
+        66.666% {
+          stroke-dashoffset: -14; /* pause at 50% for 1s */
+        }
+
+        100% {
+          stroke-dashoffset: -28;
+        }
+      }
+
+      @keyframes moveHead {
+        0% {
+          stroke-dashoffset: 0;
+        }
+
+        33.333% {
+          stroke-dashoffset: -40;
+        }
+
+        66.666% {
+          stroke-dashoffset: -40;
+        }
+
+        100% {
+          stroke-dashoffset: -40;
+        }
+      }
+
+      /* @keyframes drawHead {
+        to {
+          stroke-dashoffset: -40;
+        }
+      } */
+
+      /* .arrow-head,
+      .arrow-body {
+        stroke-dashoffset: 0;
+        animation-timing-function: cubic-bezier(0.68, 0.39, 0.04, 0.76);
+        animation-fill-mode: forwards;
+      }
+
+      .arrow-head {
+        stroke-dasharray: 20;
+        animation: moveHead 0.5s 0.5s, drawHead 0.5s 1s;
+      }
+
+      .arrow-body {
+        stroke-dasharray: 14;
+        animation: move 0.5s, moveBody 0.5s 1.5s;
+      } */
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Animation will always return to start position when done hovering</h2>
+      <div class="wrapper">
+        <div class="circle"></div>
+        <button id="hoverBtn">hover me</button>
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <a href="" class="my-button">
+        erfahren sie mehr
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M5 12L19 12M19 12L12 5M19 12L12 19"
+            stroke="#161616"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+      <div class="mt-5"></div>
+      <a href="" class="my-button mt-5">
+        erfahren sie mehr
+        <svg width="500" height="500" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path id="body" d="M5 11C6 14.3333 12.3 20.3 29.5 17.5" stroke="black" />
+          <path id="head" d="M24.5 12.5L29.5 17.5L25.5 23.5" stroke="black" />
+        </svg>
+      </a>
+      <br />
+      <br />
+      <br />
+      <br />
+      <a href="" class="btn">
+        erfahren Sie mehr
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            class="arrow-body"
+            d="M5 12H19"
+            stroke="#161616"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            class="arrow-head"
+            d="M12 5L19 12L12 19"
+            stroke="#161616"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+
+    <script>
+      let hover = false;
+      hoverBtn.addEventListener('mouseenter', hoverOn);
+      hoverBtn.addEventListener('mouseleave', hoverOff);
+      const tween = gsap.to('.circle', {
+        duration: 1,
+        x: 200,
+        paused: true,
+        repeat: 1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        onComplete: checkHover,
+      });
+
+      function hoverOn() {
+        hover = true;
+        console.log(tween.totalProgress());
+        tween.play();
+        if (tween.totalProgress() == 1) {
+          tween.restart();
+        }
+      }
+
+      function hoverOff() {
+        hover = false;
+      }
+
+      function checkHover() {
+        if (hover) {
+          tween.restart();
+        }
+      }
+
+      const myButtons = document.querySelectorAll('.btn');
+
+      myButtons.forEach((btn) => {
+        let isAnimating = false;
+
+        btn.addEventListener('animationstart', (e) => {
+          isAnimating = true;
+        });
+
+        btn.addEventListener('animationend', (e) => {
+          console.log('end: ', e);
+
+          isAnimating = false;
+          btn.classList.remove('active');
+        });
+
+        btn.addEventListener('mouseenter', (e) => {
+          e.target.classList.add('active');
+        });
+      });
+    </script>
+  </body>
+</html>
