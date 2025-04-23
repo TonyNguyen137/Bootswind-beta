@@ -175,6 +175,12 @@ Modifications may have been made to the original functions.
   @return if($min != 0, $min, null);
 }
 
+@function to-rem($value) {
+  $rem-value: if(math.unit($value) == 'px', px-to-rem($value), $value);
+
+  @return $rem-value;
+}
+
 // @function map-loop-advanced($map, $func, $args...) {
 //   $_map: ();
 
@@ -211,9 +217,13 @@ Modifications may have been made to the original functions.
   $_map: ();
 
   // @debug args $args;
+  // @debug map $map;
 
   @each $key, $value in $map {
     // allow to pass the $key and $value of the map as an function argument
+    // @debug key $key;
+    // @debug value $value;
+
     $_args: ();
     @each $arg in $args {
       $_args: list.append($_args, if($arg == '$key', $key, if($arg == '$value', $value, $arg)));
@@ -287,12 +297,12 @@ Modifications may have been made to the original functions.
 
 @function rgba-css-var-advanced($identifier, $target, $local-prefix: '') {
   @if $identifier == 'body' and $target == 'bg' {
-    @return rgba(var(--#{$prefix}#{$identifier}-bg-rgb), var(--#{$prefix}alpha));
+    @return rgba(var(--#{$prefix}#{$identifier}-bg-rgb), var(--#{$prefix}alpha, 1));
   }
   @if $identifier == 'body' and $target == 'text' {
-    @return rgba(var(--#{$prefix}#{$identifier}-color-rgb), var(--#{$prefix}alpha));
+    @return rgba(var(--#{$prefix}#{$identifier}-color-rgb), var(--#{$prefix}alpha, 1));
   } @else {
-    @return rgba(var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb), var(--#{$prefix}alpha));
+    @return rgba(var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb), var(--#{$prefix}alpha, 1));
   }
 }
 

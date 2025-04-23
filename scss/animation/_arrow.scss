@@ -1,0 +1,57 @@
+.arrow-animation {
+  --_time: 1.5s;
+  &.play {
+    .arrow-head {
+      animation: var(--_time) moveArrowHead 0.3s;
+    }
+
+    .arrow-body {
+      animation: var(--_time) moveArrowBody;
+    }
+  }
+}
+.arrow-head {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 0;
+}
+
+.arrow-body {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 0;
+}
+
+@keyframes moveArrowBody {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  33.333% {
+    stroke-dashoffset: -14;
+  }
+
+  45% {
+    stroke-dashoffset: -14;
+  }
+
+  100% {
+    stroke-dashoffset: -28;
+  }
+}
+
+@keyframes moveArrowHead {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  33.333% {
+    stroke-dashoffset: -40;
+  }
+
+  66.666% {
+    stroke-dashoffset: -40;
+  }
+
+  100% {
+    stroke-dashoffset: -40;
+  }
+}

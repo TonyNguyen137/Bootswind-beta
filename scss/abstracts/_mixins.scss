@@ -315,7 +315,7 @@ Modifications may have been made to the original mixins.
 
     @each $property in $properties {
       .#{$property-class + $infix} {
-        #{$property}: var(--#{$custom-property-value}) if($is-important, !important, null);
+        #{$property}: var(--#{$prefix}#{$custom-property-value}) if($is-important, !important, null);
       }
     }
   }
@@ -431,7 +431,7 @@ Modifications may have been made to the original mixins.
       $property-class-modifier: if($key, if($property-class == '' and $infix == '', '', '-') + $key, '');
 
       .#{$property-class + $infix + $property-class-modifier} {
-        --#{$css-var}: #{$value};
+        --#{$prefix}#{$css-var}: #{$value};
       }
     }
   }
@@ -464,7 +464,7 @@ Modifications may have been made to the original mixins.
         // Don't prefix if value key is null (e.g. with shadow class)
         $property-class-modifier: if($key, if($property-class == '' and $infix == '', '', '-') + $key, '');
 
-        .#{$property-class
+        .#{$prefix-class}#{$property-class
           + $infix
           + $property-class-modifier}#{$state-1}#{if($state-2, ', .' + $property-class + $infix + $property-class-modifier + $state-2, '')} {
           @each $property in $properties {
@@ -644,7 +644,7 @@ Modifications may have been made to the original mixins.
           }
         }
       }
-    } @else {
+    } @else if(map.has-key($map, xs)) {
       @each $key, $value in $map {
         @if $key != xs {
           --#{$prefix}#{$local-prefix}#{$key}: #{$value};

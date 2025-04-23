@@ -32,11 +32,7 @@ const MODULE_INTERFACE = {
 export class Navbar {
   constructor(rootEl = '.navbar', options = {}) {
     this._rootEl = typeof rootEl === 'string' ? Utils.select(rootEl) : rootEl;
-
     if (!this._rootEl) return;
-
-    console.log('here');
-
     this._openBtnEl = this._rootEl.querySelector('.navbar__btn-open');
     this._closeBtnEl = this._rootEl.querySelector('.navbar__btn-close');
     this._containerEl = this._rootEl.querySelector('.navbar__container');
@@ -44,7 +40,9 @@ export class Navbar {
     this._isTransitioning = false;
     this._isExpanded = false;
     this._isPositionFixed = this._rootEl.dataset.fixed === 'true';
-    this._breakpointName = this._rootEl.dataset.expand || null;
+    this._breakpointName = this._breakpointName =
+      [...this._rootEl.classList].find((cls) => cls.startsWith('navbar--expand-'))?.replace('navbar--expand-', '') ??
+      null;
     this._breakpointValue = BREAKPOINTS[this._breakpointName] || null;
     this._expandMediaQuery = this._breakpointName ? window.matchMedia(`(min-width: ${this._breakpointValue})`) : null;
 

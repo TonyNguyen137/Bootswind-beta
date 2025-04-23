@@ -202,12 +202,6 @@ export class Utils {
   }
 }
 
-export function CSSsupports(property, value) {
-  const element = document.createElement('div');
-  element.style[property] = value;
-  return element.style[property] === 'fixed';
-}
-
 export function isIosDevice() {
   return (
     typeof window !== 'undefined' &&

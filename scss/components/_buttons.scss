@@ -1,22 +1,15 @@
 @use '../abstracts' as *;
 
-.btn-reset {
+button.btn {
   background-color: transparent;
   cursor: pointer;
   border: none;
 }
 
-.btn {
-  background-color: transparent;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+a.btn {
+  text-decoration: none;
+  color: inherit;
+}
 
-  &--link {
-    background-color: $clr-white;
-    padding: px-to-rem(17) px-to-rem(19);
-    font-size: px-to-rem(15);
-    letter-spacing: 1;
-    text-transform: uppercase;
-  }
+.btn {
 }

@@ -1,0 +1,91 @@
+@use '../abstracts' as *;
+@use 'sass:map';
+
+/* == responsive grid without media queries == */
+
+.grid-even-cols {
+  --_min-col-size: 275px;
+  --_auto-mode: auto-fill;
+
+  padding: 12px;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(var(--_auto-mode), minmax(min(var(--_min-col-size), 100%), 1fr));
+
+  /* modifiers */
+  &--auto-fit {
+    --_auto-mode: auto-fit;
+  }
+}
+
+/* == grid with even columns & breakpoints == */
+
+.grid-even-columns {
+  --col: 1;
+  --gap: 16px;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(var(--col), 1fr);
+
+  $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
+
+  @each $bp in map.keys($grid-breakpoints-without-xs) {
+    @include mq($bp) {
+      &--#{$bp} {
+        grid-template-columns: repeat(var(--col-#{$bp}, var(--col)), 1fr);
+        gap: var(--gap-#{$bp}, var(--gap));
+      }
+    }
+  }
+}
+
+.grid {
+  --col-temp: none;
+  --row-temp: none;
+  --gap: 16px;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: var(--col-temp);
+  grid-template-rows: var(--row-temp);
+
+  $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
+
+  @each $bp in map.keys($grid-breakpoints-without-xs) {
+    @include mq($bp) {
+      &--#{$bp} {
+        grid-template-columns: var(--col-#{$bp}-temp, var(--col-temp));
+        grid-template-rows: var(--row-#{$bp}-temp, var(--row-temp));
+        gap: var(--gap-#{$bp}, var(--gap));
+      }
+    }
+  }
+}
+
+/* == grid-system == */
+
+@if $enable-css-grid-system {
+  @each $breakpoint in map.keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+      @for $start from 1 through $grid-columns {
+        @for $end from ($start + 1) through ($grid-columns + 1) {
+          .#{$prefix-class}grid-col#{$infix}-#{$start}-#{$end} {
+            grid-column: #{$start} / #{$end};
+          }
+
+          .#{$prefix-class}grid-row#{$infix}-#{$start}-#{$end} {
+            grid-row: #{$start} / #{$end};
+          }
+        }
+        .#{$prefix-class}grid-col#{$infix}-#{$start}-end {
+          grid-column: #{$start} / -1;
+        }
+
+        .#{$prefix-class}grid-row#{$infix}-#{$start}-end {
+          grid-row: #{$start} / -1;
+        }
+      }
+    }
+  }
+}

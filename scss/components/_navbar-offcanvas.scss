@@ -117,8 +117,9 @@
 
   @each $bp in map.keys($grid-breakpoints-without-xs) {
     @include mq($bp) {
-      &[data-expand='#{$bp}'] {
+      &--expand-#{$bp} {
         --_gap: 16px;
+
         .navbar__offcanvas {
           all: unset;
         }

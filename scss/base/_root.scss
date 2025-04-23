@@ -12,8 +12,6 @@
   @include generate-custom-properties(if(meta.variable-exists(transitions), $transitions, null));
   @include generate-custom-properties(if(meta.variable-exists(borders), $borders, null));
   @include generate-custom-properties(if(meta.variable-exists(border-radius), $border-radius, null));
-  @include generate-custom-properties(if(meta.variable-exists(border-widths), $border-widths, null));
-  @include generate-custom-properties(if(meta.variable-exists(border-styles), $border-styles, null));
   @include generate-custom-properties(if(meta.variable-exists(focus-rings), $focus-rings, null));
   @include generate-simple-custom-properties($simple-custom-properties);
 
