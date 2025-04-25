@@ -18,6 +18,11 @@ $utilities: ();
 
 $utilities: map.merge(
   (
+    'box-sizing': (
+      property: box-sizing,
+      class: box,
+      values: border-box content-box,
+    ),
     'inset': (
       property: inset,
       class: inset,
@@ -288,6 +293,9 @@ $utilities: map.merge(
           $percentage-values,
           (
             auto: auto,
+            fit-content: fit-content,
+            min-content: min-width,
+            max-content: max-content,
           )
         ),
     ),
@@ -295,6 +303,11 @@ $utilities: map.merge(
       property: max-width,
       class: mw,
       values: $percentage-values,
+    ),
+    'max-width-fixed': (
+      property: max-width,
+      class: mw-f,
+      values: $fixed-values,
     ),
     'viewport-width': (
       property: width,
@@ -348,6 +361,7 @@ $utilities: map.merge(
       property: flex,
       values: (
         fill: 1 1 auto,
+        none: none,
       ),
     ),
     'flex-direction': (
@@ -951,6 +965,64 @@ $complex-utilities: map.merge(
         list-style: none,
         a: (
           text-decoration: none,
+        ),
+      ),
+    ),
+    'list-reset-deep': (
+      class: list-reset-deep,
+      complex-selectors: (
+        list-style: none,
+        padding-left: 0,
+        margin-block: 0,
+        a: (
+          text-decoration: none,
+        ),
+      ),
+    ),
+    'flow': (
+      class: flow,
+      complex-selectors: (
+        '> :first-child': (
+          margin: 0,
+        ),
+        '> * + *': (
+          margin-top: var(--flow-space, 1em),
+          margin-bottom: 0,
+        ),
+      ),
+    ),
+    'reset-spacing': (
+      class: reset-spacing,
+      complex-selectors: (
+        '*': (
+          padding: 0,
+          margin: 0,
+        ),
+      ),
+    ),
+    'reset-spacing-x': (
+      class: reset-spacing-x,
+      complex-selectors: (
+        '*': (
+          padding-inline: 0,
+          margin-inline: 0,
+        ),
+      ),
+    ),
+    'reset-spacing-y': (
+      class: reset-spacing-y,
+      complex-selectors: (
+        '*': (
+          padding-block: 0,
+          margin-block: 0,
+        ),
+      ),
+    ),
+    'reset-margin-b': (
+      class: reset-margin-b,
+      complex-selectors: (
+        '*': (
+          margin-bottom: 0,
         ),
       ),
     ),
