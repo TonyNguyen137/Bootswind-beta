@@ -13,7 +13,7 @@ Modifications may have been made to the original code.
 /* General setting
 /* ****************************************************** */
 
-$prefix: 'wbpgs-';
+$prefix: '';
 $prefix-class: $prefix;
 $enable-transitions: true;
 $enable-reduced-motion: true;
@@ -130,13 +130,14 @@ $enable-rgb-colors: true;
 $enable-color-themes: false;
 
 /* ************************************************************* */
-/*  Custom properties using clamp() for responsive values
+/* Clamp() values
 /* ************************************************************* */
 
 $size-prefix: fs-fluid;
 
 $size-clamp: (
-  heading-1: (
+  heading-primary: (
+    has-custom-property: false,
     threshold: (
       576px: 32,
       1400px: 150,
@@ -144,45 +145,53 @@ $size-clamp: (
     threshold-unit: 'rem',
     preferred-unit: 'rem',
   ),
-  heading-2: (
-    threshold: (
-      576px: 28,
-      1400px: 32,
-    ),
-    threshold-unit: 'rem',
-    preferred-unit: 'rem',
-  ),
-  '12-16': (
-    threshold: (
-      320px: 12,
-      768px: 16,
-    ),
-    threshold-unit: 'rem',
-    preferred-unit: 'rem',
-  ),
+  // heading-2: (
+  //   threshold: (
+  //     576px: 28,
+  //     1400px: 32,
+  //   ),
+  //   threshold-unit: 'rem',
+  //   preferred-unit: 'rem',
+  // ),
+  // '12-16': (
+  //   threshold: (
+  //     320px: 12,
+  //     768px: 16,
+  //   ),
+  //   threshold-unit: 'rem',
+  //   preferred-unit: 'rem',
+  // ),,
 );
 
 $spacing-prefix: fluid;
 
 $spacing-clamp: (
-  '15-30': (
-    threshold: (
-      576px: 32,
-      1400px: 150,
-    ),
-    // default px
-    threshold-unit: 'px',
-    // default px
-    preferred-unit: 'rem',
-    // default viewport
-    relative-to: 'viewport',
-  ),
-  '28-40': (
-    threshold: (
-      576px: 28,
-      1400px: 40,
-    ),
-  ),
+  // '15-30': (
+  //   threshold: (
+  //     576px: 32,
+  //     1400px: 150,
+  //   ),
+  //   // default px
+  //   threshold-unit: 'px',
+  //   // default px
+  //   preferred-unit: 'rem',
+  //   // default viewport
+  //   relative-to: 'viewport',
+  // ),
+  // '28-40': (
+  //   threshold: (
+  //     576px: 28,
+  //     1400px: 40,
+  //   ),
+  // ),
+  // '12-60':
+  //   (
+  //     has-custom-property: false,
+  //     threshold: (
+  //       576px: 28,
+  //       1400px: 40,
+  //     ),
+  //   )
 );
 
 /* ************************************************************* */
@@ -258,11 +267,18 @@ $sizes-regular: map.merge(
   )
 );
 
-$sizes-irregular: (
-  i-121: 121px,
-  i-n121: -121px,
-  i-67: 67px,
-);
+$sizes-irregular: ();
+
+@for $i from 1 through 30 {
+  @if ($i % 4 != 0) {
+    $sizes-irregular: map.merge(
+      $sizes-irregular,
+      (
+        'i-#{$i}': $i * 1px,
+      )
+    );
+  }
+}
 
 /* ****************************************************** */
 /* Font family

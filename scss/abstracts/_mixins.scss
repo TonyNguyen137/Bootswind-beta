@@ -299,7 +299,7 @@ Modifications may have been made to the original mixins.
 
   // 1. Utility classes that use CSS custom properties from the $simple-custom-properties map in _variables.scss.
   @if ($key == 'simple-and-resposive-custom-properties') {
-    @debug 1;
+    // @debug 1;
     // @debug key $key;
 
     @include make-simple-custom-property-utility($values);
@@ -307,7 +307,7 @@ Modifications may have been made to the original mixins.
 
   // 2. maps $custom-property as value to a property
   @if $custom-property-value {
-    @debug 2;
+    // @debug 2;
 
     $property-class: if(map.has-key($utility, class), map.get($utility, class), '');
 
@@ -322,7 +322,7 @@ Modifications may have been made to the original mixins.
 
   // 3. Utility classes that use custom property values
   @if ($custom-property-name) {
-    @debug 3;
+    // @debug 3;
 
     $_property-name: $properties;
 
@@ -334,11 +334,13 @@ Modifications may have been made to the original mixins.
     @if list.length(map.keys($values)) > 0 {
       @each $key in map.keys($values) {
         // @debug key $key;
+
         @if ($key != none) {
           $_key: if($key != null, if($key == 0, '-0', '-' + $key), '');
           // @debug _key $_key;
           // @debug _key type-of meta.type-of($_key);
           // @debug class $class;
+          // @debug if 1;
 
           .#{$class}#{$_key}#{if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), '')} {
             @if $required-property {
@@ -349,12 +351,61 @@ Modifications may have been made to the original mixins.
 
             // loop through the properties if there are multiple
             @if (list.length($_property-name) > 1) {
+              // @debug if 1-2;
+
               @each $_property in $_property-name {
                 // @debug _property $_property;
                 #{$_property}: var(--#{$prefix}#{$custom-property-name}#{$_key});
               }
             } @else {
-              #{$_property-name}: var(--#{$prefix}#{$custom-property-name}#{$_key});
+              // @debug utility $utility;
+              // @debug values $values;
+              // @debug cpn $custom-property-name;
+              // @debug key $_key;
+
+              // @debug map.get($values, $key);
+
+              // @debug here $values;
+              // $has-custom-property: if(map.has-key($values, $key), map.get($values, $key), false);
+              // $has-custom-property: if(
+              //   map.has-key($has-custom-property, has-custom-property),
+              //   map.get($has-custom-property, has-custom-property),
+              //   true
+              // );
+
+              $has-custom-property: true;
+              // @debug $has-custom-property;
+              @if $has-custom-property {
+                #{$_property-name}: var(--#{$prefix}#{$custom-property-name}#{$_key});
+              } @else {
+                $threshold: map.get($values, $key, threshold);
+                $viewports: map.keys($threshold);
+                $min-viewport: list.nth($viewports, 1);
+                $max-viewport: list.nth($viewports, 2);
+
+                $min-size: map.get($threshold, list.nth($viewports, 1));
+                $max-size: map.get($threshold, list.nth($viewports, 2));
+
+                $threshold-unit: map.get($values, $key, threshold-unit);
+                $preferred-unit: map.get($values, $key, preferred-unit);
+
+                // @debug $threshold;
+                // @debug $threshold-unit;
+                // @debug $preferred-unit;
+                // @debug $viewports;
+                // @debug list.nth($viewports, 1);
+                // @debug $min-size;
+                // @debug $max-size;
+
+                #{$_property-name}: fluid(
+                  $min-size,
+                  $max-size,
+                  $min-viewport,
+                  $max-viewport,
+                  $threshold-unit,
+                  $preferred-unit
+                );
+              }
             }
           }
         } @else {
@@ -374,7 +425,7 @@ Modifications may have been made to the original mixins.
 
   // 4. Utility classes with multiple properties
   @if meta.type-of($properties) == 'map' {
-    @debug 4;
+    // @debug 4;
 
     $property-class: if(map.has-key($utility, class), map.get($utility, class), '');
     $prefix-class: null;
@@ -416,7 +467,7 @@ Modifications may have been made to the original mixins.
 
   // 6. map values to $custom-property
   @if $properties == null and $css-var {
-    @debug 6;
+    // @debug 6;
 
     @each $key, $value in $values {
       // Use custom class if present
@@ -438,7 +489,7 @@ Modifications may have been made to the original mixins.
 
   // 7.
   @if meta.type-of($properties) == 'list' and $custom-property-value == null and $custom-property-name == null {
-    @debug 7;
+    // @debug 7;
 
     $state-1: if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), '');
     $state-2: if(
@@ -667,59 +718,70 @@ Modifications may have been made to the original mixins.
 }
 @mixin generate-clamp-custom-properties($clamp-map, $clamp-prefix: '') {
   // Only loop if the map has entries
+  @debug map $clamp-map;
+
   @if (list.length(map.keys($clamp-map)) > 0) {
     @each $key, $map in $clamp-map {
       // @debug key $key;
       // @debug map $map;
 
-      $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
+      $has-custom-property: if(map.has-key($map, has-custom-property), map.get($map, has-custom-property), true);
 
-      $threshold-unit: if(map.has-key($map, threshold-unit), map.get($map, threshold-unit), 'px');
-      $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
+      @if ($has-custom-property) {
+        @debug inside;
+        $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
 
-      $threshold-keys: map.keys(map.get($map, threshold));
-      $threshold-map: map.get($map, threshold);
-      // @debug th $threshold-keys;
+        $threshold-unit: if(map.has-key($map, threshold-unit), map.get($map, threshold-unit), 'px');
+        $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
 
-      $min-size: map.get($threshold-map, list.nth($threshold-keys, 1));
-      $max-size: map.get($threshold-map, list.nth($threshold-keys, 2));
+        $threshold-keys: map.keys(map.get($map, threshold));
+        $threshold-map: map.get($map, threshold);
+        // @debug th $threshold-keys;
 
-      // @debug list 1 list.nth($threshold-keys, 1);
-      // @debug list 2 list.nth($threshold-keys, 2);
+        $min-size: map.get($threshold-map, list.nth($threshold-keys, 1));
+        $max-size: map.get($threshold-map, list.nth($threshold-keys, 2));
 
-      // @debug min-size $min-size;
-      // @debug max-size $max-size;
+        // @debug list 1 list.nth($threshold-keys, 1);
+        // @debug list 2 list.nth($threshold-keys, 2);
 
-      $min-viewport: remove-unit-and-convert(list.nth($threshold-keys, 1));
-      $max-viewport: remove-unit-and-convert(list.nth($threshold-keys, 2));
+        // @debug min-size $min-size;
+        // @debug max-size $max-size;
 
-      // @debug min-viewport $min-viewport;
-      // @debug max-viewport $max-viewport;
+        $min-viewport: remove-unit-and-convert(list.nth($threshold-keys, 1));
+        $max-viewport: remove-unit-and-convert(list.nth($threshold-keys, 2));
 
-      $delta-size: $max-size - $min-size;
-      $delta-viewport: $max-viewport - $min-viewport;
-      $change: round-to(math.div($delta-size, $delta-viewport), 6);
+        // @debug min-viewport $min-viewport;
+        // @debug max-viewport $max-viewport;
 
-      $preferred: if(
-        $preferred-unit == 'rem',
-        round-to(math.div($max-size - ($max-viewport * $change), 16) * 1rem, 4),
-        round-to($max-size - ($max-viewport * $change), 4) * 1px
-      );
+        $delta-size: $max-size - $min-size;
+        $delta-viewport: $max-viewport - $min-viewport;
+        $change: round-to(math.div($delta-size, $delta-viewport), 6);
 
-      $rate-of-change: null;
+        $preferred: if(
+          $preferred-unit == 'rem',
+          round-to(math.div($max-size - ($max-viewport * $change), 16) * 1rem, 4),
+          round-to($max-size - ($max-viewport * $change), 4) * 1px
+        );
 
-      @if $relative-to == 'viewport' {
-        $rate-of-change: round-to(100vw * $change);
-      } @else if $relative-to == 'container' {
-        $rate-of-change: round-to(100cqi * $change);
-      } @else {
-        @error 'Invalid value for $relativeTo. Expected "viewport" or "container".';
+        $rate-of-change: null;
+
+        @if $relative-to == 'viewport' {
+          $rate-of-change: round-to(100vw * $change);
+        } @else if $relative-to == 'container' {
+          $rate-of-change: round-to(100cqi * $change);
+        } @else {
+          @error 'Invalid value for $relativeTo. Expected "viewport" or "container".';
+        }
+
+        $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
+        $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
+
+        --#{$prefix}#{$clamp-prefix}-#{$key}: clamp(
+          #{$min-size},
+          calc(#{$preferred} + #{$rate-of-change}),
+          #{$max-size}
+        );
       }
-
-      $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
-      $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
-
-      --#{$prefix}#{$clamp-prefix}-#{$key}: clamp(#{$min-size}, calc(#{$preferred} + #{$rate-of-change}), #{$max-size});
     }
   }
 }
@@ -734,18 +796,18 @@ Modifications may have been made to the original mixins.
   // @debug unit $unit;
 
   @each $key, $map in $clamp-map {
-    @debug map $map;
+    // @debug map $map;
 
     $threshold: map.keys($map);
-    @debug th $threshold;
+    // @debug th $threshold;
     $sizeMin: map.get($map, list.nth($threshold, 1));
     $sizeMax: map.get($map, list.nth($threshold, 2));
 
-    @debug list 1 list.nth($threshold, 1);
-    @debug list 2 list.nth($threshold, 2);
+    // @debug list 1 list.nth($threshold, 1);
+    // @debug list 2 list.nth($threshold, 2);
 
-    @debug sizeMin $sizeMin;
-    @debug sizeMax $sizeMax;
+    // @debug sizeMin $sizeMin;
+    // @debug sizeMax $sizeMax;
 
     // $viewportMin: remove-unit-and-convert(
     //   map.get($grid-breakpoints, list.nth($threshold, 1))
@@ -757,8 +819,8 @@ Modifications may have been made to the original mixins.
     $viewportMin: remove-unit-and-convert(list.nth($threshold, 1));
     $viewportMax: remove-unit-and-convert(list.nth($threshold, 2));
 
-    @debug viewportMin $viewportMin;
-    @debug viewportMax $viewportMax;
+    // @debug viewportMin $viewportMin;
+    // @debug viewportMax $viewportMax;
 
     $deltaSize: $sizeMax - $sizeMin;
     $deltaViewport: $viewportMax - $viewportMin;

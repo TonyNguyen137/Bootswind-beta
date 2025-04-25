@@ -23,6 +23,11 @@ $utilities: map.merge(
       class: box,
       values: border-box content-box,
     ),
+    'box-sizing': (
+      property: box-sizing,
+      class: box,
+      values: border-box content-box,
+    ),
     'inset': (
       property: inset,
       class: inset,
@@ -968,7 +973,7 @@ $complex-utilities: map.merge(
         ),
       ),
     ),
-    'list-reset-deep': (
+    '.list-reset-deep': (
       class: list-reset-deep,
       complex-selectors: (
         list-style: none,
@@ -986,42 +991,7 @@ $complex-utilities: map.merge(
           margin: 0,
         ),
         '> * + *': (
-          margin-top: var(--flow-space, 1em),
-          margin-bottom: 0,
-        ),
-      ),
-    ),
-    'reset-spacing': (
-      class: reset-spacing,
-      complex-selectors: (
-        '*': (
-          padding: 0,
-          margin: 0,
-        ),
-      ),
-    ),
-    'reset-spacing-x': (
-      class: reset-spacing-x,
-      complex-selectors: (
-        '*': (
-          padding-inline: 0,
-          margin-inline: 0,
-        ),
-      ),
-    ),
-    'reset-spacing-y': (
-      class: reset-spacing-y,
-      complex-selectors: (
-        '*': (
-          padding-block: 0,
-          margin-block: 0,
-        ),
-      ),
-    ),
-    'reset-margin-b': (
-      class: reset-margin-b,
-      complex-selectors: (
-        '*': (
+          margin-top: var(--flow-space, 16px),
           margin-bottom: 0,
         ),
       ),
