@@ -12,6 +12,8 @@ Modifications may have been made to the original code.
 @use 'variables' as *;
 
 $negative-spacers: if($enable-negative-margins, negativify-map($sizes-regular), ());
+$negative-spacers-irregular: if($enable-negative-margins, negativify-map($sizes-irregular), ());
+
 $selected-theme-rgb-colors: if($enable-rgb-colors, map-loop($selected-theme-hex-colors, to-rgb, '$value'), null);
 
 $utilities: ();
@@ -23,11 +25,7 @@ $utilities: map.merge(
       class: box,
       values: border-box content-box,
     ),
-    'box-sizing': (
-      property: box-sizing,
-      class: box,
-      values: border-box content-box,
-    ),
+
     'inset': (
       property: inset,
       class: inset,
@@ -161,7 +159,7 @@ $utilities: map.merge(
       values: $percentage-values,
     ),
     'bottom-right': (
-      property: bottom right,
+      property: bottom right left top,
       class: bottom-right,
       values: 0,
     ),
@@ -463,192 +461,6 @@ $utilities: map.merge(
         5: 5,
         last: 6,
       ),
-    ),
-    'margin': (
-      responsive: true,
-      property: margin,
-      class: m,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'margin-x': (
-      responsive: true,
-      property: margin-right margin-left,
-      class: mx,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'margin-y': (
-      responsive: true,
-      property: margin-top margin-bottom,
-      class: my,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'margin-top': (
-      responsive: true,
-      property: margin-top,
-      class: mt,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'margin-end': (
-      responsive: true,
-      property: margin-right,
-      class: me,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'margin-bottom': (
-      responsive: true,
-      property: margin-bottom,
-      class: mb,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'margin-start': (
-      responsive: true,
-      property: margin-left,
-      class: ms,
-      values:
-        map.merge(
-          map.merge($sizes-regular, $sizes-irregular),
-          (
-            auto: auto,
-          )
-        ),
-    ),
-    'negative-margin': (
-      responsive: true,
-      property: margin,
-      class: m,
-      values: $negative-spacers,
-    ),
-    'negative-margin-x': (
-      responsive: true,
-      property: margin-right margin-left,
-      class: mx,
-      values: $negative-spacers,
-    ),
-    'negative-margin-y': (
-      responsive: true,
-      property: margin-top margin-bottom,
-      class: my,
-      values: $negative-spacers,
-    ),
-    'negative-margin-top': (
-      responsive: true,
-      property: margin-top,
-      class: mt,
-      values: $negative-spacers,
-    ),
-    'negative-margin-end': (
-      responsive: true,
-      property: margin-right,
-      class: me,
-      values: $negative-spacers,
-    ),
-    'negative-margin-bottom': (
-      responsive: true,
-      property: margin-bottom,
-      class: mb,
-      values: $negative-spacers,
-    ),
-    'negative-margin-start': (
-      responsive: true,
-      property: margin-left,
-      class: ms,
-      values: $negative-spacers,
-    ),
-    'padding': (
-      responsive: true,
-      property: padding,
-      class: p,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'padding-x': (
-      responsive: true,
-      property: padding-right padding-left,
-      class: px,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'padding-y': (
-      responsive: true,
-      property: padding-top padding-bottom,
-      class: py,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'padding-top': (
-      responsive: true,
-      property: padding-top,
-      class: pt,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'padding-end': (
-      responsive: true,
-      property: padding-right,
-      class: pe,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'padding-bottom': (
-      responsive: true,
-      property: padding-bottom,
-      class: pb,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'padding-start': (
-      responsive: true,
-      property: padding-left,
-      class: ps,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'gap': (
-      responsive: true,
-      property: gap,
-      class: gap,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'row-gap': (
-      responsive: true,
-      property: row-gap,
-      class: row-gap,
-      values: map.merge($sizes-regular, $sizes-irregular),
-    ),
-    'column-gap': (
-      responsive: true,
-      property: column-gap,
-      class: column-gap,
-      values: map.merge($sizes-regular, $sizes-irregular),
     ),
 
     'font-size': (
@@ -958,446 +770,695 @@ $utilities: map.merge(
 $complex-utilities: ();
 $complex-utilities: map.merge(
   (
-    'font-family': (
-      property: font-family,
-      class: font-family,
-      values: if(meta.variable-exists(font-families), map.get($font-families, values), null),
-      custom-property-name: if(meta.variable-exists(font-families), map.get($font-families, custom-property-name), null),
-    ),
-    'list-none-deep': (
-      class: list-none-deep,
-      complex-selectors: (
-        list-style: none,
-        a: (
-          text-decoration: none,
-        ),
+    // 'font-family': (
+    //   property: font-family,
+    //   class: font-family,
+    //   values: if(meta.variable-exists(font-families), map.get($font-families, values), null),
+    //   custom-property-name: if(meta.variable-exists(font-families), map.get($font-families, custom-property-name), null),
+    // ),
+    // 'list-none-deep': (
+    //   class: list-none-deep,
+    //   complex-selectors: (
+    //     list-style: none,
+    //     a: (
+    //       text-decoration: none,
+    //     ),
+    //   ),
+    // ),
+    // '.list-reset-deep': (
+    //   class: list-reset-deep,
+    //   complex-selectors: (
+    //     list-style: none,
+    //     padding-left: 0,
+    //     margin-block: 0,
+    //     a: (
+    //       text-decoration: none,
+    //     ),
+    //   ),
+    // ),
+    // 'lead': (
+    //   class: lead,
+    //   complex-selectors: (
+    //     color: var(--clr-black),
+    //     text-transform: uppercase,
+    //     font-weight: 400,
+    //     '& + p ': (
+    //       margin-top: 0,
+    //     ),
+    //   ),
+    // ),
+    // 'flow': (
+    //   class: flow,
+    //   complex-selectors: (
+    //     '> :first-child': (
+    //       margin: 0,
+    //     ),
+    //     '> * + *': (
+    //       margin-top: var(--flow-space, 16px),
+    //       margin-bottom: 0,
+    //     ),
+    //   ),
+    // ),
+    // 'rever-spacing': (
+    //   class: revert-spacing,
+    //   complex-selectors: (
+    //     padding: revert,
+    //     margin: revert,
+    //     '*': (
+    //       padding: revert,
+    //       margin: revert,
+    //     ),
+    //   ),
+    // ),
+    // 'border-custom-properties': (
+    //   property: border,
+    //   class: border,
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'border-top': (
+    //   property: border-top,
+    //   class: border-top,
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'border-bottom': (
+    //   property: border-bottom,
+    //   class: border-bottom,
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'border-left': (
+    //   property: border-left,
+    //   class: border-start,
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'border-right': (
+    //   property: border-right,
+    //   class: border-end,
+    //   // values: map.get($borders, values),
+    //   // custom-property-name: map.get($borders, custom-property-name),
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'border-block': (
+    //   property: border-block,
+    //   class: border-y,
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'border-inline': (
+    //   property: border-inline,
+    //   class: border-x,
+    //   values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    //   custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
+    // ),
+    // 'box-shadow': (
+    //   property: box-shadow,
+    //   class: box-shadow,
+    //   values: if(meta.variable-exists(box-shadows), map.get($box-shadows, values), null),
+    //   custom-property-name: if(meta.variable-exists(box-shadows), map.get($box-shadows, custom-property-name), null),
+    // ),
+    // 'focus-ring': (
+    //   class: focus-ring,
+    //   state: ':focus',
+    //   required-property: (
+    //     outline: 0,
+    //   ),
+    //   property: box-shadow,
+    //   values: if(meta.variable-exists(focus-rings), map.get($focus-rings, values), null),
+    //   custom-property-name: if(meta.variable-exists(focus-rings), map.get($focus-rings, custom-property-name), null),
+    // ),
+    // 'transition': (
+    //   property: transition,
+    //   class: transition,
+    //   values: map.get($transitions, values),
+    //   custom-property-name: map.get($transitions, custom-property-name),
+    // ),
+    // 'z-index': (
+    //   property: z-index,
+    //   class: z,
+    //   values: map.get($z-indexes, values),
+    //   custom-property-name: map.get($z-indexes, custom-property-name),
+    // ),
+    // 'border-radius': (
+    //   property: border-radius,
+    //   class: radius,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-radius-start': (
+    //   property: border-bottom-left-radius border-top-left-radius,
+    //   class: radius-start,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-radius-end': (
+    //   property: border-bottom-left-radius border-top-right-radius,
+    //   class: radius-end,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-radius-top': (
+    //   property: border-top-left-radius border-top-right-radius,
+    //   class: radius-top,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-radius-bottom': (
+    //   property: border-bottom-left-radius border-bottom-right-radius,
+    //   class: radius-bottom,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-top-left': (
+    //   property: border-top-left-radius,
+    //   class: radius-top-left,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-top-right': (
+    //   property: border-top-right-radius,
+    //   class: radius-top-right,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-bottom-left': (
+    //   property: border-bottom-left-radius,
+    //   class: radius-bottom-left,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'border-bottom-right': (
+    //   property: border-bottom-right-radius,
+    //   class: radius-bottom-right,
+    //   values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+    //   custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+    // ),
+    // 'simple-and-resposive-custom-properties': (
+    //   values: map.merge($simple-custom-properties, map.get($responsive-custom-properties, xs)),
+    // ),
+    // 'flex-center': (
+    //   class: flex-center,
+    //   property: (
+    //     display: flex,
+    //     justify-content: center,
+    //     align-items: center,
+    //   ),
+    //   responsive: true,
+    // ),
+    // 'default-button-style': (
+    //   class: button-style-reset,
+    //   property: (
+    //     background-color: transparent,
+    //     cursor: pointer,
+    //     border: none,
+    //   ),
+    // ),
+    // 'clear-float': (
+    //   class: clear-float,
+    //   state: '::after',
+    //   property: (
+    //     content: '',
+    //     display: block,
+    //     clear: both,
+    //   ),
+    // ),
+    // 'sr-only-focusable': (
+    //   class: sr-only-focusable,
+    //   state: ':active' ':focus',
+    //   property: (
+    //     clip: auto,
+    //     -webkit-clip-path: none,
+    //     clip-path: none,
+    //     height: auto,
+    //     margin: auto,
+    //     overflow: visible,
+    //     width: auto,
+    //     white-space: normal,
+    //   ),
+    // ),
+    // 'sr-only': (
+    //   class: sr-only,
+    //   property: (
+    //     border: 0,
+    //     clip: rect(1px, 1px, 1px, 1px),
+    //     -webkit-clip-path: inset(50%),
+    //     clip-path: inset(50%),
+    //     height: 1px,
+    //     margin: -1px,
+    //     overflow: hidden,
+    //     padding: 0,
+    //     position: absolute,
+    //     width: 1px,
+    //     white-space: nowrap,
+    //   ),
+    // ),
+    // 'sticky-top': (
+    //   class: sticky-top,
+    //   property: (
+    //     position: sticky,
+    //     top: 0,
+    //     z-index: var(--z-1),
+    //   ),
+    //   // responsive: true,
+    // ),
+    // 'sticky-bottom': (
+    //   class: sticky-bottom,
+    //   property: (
+    //     position: sticky,
+    //     bottom: 0,
+    //     z-index: var(--z-1),
+    //   ),
+    //   // responsive: true,
+    // ),
+    // 'fixed-top': (
+    //   class: fixed-top,
+    //   property: (
+    //     position: fixed,
+    //     top: 0,
+    //     right: 0,
+    //     left: 0,
+    //     z-index: var(--z-1),
+    //   ),
+    // ),
+    // 'fixed-bottom': (
+    //   class: fixed-bottom,
+    //   property: (
+    //     position: fixed,
+    //     bottom: 0,
+    //     right: 0,
+    //     left: 0,
+    //     z-index: var(--z-1),
+    //   ),
+    // ),
+    // 'position': (
+    //   property: position,
+    //   class: position,
+    //   values: (
+    //     absolute: absolute,
+    //     relative: relative,
+    //     static: static,
+    //   ),
+    // ),
+    // 'position-bot': (
+    //   property: bottom,
+    //   class: bot,
+    //   values: $percentage-values,
+    // ),
+    // 'position-top': (
+    //   property: top,
+    //   class: top,
+    //   values: $percentage-values,
+    // ),
+    // 'position-start': (
+    //   property: left,
+    //   class: left,
+    //   values: $percentage-values,
+    // ),
+    // 'position-end': (
+    //   property: right,
+    //   class: end,
+    //   values: $percentage-values,
+    // ),
+    // 'background-colors-hover': (
+    //   property: background-color,
+    //   class: bg-hover,
+    //   local-vars: (
+    //     'alpha': 1,
+    //   ),
+    //   state: ':hover',
+    //   values:
+    //     if(
+    //       map.has-key($color-theme, $selected-theme, hover),
+    //       map-loop(map.get($color-theme, $selected-theme, hover), rgba-css-var-advanced, '$key', null, $hover-prefix),
+    //       null
+    //     ),
+    // ),
+    // 'background-colors-alpha': (
+    //   property: background-color,
+    //   class: bga,
+    //   local-vars: (
+    //     'alpha': 1,
+    //   ),
+    //   values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
+    //   // responsive: true,,
+    // ),
+    // 'background-colors': (
+    //   property: background-color,
+    //   class: bg,
+    //   values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    //   custom-property-name: clr,
+    // ),
+    // 'background-transparent': (
+    //   property: background-color,
+    //   class: bg,
+    //   values: transparent,
+    // ),
+    // 'text-transparent': (
+    //   property: color,
+    //   class: text,
+    //   values: (
+    //     transparent: transparent,
+    //   ),
+    // ),
+    // 'text-color-hover': (
+    //   property: color,
+    //   class: text-hover,
+    //   state: ':hover',
+    //   values: $selected-theme-hex-colors,
+    // ),
+    // 'text-color-hex-custom-properties': (
+    //   property: color,
+    //   class: text,
+    //   custom-property-name: clr,
+    //   values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    // ),
+    // 'text-color-hex': (
+    //   property: color,
+    //   class: text,
+    //   custom-property-name: clr,
+    //   values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    // ),
+    'text-color-rgba-hover':
+      (
+        property: color,
+        class: text-hover,
+        state: ':hover',
+        values:
+          if(
+            map.has-key($color-theme, $selected-theme, hover),
+            map-loop(map.get($color-theme, $selected-theme, hover), rgba-css-var-advanced, '$key', null, $hover-prefix),
+            null
+          ),
       ),
-    ),
-    '.list-reset-deep': (
-      class: list-reset-deep,
-      complex-selectors: (
-        list-style: none,
-        padding-left: 0,
-        margin-block: 0,
-        a: (
-          text-decoration: none,
-        ),
-      ),
-    ),
-    'flow': (
-      class: flow,
-      complex-selectors: (
-        '> :first-child': (
-          margin: 0,
-        ),
-        '> * + *': (
-          margin-top: var(--flow-space, 16px),
-          margin-bottom: 0,
-        ),
-      ),
-    ),
-    'rever-spacing': (
-      class: revert-spacing,
-      complex-selectors: (
-        padding: revert,
-        margin: revert,
-        '*': (
-          padding: revert,
-          margin: revert,
-        ),
-      ),
-    ),
-    'border-custom-properties': (
-      property: border,
-      class: border,
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'border-top': (
-      property: border-top,
-      class: border-top,
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'border-bottom': (
-      property: border-bottom,
-      class: border-bottom,
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'border-left': (
-      property: border-left,
-      class: border-start,
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'border-right': (
-      property: border-right,
-      class: border-end,
-      // values: map.get($borders, values),
-      // custom-property-name: map.get($borders, custom-property-name),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'border-block': (
-      property: border-block,
-      class: border-y,
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'border-inline': (
-      property: border-inline,
-      class: border-x,
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-      custom-property-name: if(meta.variable-exists(borders), map.get($borders, custom-property-name), null),
-    ),
-    'box-shadow': (
-      property: box-shadow,
-      class: box-shadow,
-      values: if(meta.variable-exists(box-shadows), map.get($box-shadows, values), null),
-      custom-property-name: if(meta.variable-exists(box-shadows), map.get($box-shadows, custom-property-name), null),
-    ),
-
-    'margin-top-fluid': (
-      property: margin-top,
-      class: mt + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'margin-bottom-fluid': (
-      property: margin-bottom,
-      class: mb + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'margin-left-fluid': (
-      property: margin-left,
-      class: ms + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'margin-right-fluid': (
-      property: margin-right,
-      class: me + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'margin-block-fluid': (
-      property: margin-block,
-      class: my + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'padding-top-fluid': (
-      property: padding-top,
-      class: pt + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'padding-bottom-fluid': (
-      property: padding-bottom,
-      class: pb + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'padding-left-fluid': (
-      property: padding-left,
-      class: ps + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'padding-right-fluid': (
-      property: padding-right,
-      class: pe + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'padding-block-fluid': (
-      property: padding-block,
-      class: py + '-' + $spacing-prefix,
-      values: $spacing-clamp,
-      custom-property-name: $spacing-prefix,
-    ),
-    'font-size-fluid': (
-      property: font-size,
-      class: $size-prefix,
-      values: $size-clamp,
-      custom-property-name: $size-prefix,
-    ),
-    'focus-ring': (
-      class: focus-ring,
-      state: ':focus',
-      required-property: (
-        outline: 0,
-      ),
-      property: box-shadow,
-
-      values: if(meta.variable-exists(focus-rings), map.get($focus-rings, values), null),
-      custom-property-name: if(meta.variable-exists(focus-rings), map.get($focus-rings, custom-property-name), null),
-    ),
-    'transition': (
-      property: transition,
-      class: transition,
-      values: map.get($transitions, values),
-      custom-property-name: map.get($transitions, custom-property-name),
-    ),
-    'z-index': (
-      property: z-index,
-      class: z,
-      values: map.get($z-indexes, values),
-      custom-property-name: map.get($z-indexes, custom-property-name),
-    ),
-    'border-radius': (
-      property: border-radius,
-      class: radius,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-radius-start': (
-      property: border-bottom-left-radius border-top-left-radius,
-      class: radius-start,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-radius-end': (
-      property: border-bottom-left-radius border-top-right-radius,
-      class: radius-end,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-radius-top': (
-      property: border-top-left-radius border-top-right-radius,
-      class: radius-top,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-radius-bottom': (
-      property: border-bottom-left-radius border-bottom-right-radius,
-      class: radius-bottom,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-top-left': (
-      property: border-top-left-radius,
-      class: radius-top-left,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-top-right': (
-      property: border-top-right-radius,
-      class: radius-top-right,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-bottom-left': (
-      property: border-bottom-left-radius,
-      class: radius-bottom-left,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'border-bottom-right': (
-      property: border-bottom-right-radius,
-      class: radius-bottom-right,
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
-      custom-property-name: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
-    ),
-    'simple-and-resposive-custom-properties': (
-      values: map.merge($simple-custom-properties, map.get($responsive-custom-properties, xs)),
-    ),
-
-    'flex-center': (
-      class: flex-center,
-      property: (
-        display: flex,
-        justify-content: center,
-        align-items: center,
-      ),
-      responsive: true,
-    ),
-    'default-button-style': (
-      class: button-style-reset,
-      property: (
-        background-color: transparent,
-        cursor: pointer,
-        border: none,
-      ),
-    ),
-    'clear-float': (
-      class: clear-float,
-      state: '::after',
-      property: (
-        content: '',
-        display: block,
-        clear: both,
-      ),
-    ),
-    'sr-only-focusable': (
-      class: sr-only-focusable,
-      state: ':active' ':focus',
-      property: (
-        clip: auto,
-        -webkit-clip-path: none,
-        clip-path: none,
-        height: auto,
-        margin: auto,
-        overflow: visible,
-        width: auto,
-        white-space: normal,
-      ),
-    ),
-    'sr-only': (
-      class: sr-only,
-      property: (
-        border: 0,
-        clip: rect(1px, 1px, 1px, 1px),
-        -webkit-clip-path: inset(50%),
-        clip-path: inset(50%),
-        height: 1px,
-        margin: -1px,
-        overflow: hidden,
-        padding: 0,
-        position: absolute,
-        width: 1px,
-        white-space: nowrap,
-      ),
-    ),
-    'sticky-top': (
-      class: sticky-top,
-      property: (
-        position: sticky,
-        top: 0,
-        z-index: var(--z-1),
-      ),
-      // responsive: true,
-    ),
-    'sticky-bottom': (
-      class: sticky-bottom,
-      property: (
-        position: sticky,
-        bottom: 0,
-        z-index: var(--z-1),
-      ),
-      // responsive: true,
-    ),
-    'fixed-top': (
-      class: fixed-top,
-      property: (
-        position: fixed,
-        top: 0,
-        right: 0,
-        left: 0,
-        z-index: var(--z-1),
-      ),
-    ),
-    'fixed-bottom': (
-      class: fixed-bottom,
-      property: (
-        position: fixed,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        z-index: var(--z-1),
-      ),
-    ),
-    'position': (
-      property: position,
-      class: position,
-      values: (
-        absolute: absolute,
-        relative: relative,
-        static: static,
-      ),
-    ),
-    'position-bot': (
-      property: bottom,
-      class: bot,
-      values: $percentage-values,
-    ),
-    'position-top': (
-      property: top,
-      class: top,
-      values: $percentage-values,
-    ),
-    'position-start': (
-      property: left,
-      class: left,
-      values: $percentage-values,
-    ),
-    'position-end': (
-      property: right,
-      class: end,
-      values: $percentage-values,
-    ),
-    'background-colors-hover': (
-      property: background-color,
-      class: bg-hover,
-      local-vars: (
-        'alpha': 1,
-      ),
-      state: ':hover',
-      values:
-        if(
-          map.has-key($color-theme, $selected-theme, hover),
-          map-loop(map.get($color-theme, $selected-theme, hover), rgba-css-var-advanced, '$key', null, $hover-prefix),
-          null
-        ),
-    ),
-    'background-colors-alpha': (
-      property: background-color,
-      class: bga,
-      local-vars: (
-        'alpha': 1,
-      ),
-      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
-      // responsive: true,,
-    ),
-    'background-colors': (
-      property: background-color,
-      class: bg,
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
-      custom-property-name: clr,
-    ),
-
-    'background-transparent': (
-      property: background-color,
-      class: bg,
-      values: transparent,
-    ),
-    'text-transparent': (
-      property: color,
-      class: text,
-      values: (
-        transparent: transparent,
-      ),
-    ),
-    'text-color-hover': (
-      property: color,
-      class: text-hover,
-      state: ':hover',
-      values: $selected-theme-hex-colors,
-    ),
-    'text-color': (
-      property: color,
-      class: text,
-      custom-property-name: clr,
-
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
-    ),
-
-    'text-color-alpha': (
-      property: color,
-      class: texta,
-      local-vars: (
-        'alpha': 1,
-      ),
-      state: ':hover',
-      values:
-        if(
-          map.has-key($color-theme, $selected-theme, hover),
-          map-loop(map.get($color-theme, $selected-theme, hover), rgba-css-var-advanced, '$key', null, $hover-prefix),
-          null
-        ),
-    ),
+    // 'box-shadow': (
+    //   property: box-shadow,
+    //   class: box-shadow,
+    //   values: if(meta.variable-exists(box-shadows), map.get($box-shadows, values), null),
+    //   custom-property-name: if(meta.variable-exists(box-shadows), map.get($box-shadows, custom-property-name), null),
+    // ),
+    // 'font-size-fluid': (
+    //   function: 'fluid',
+    //   class: fs,
+    //   property: font-size,
+    //   values: if(meta.variable-exists(size-clamp), $size-clamp, null),
+    //   responsive: true,
+    //   important: true,
+    // ),
+    // 'margin-top-fluid': (
+    //   function: 'fluid',
+    //   class: mt,
+    //   property: margin-top,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'margin-bottom-fluid': (
+    //   function: 'fluid',
+    //   class: mb,
+    //   property: margin-bottom,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'margin-left-fluid': (
+    //   function: 'fluid',
+    //   class: ms,
+    //   property: margin-left,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'margin-right-fluid': (
+    //   function: 'fluid',
+    //   class: me,
+    //   property: margin-right,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'margin-block-fluid': (
+    //   function: 'fluid',
+    //   class: my,
+    //   property: margin-block,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'margin-inline-fluid': (
+    //   function: 'fluid',
+    //   class: mx,
+    //   property: margin-inline,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'padding-top-fluid': (
+    //   function: 'fluid',
+    //   class: pt,
+    //   property: padding-top,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'padding-bottom-fluid': (
+    //   function: 'fluid',
+    //   class: pb,
+    //   property: padding-bottom,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'padding-left-fluid': (
+    //   function: 'fluid',
+    //   class: ps,
+    //   property: padding-left,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'padding-right-fluid': (
+    //   function: 'fluid',
+    //   class: pe,
+    //   property: padding-right,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'padding-block-fluid': (
+    //   function: 'fluid',
+    //   class: py,
+    //   property: padding-block,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'padding-inline-fluid': (
+    //   function: 'fluid',
+    //   class: px,
+    //   property: padding-inline,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    //   responsive: true,
+    // ),
+    // 'gap-fluid': (
+    //   function: 'fluid',
+    //   responsive: true,
+    //   property: gap,
+    //   class: gap,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    // ),
+    // 'row-gap-fluid': (
+    //   function: 'fluid',
+    //   responsive: true,
+    //   property: row-gap,
+    //   class: row-gap,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    // ),
+    // 'column-gap-fluid': (
+    //   function: 'fluid',
+    //   responsive: true,
+    //   property: column-gap,
+    //   class: column-gap,
+    //   values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    // ),
+    // 'gap': (
+    //   responsive: true,
+    //   property: gap,
+    //   class: gap,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'row-gap': (
+    //   responsive: true,
+    //   property: row-gap,
+    //   class: row-gap,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'column-gap': (
+    //   responsive: true,
+    //   property: column-gap,
+    //   class: column-gap,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'margin': (
+    //   responsive: true,
+    //   property: margin,
+    //   class: m,
+    //   values:
+    //     map.merge(
+    //       map.merge($sizes-regular, $sizes-irregular),
+    //       (
+    //         auto: auto,
+    //       )
+    //     ),
+    // ),
+    // 'margin-x': (
+    //   responsive: true,
+    //   property: margin-right margin-left,
+    //   class: mx,
+    //   values:
+    //     map.merge(
+    //       map.merge($sizes-regular, $sizes-irregular),
+    //       (
+    //         auto: auto,
+    //       )
+    //     ),
+    // ),
+    // 'margin-y': (
+    //   responsive: true,
+    //   property: margin-top margin-bottom,
+    //   class: my,
+    //   values:
+    //     map.merge(
+    //       map.merge($sizes-regular, $sizes-irregular),
+    //       (
+    //         auto: auto,
+    //       )
+    //     ),
+    // ),
+    // 'margin-top': (
+    //   responsive: true,
+    //   property: margin-top,
+    //   class: mt,
+    //   values:
+    //     map.merge(
+    //       map.merge($sizes-regular, $sizes-irregular),
+    //       (
+    //         auto: auto,
+    //       )
+    //     ),
+    // ),
+    // 'margin-end':
+    //   (
+    //     responsive: true,
+    //     property: margin-right,
+    //     class: me,
+    //     values:
+    //       map.merge(
+    //         map.merge($sizes-regular, $sizes-irregular),
+    //         (
+    //           auto: auto,
+    //         )
+    //       ),
+    //   ),
+    // 'margin-bottom': (
+    //   responsive: true,
+    //   property: margin-bottom,
+    //   class: mb,
+    //   values:
+    //     map.merge(
+    //       map.merge($sizes-regular, $sizes-irregular),
+    //       (
+    //         auto: auto,
+    //       )
+    //     ),
+    // ),
+    // 'margin-start': (
+    //   responsive: true,
+    //   property: margin-left,
+    //   class: ms,
+    //   values:
+    //     map.merge(
+    //       map.merge($sizes-regular, $sizes-irregular),
+    //       (
+    //         auto: auto,
+    //       )
+    //     ),
+    // ),
+    // 'negative-margin': (
+    //   responsive: true,
+    //   property: margin,
+    //   class: m,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'negative-margin-x': (
+    //   responsive: true,
+    //   property: margin-right margin-left,
+    //   class: mx,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'negative-margin-y': (
+    //   responsive: true,
+    //   property: margin-top margin-bottom,
+    //   class: my,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'negative-margin-top': (
+    //   responsive: true,
+    //   property: margin-top,
+    //   class: mt,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'negative-margin-end': (
+    //   responsive: true,
+    //   property: margin-right,
+    //   class: me,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'negative-margin-bottom': (
+    //   responsive: true,
+    //   property: margin-bottom,
+    //   class: mb,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'negative-margin-start': (
+    //   responsive: true,
+    //   property: margin-left,
+    //   class: ms,
+    //   values: map.merge($negative-spacers, $negative-spacers-irregular),
+    // ),
+    // 'padding': (
+    //   responsive: true,
+    //   property: padding,
+    //   class: p,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'padding-x': (
+    //   responsive: true,
+    //   property: padding-right padding-left,
+    //   class: px,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'padding-y': (
+    //   responsive: true,
+    //   property: padding-top padding-bottom,
+    //   class: py,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'padding-top': (
+    //   responsive: true,
+    //   property: padding-top,
+    //   class: pt,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'padding-end': (
+    //   responsive: true,
+    //   property: padding-right,
+    //   class: pe,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'padding-bottom': (
+    //   responsive: true,
+    //   property: padding-bottom,
+    //   class: pb,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // ),
+    // 'padding-start': (
+    //   responsive: true,
+    //   property: padding-left,
+    //   class: ps,
+    //   values: map.merge($sizes-regular, $sizes-irregular),
+    // )
   ),
   $complex-utilities
 );

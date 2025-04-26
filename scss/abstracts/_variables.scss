@@ -47,6 +47,7 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
+  3xl: 1600px,
 );
 
 // rem values
@@ -69,6 +70,7 @@ $container-max-widths: (
   lg: 960px,
   xl: 1140px,
   xxl: 1320px,
+  3xl: 1500px,
 );
 
 /* ****************************************************** */
@@ -133,65 +135,40 @@ $enable-color-themes: false;
 /* Clamp() values
 /* ************************************************************* */
 
-$size-prefix: fs-fluid;
+// $size-prefix: fs-fluid;
 
 $size-clamp: (
-  heading-primary: (
-    has-custom-property: false,
+  fs-fluid-heading-primary: (
+    // default true
+    use-custom-property: true,
     threshold: (
       576px: 32,
       1400px: 150,
     ),
+    // default rem
     threshold-unit: 'rem',
+    // default rem
     preferred-unit: 'rem',
+    // default viewport
+    relative-to: 'viewport',
   ),
-  // heading-2: (
-  //   threshold: (
-  //     576px: 28,
-  //     1400px: 32,
-  //   ),
-  //   threshold-unit: 'rem',
-  //   preferred-unit: 'rem',
-  // ),
-  // '12-16': (
-  //   threshold: (
-  //     320px: 12,
-  //     768px: 16,
-  //   ),
-  //   threshold-unit: 'rem',
-  //   preferred-unit: 'rem',
-  // ),,
 );
 
-$spacing-prefix: fluid;
-
 $spacing-clamp: (
-  // '15-30': (
-  //   threshold: (
-  //     576px: 32,
-  //     1400px: 150,
-  //   ),
-  //   // default px
-  //   threshold-unit: 'px',
-  //   // default px
-  //   preferred-unit: 'rem',
-  //   // default viewport
-  //   relative-to: 'viewport',
-  // ),
-  // '28-40': (
-  //   threshold: (
-  //     576px: 28,
-  //     1400px: 40,
-  //   ),
-  // ),
-  // '12-60':
-  //   (
-  //     has-custom-property: false,
-  //     threshold: (
-  //       576px: 28,
-  //       1400px: 40,
-  //     ),
-  //   )
+  'fluid-15-30': (
+    // default true
+    use-custom-property: true,
+    threshold: (
+      576px: 32,
+      1400px: 150,
+    ),
+    // default px
+    threshold-unit: 'px',
+    // default rem
+    preferred-unit: 'rem',
+    // default viewport
+    relative-to: 'viewport',
+  ),
 );
 
 /* ************************************************************* */
@@ -238,6 +215,9 @@ $responsive-custom-properties: (
   ),
   'xxl': (
     'container-max-width': map.get($container-max-widths, xxl),
+  ),
+  '3xl': (
+    'container-max-width': map.get($container-max-widths, 3xl),
   ),
 );
 

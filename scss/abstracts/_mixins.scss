@@ -234,8 +234,10 @@ Modifications may have been made to the original mixins.
     }
   }
 }
+
 @mixin generate-complex-utility($utility, $infix: '', $key, $is-rfs-media-query: false) {
   $values: map.get($utility, values);
+  $selected-function: if(map.has-key($utility, function), map.get($utility, function), 'normal');
 
   // Check if the list is not empty before accessing the first element
   @if list.length($values) > 0 and $values != null {
@@ -245,7 +247,11 @@ Modifications may have been made to the original mixins.
     }
   }
 
-  $is-important: if(map.get($utility, important), true, false);
+  // @debug values $values;
+  // @debug meta.type-of($values);
+
+  $is-important: if(map.get($utility, important), !important, null);
+
   $required-property: if(map.has-key($utility, required-property), map.get($utility, required-property), null);
   $properties: map.get($utility, property);
   $custom-property-value: if(
@@ -258,18 +264,44 @@ Modifications may have been made to the original mixins.
   $class: map.get($utility, class);
 
   // Multiple properties are possible, for example with vertical or horizontal margins or paddings
+  // @debug properties before $properties;
+
   @if meta.type-of($properties) == 'string' {
     $properties: list.append((), $properties);
+
+    // @debug properties inside $properties;
   }
+
+  // @debug properties after $properties;
+
   $css-var: map.get($utility, css-var);
-  $is-local-vars: map.get($utility, local-vars);
+  $local-vars: map.get($utility, local-vars);
   $is-rtl: map.get($utility, rtl);
   $custom-property-name: map.get($utility, custom-property-name);
+  $nested-selectors: if(map.has-key($utility, complex-selectors), map.get($utility, complex-selectors), null);
   $complex-selectors: if(map.has-key($utility, complex-selectors), map.get($utility, complex-selectors), null);
+  $state: map.get($utility, state);
+
+  $configuration-map: (
+    properties: $properties,
+    values: $values,
+    important: $is-important,
+    required-property: $required-property,
+    breakpoint-infix: $infix,
+    class: $class,
+    key: $key,
+    custom-property-name: $custom-property-name,
+    custom-property-value: $custom-property-value,
+    css-var: $css-var,
+    local-vars: $local-vars,
+    is-rtl: $is-rtl,
+    nested-selectors: $nested-selectors,
+    state: $state,
+  );
 
   // 0. Generates utility classes with nested selector styles
   @if ($complex-selectors) {
-    // @debug 0;
+    @debug 0;
 
     $_selectors: map.get($utility, complex-selectors);
 
@@ -299,7 +331,7 @@ Modifications may have been made to the original mixins.
 
   // 1. Utility classes that use CSS custom properties from the $simple-custom-properties map in _variables.scss.
   @if ($key == 'simple-and-resposive-custom-properties') {
-    // @debug 1;
+    @debug 1;
     // @debug key $key;
 
     @include make-simple-custom-property-utility($values);
@@ -307,7 +339,456 @@ Modifications may have been made to the original mixins.
 
   // 2. maps $custom-property as value to a property
   @if $custom-property-value {
-    // @debug 2;
+    @debug 2;
+
+    $property-class: if(map.has-key($utility, class), map.get($utility, class), '');
+
+    $infix: if($property-class == '' and string.slice($infix, 1, 1) == '-', string.slice($infix, 2), $infix);
+
+    @each $property in $properties {
+      .#{$property-class + $infix} {
+        #{$property}: var(--#{$prefix}#{$custom-property-value}) if($is-important, !important, null);
+      }
+    }
+  }
+
+  // 3. Utility classes that use custom property values
+  // @if ($custom-property-name) {
+  //   @debug 3;
+
+  //   $_property-name: $properties;
+
+  //   // @debug _prefix $_prefix;
+  //   // @debug properties $_property-name;
+  //   // @debug properties type meta.type-of($_property-name);
+  //   // @debug mapkeys map.keys($values);
+
+  //   @if list.length(map.keys($values)) > 0 {
+  //     @each $key in map.keys($values) {
+  //       // @debug key $key;
+
+  //       @if ($key != none) {
+  //         $_key: if($key != null, if($key == 0, '-0', '-' + $key), '');
+  //         // @debug _key $_key;
+  //         // @debug _key type-of meta.type-of($_key);
+  //         // @debug class $class;
+  //         // @debug if 1;
+
+  //         .#{$class}#{$_key}#{if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), '')} {
+  //           @if $required-property {
+  //             @each $property, $value in $required-property {
+  //               #{$property}: $value;
+  //             }
+  //           }
+
+  //           // loop through the properties if there are multiple
+  //           @if (list.length($_property-name) > 1) {
+  //             // @debug if 1-2;
+
+  //             @each $_property in $_property-name {
+  //               // @debug _property $_property;
+  //               #{$_property}: var(--#{$prefix}#{$custom-property-name}#{$_key});
+  //             }
+  //           } @else {
+  //             // @debug utility $utility;
+  //             // @debug values $values;
+  //             // @debug cpn $custom-property-name;
+  //             // @debug key $_key;
+
+  //             // @debug map.get($values, $key);
+
+  //             // @debug here $values;
+  //             // $has-custom-property: if(map.has-key($values, $key), map.get($values, $key), false);
+  //             // $has-custom-property: if(
+  //             //   map.has-key($has-custom-property, has-custom-property),
+  //             //   map.get($has-custom-property, has-custom-property),
+  //             //   true
+  //             // );
+
+  //             $has-custom-property: true;
+  //             // @debug $has-custom-property;
+  //             @if $has-custom-property {
+  //               #{$_property-name}: var(--#{$prefix}#{$custom-property-name}#{$_key});
+  //             } @else {
+  //               $threshold: map.get($values, $key, threshold);
+  //               $viewports: map.keys($threshold);
+  //               $min-viewport: list.nth($viewports, 1);
+  //               $max-viewport: list.nth($viewports, 2);
+
+  //               $min-size: map.get($threshold, list.nth($viewports, 1));
+  //               $max-size: map.get($threshold, list.nth($viewports, 2));
+
+  //               $threshold-unit: map.get($values, $key, threshold-unit);
+  //               $preferred-unit: map.get($values, $key, preferred-unit);
+
+  //               // @debug $threshold;
+  //               // @debug $threshold-unit;
+  //               // @debug $preferred-unit;
+  //               // @debug $viewports;
+  //               // @debug list.nth($viewports, 1);
+  //               // @debug $min-size;
+  //               // @debug $max-size;
+
+  //               #{$_property-name}: fluid(
+  //                 $min-size,
+  //                 $max-size,
+  //                 $min-viewport,
+  //                 $max-viewport,
+  //                 $threshold-unit,
+  //                 $preferred-unit
+  //               );
+  //             }
+  //           }
+  //         }
+  //       } @else {
+  //         // @debug 3 else;
+  //         .#{$class}#{-none}#{if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), '')} {
+  //           @if $required-property {
+  //             @each $property, $value in $required-property {
+  //               #{$property}: $value;
+  //             }
+  //           }
+  //           #{$_property-name}: none;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
+  // 4. Utility classes with multiple properties
+  @if meta.type-of($properties) == 'map' {
+    @debug 4;
+
+    $property-class: if(map.has-key($utility, class), map.get($utility, class), '');
+    $prefix-class: null;
+    $suffix-class: null;
+
+    $dash-index: string.index($property-class, '-');
+    $state-1: if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), null);
+    $state-2: if(
+      map.has-key($utility, state),
+      if(list.length(map.get($utility, state)) > 1, list.nth(map.get($utility, state), 2), null),
+      null
+    );
+
+    // @debug state-1 $state-1;
+    // @debug state-2 $state-2;
+
+    @if $dash-index {
+      $prefix-class: string.slice($property-class, 1, $dash-index - 1);
+      $suffix-class: string.slice($property-class, $dash-index + 1);
+    }
+
+    // $prefix-class: string.slice('Helvetica Neue', 11); // "Neue"
+    // @debug property-class $property-class;
+    // @debug prefix-class $prefix-class;
+
+    $infix: if($property-class == '' and string.slice($infix, 1, 1) == '-', string.slice($infix, 2), $infix);
+
+    .#{if($prefix-class, $prefix-class, $property-class)}#{$infix}#{
+      if($suffix-class, '-' + $suffix-class, '')}#{$state-1}#{if($state-2, ', .' + if($prefix-class, $prefix-class, $property-class) + $infix + if($suffix-class, '-' + $suffix-class, '') + $state-2, '')} {
+      @each $property, $value in $properties {
+        // @debug property $property;
+        // @debug value $value;
+
+        $value: normalize-value($value);
+        #{$property}: #{$value}#{if($is-important, ' !important', '')};
+      }
+    }
+  }
+
+  // 5. map values to $custom-property
+  @if $properties == null and $css-var {
+    @debug 5;
+
+    @each $key, $value in $values {
+      // Use custom class if present
+      $property-class: if(map.has-key($utility, class), map.get($utility, class), list.nth($properties, 1));
+
+      // @debug property-class $property-class;
+      $property-class: if($property-class == null, '', $property-class);
+
+      $infix: if($property-class == '' and string.slice($infix, 1, 1) == '-', string.slice($infix, 2), $infix);
+
+      // Don't prefix if value key is null (e.g. with shadow class)
+      $property-class-modifier: if($key, if($property-class == '' and $infix == '', '', '-') + $key, '');
+
+      .#{$property-class + $infix + $property-class-modifier} {
+        --#{$prefix}#{$css-var}: #{$value};
+      }
+    }
+  }
+
+  @if $selected-function == 'normal' {
+    @include create-normal-utility($configuration-map);
+  }
+
+  @if $selected-function == 'fluid' {
+    @include create-fluid-utility($configuration-map);
+  }
+}
+
+@mixin create-normal-utility($map) {
+  $properties: map.get($map, properties);
+  $values: map.get($map, values);
+  $important: map.get($map, important);
+  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $class: map.get($map, class);
+  $local-vars: map.get($map, local-vars);
+  $state: map.get($map, state);
+
+  // @debug p $properties;
+  // @debug v $values;
+  // @debug i $important;
+  // @debug bp $breakpoint-infix;
+  // @debug c $class;
+  @debug state $state;
+  // @debug bp $breakpoint-infix;
+  @debug local-vars $local-vars;
+
+  @if ($values != null) {
+    @each $key, $value in $values {
+      $key-suffix: null-safe-suffix($key);
+
+      .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
+        @if $local-vars {
+          @each $local-var, $value in $local-vars {
+            --#{$local-var}: #{$value};
+          }
+        }
+        @each $property in $properties {
+          @debug property $property;
+          #{$property}: $value #{$important};
+        }
+      }
+    }
+  }
+
+  // $state-1: if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), '');
+  // $state-2: if(
+  //   map.has-key($utility, state),
+  //   if(list.length(map.get($utility, state)) > 1, list.nth(map.get($utility, state), 2), null),
+  //   null
+  // );
+
+  // // @debug values $values;
+
+  // @if ($values != null) {
+  //   @each $key, $value in $values {
+  //     @debug key $key value $value;
+
+  //     // Use custom class if present
+  //     $property-class: if(map.has-key($utility, class), map.get($utility, class), list.nth($properties, 1));
+
+  //     // @debug property-class $property-class;
+  //     $property-class: if($property-class == null, '', $property-class);
+
+  //     $infix: if($property-class == '' and string.slice($infix, 1, 1) == '-', string.slice($infix, 2), $infix);
+
+  //     // Don't prefix if value key is null (e.g. with shadow class)
+  //     $property-class-modifier: if($key, if($property-class == '' and $infix == '', '', '-') + $key, '');
+
+  //     .#{$prefix-class}#{$property-class
+  //       + $infix
+  //       + $property-class-modifier}#{$state-1}#{if($state-2, ', .' + $property-class + $infix + $property-class-modifier + $state-2, '')} {
+  //       @each $property in $properties {
+  //         @if $is-local-vars {
+  //           @each $local-var, $variable in $is-local-vars {
+  //             --#{$prefix}#{$local-var}: #{$variable};
+  //           }
+  //         }
+  //         #{$property}: $value if($is-important, !important, null);
+  //       }
+  //     }
+  //   }
+  // }
+}
+
+@mixin create-fluid-utility($map) {
+  $property: map.get($map, properties);
+  $values: map.get($map, values);
+  $important: map.get($map, important);
+  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $class: map.get($map, class);
+
+  $fluid-map: $values;
+
+  // @debug property $property;
+  // @debug type-of property meta.type-of($property);
+  // @debug #{$property} == $property;
+  // @debug font-size #{$property} == 'font-size';
+  // @debug v $values;
+  // @debug i $important;
+  // @debug bp $breakpoint-infix;
+  // @debug class selector $class;
+  // @debug bp $breakpoint-infix;
+
+  @if ($values != null) {
+    // Loop through each key in the map
+    @each $key in map.keys($fluid-map) {
+      $map: map.get($fluid-map, $key);
+
+      $selector-suffix: remove-prefix($key, 'fs-');
+      $custom-property-name: $key;
+
+      // @debug remove-prefix remove-prefix($key, 'fs-');
+
+      $use-custom-property: if(map.has-key($map, use-custom-property), map.get($map, use-custom-property), true);
+
+      // @debug custom-property-name $custom-property-name;
+      // @debug use-custom-property $use-custom-property;
+
+      $threshold-map: map.get($map, threshold);
+
+      // Get keys (the viewports)
+      $viewports: map.keys($threshold-map);
+      $min-viewport: list.nth($viewports, 1);
+      $max-viewport: list.nth($viewports, 2);
+
+      // Get sizes
+      $min-size: map.get($threshold-map, $min-viewport);
+      $max-size: map.get($threshold-map, $max-viewport);
+
+      $threshold-unit: if(
+        map.has-key($map, threshold-unit),
+        map.get($map, threshold-unit),
+        if(#{$property} == 'font-size', 'rem', 'px')
+      );
+      $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
+      $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
+
+      // @debug min-vp $min-viewport;
+      // @debug max-vp $max-viewport;
+      // @debug min-size $min-size;
+      // @debug max-size $max-size;
+      // @debug threshold-unit $threshold-unit;
+      // @debug preferred-unit $preferred-unit;
+      // @debug relative-to $relative-to;
+
+      @if ($use-custom-property) {
+        .#{$prefix-class}#{$class}#{$breakpoint-infix}-#{$selector-suffix} {
+          #{$property}: var(--#{$prefix}#{$custom-property-name}) #{$important};
+        }
+      } @else {
+        .#{$prefix-class}#{$class}#{$breakpoint-infix}-#{$selector-suffix} {
+          #{$property}: fluid(
+              $min-size,
+              $max-size,
+              $min-viewport,
+              $max-viewport,
+              $threshold-unit,
+              $preferred-unit,
+              $relative-to
+            )
+            #{$important};
+        }
+      }
+    }
+  }
+}
+
+@mixin generate-complex-utility_og($utility, $infix: '', $key, $is-rfs-media-query: false) {
+  $values: map.get($utility, values);
+  $selected-function: if(map.has-key($utility, function), map.get($utility, function), 'normal');
+
+  // Check if the list is not empty before accessing the first element
+  @if list.length($values) > 0 and $values != null {
+    // If the values are a list or string, convert it into a map
+    @if meta.type-of($values) == 'string' or meta.type-of(list.nth($values, 1)) != 'list' {
+      $values: list.zip($values, $values);
+    }
+  }
+
+  // @debug values $values;
+  // @debug meta.type-of($values);
+
+  $is-important: if(map.get($utility, important), true, false);
+  $required-property: if(map.has-key($utility, required-property), map.get($utility, required-property), null);
+  $properties: map.get($utility, property);
+  $custom-property-value: if(
+    map.has-key($utility, custom-property-value),
+    map.get($utility, custom-property-value),
+    null
+  );
+
+  // @debug $custom-property-value;
+  $class: map.get($utility, class);
+
+  // Multiple properties are possible, for example with vertical or horizontal margins or paddings
+  // @debug properties before $properties;
+
+  @if meta.type-of($properties) == 'string' {
+    $properties: list.append((), $properties);
+
+    // @debug properties inside $properties;
+  }
+
+  // @debug properties after $properties;
+
+  $css-var: map.get($utility, css-var);
+  $is-local-vars: map.get($utility, local-vars);
+  $is-rtl: map.get($utility, rtl);
+  $custom-property-name: map.get($utility, custom-property-name);
+  $nested-selectors: if(map.has-key($utility, complex-selectors), map.get($utility, complex-selectors), null);
+  $complex-selectors: if(map.has-key($utility, complex-selectors), map.get($utility, complex-selectors), null);
+
+  $data: (
+    values: $values,
+    important: $is-important,
+    required-property: $required-property,
+    properties: $properties,
+    breakpoint-infix: $infix,
+    class: $class,
+    key: $key,
+    custom-property-name: $custom-property-name,
+    custom-property-value: $custom-property-value,
+    css-var: $css-var,
+    is-local-vars: $is-local-vars,
+    is-rtl: $is-rtl,
+    nested-selectors: $nested-selectors,
+  );
+
+  // 0. Generates utility classes with nested selector styles
+  @if ($complex-selectors) {
+    @debug 0;
+
+    $_selectors: map.get($utility, complex-selectors);
+
+    // @debug _selectors $_selectors;
+
+    .#{$class} {
+      // Loop through the properties defined for each utility
+      @each $property, $value in $_selectors {
+        // If the value is a map, iterate through it (for nested selectors like 'a')
+        // @debug property $property;
+        // @debug value $value;
+
+        @if meta.type-of($value) == 'map' {
+          $_nested-selector: $property;
+
+          & #{$_nested-selector} {
+            @each $nested-property, $nested-value in $value {
+              #{$nested-property}: #{$nested-value};
+            }
+          }
+        } @else {
+          #{$property}: #{$value};
+        }
+      }
+    }
+  }
+
+  // 1. Utility classes that use CSS custom properties from the $simple-custom-properties map in _variables.scss.
+  @if ($key == 'simple-and-resposive-custom-properties') {
+    @debug 1;
+    // @debug key $key;
+
+    @include make-simple-custom-property-utility($values);
+  }
+
+  // 2. maps $custom-property as value to a property
+  @if $custom-property-value {
+    @debug 2;
 
     $property-class: if(map.has-key($utility, class), map.get($utility, class), '');
 
@@ -322,7 +803,7 @@ Modifications may have been made to the original mixins.
 
   // 3. Utility classes that use custom property values
   @if ($custom-property-name) {
-    // @debug 3;
+    @debug 3;
 
     $_property-name: $properties;
 
@@ -425,7 +906,7 @@ Modifications may have been made to the original mixins.
 
   // 4. Utility classes with multiple properties
   @if meta.type-of($properties) == 'map' {
-    // @debug 4;
+    @debug 4;
 
     $property-class: if(map.has-key($utility, class), map.get($utility, class), '');
     $prefix-class: null;
@@ -465,9 +946,9 @@ Modifications may have been made to the original mixins.
     }
   }
 
-  // 6. map values to $custom-property
+  // 5. map values to $custom-property
   @if $properties == null and $css-var {
-    // @debug 6;
+    @debug 5;
 
     @each $key, $value in $values {
       // Use custom class if present
@@ -487,9 +968,9 @@ Modifications may have been made to the original mixins.
     }
   }
 
-  // 7.
+  // 6. normal
   @if meta.type-of($properties) == 'list' and $custom-property-value == null and $custom-property-name == null {
-    // @debug 7;
+    @debug 6;
 
     $state-1: if(map.has-key($utility, state), list.nth(map.get($utility, state), 1), '');
     $state-2: if(
@@ -656,20 +1137,25 @@ Modifications may have been made to the original mixins.
   // @debug bps map.keys($map);
   $_prefix: if(string.length($local-prefix) > 0, $local-prefix + '-', '');
 
-  @each $breakpoint in map.keys($map) {
-    @include media-breakpoint-up($breakpoint) {
-      @if ($breakpoint == 'xs') {
-        // @debug map map.get($map, $breakpoint);
-        @each $custom-property-name, $value-object in map.get($map, $breakpoint) {
-          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
-        }
-      } @else {
-        @each $custom-property-name, $value in map.get($map, $breakpoint) {
-          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{$value};
-        }
-      }
-    }
-  }
+  // @each $breakpoint in map.keys($map) {
+  //   @include media-breakpoint-up($breakpoint) {
+  //     @if ($breakpoint == 'xs') {
+  //       // @debug map map.get($map, $breakpoint);
+  //       @each $custom-property-name, $value-object in map.get($map, $breakpoint) {
+  //         @debug custom-property-name $custom-property-name;
+  //         @debug value-object $value-object;
+  //         --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
+  //       }
+  //     } @else {
+  //       @each $custom-property-name, $value in map.get($map, $breakpoint) {
+  //         @debug custom-property-name $custom-property-name;
+  //         @debug value $value;
+
+  //         --#{$prefix}#{$_prefix}#{$custom-property-name}: #{$value};
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 @mixin generate-custom-properties($map: (), $local-prefix: '') {
@@ -716,9 +1202,9 @@ Modifications may have been made to the original mixins.
     }
   }
 }
-@mixin generate-clamp-custom-properties($clamp-map, $clamp-prefix: '') {
+@mixin generate-clamp-custom-properties($clamp-map) {
   // Only loop if the map has entries
-  @debug map $clamp-map;
+  // @debug map $clamp-map;
 
   @if (list.length(map.keys($clamp-map)) > 0) {
     @each $key, $map in $clamp-map {
@@ -728,7 +1214,7 @@ Modifications may have been made to the original mixins.
       $has-custom-property: if(map.has-key($map, has-custom-property), map.get($map, has-custom-property), true);
 
       @if ($has-custom-property) {
-        @debug inside;
+        // @debug inside;
         $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
 
         $threshold-unit: if(map.has-key($map, threshold-unit), map.get($map, threshold-unit), 'px');
@@ -776,11 +1262,7 @@ Modifications may have been made to the original mixins.
         $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
         $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
 
-        --#{$prefix}#{$clamp-prefix}-#{$key}: clamp(
-          #{$min-size},
-          calc(#{$preferred} + #{$rate-of-change}),
-          #{$max-size}
-        );
+        --#{$prefix}#{$key}: clamp(#{$min-size}, calc(#{$preferred} + #{$rate-of-change}), #{$max-size});
       }
     }
   }

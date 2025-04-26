@@ -36,10 +36,10 @@
   );
 
   // Generates CSS custom properties for sizes using clamp() values.
-  @include generate-clamp-custom-properties($size-clamp, $size-prefix);
+  @include generate-clamp-custom-properties($size-clamp);
 
   // Generates CSS custom properties for spacing using clamp() values.
-  @include generate-clamp-custom-properties($spacing-clamp, $spacing-prefix);
+  @include generate-clamp-custom-properties($spacing-clamp);
 
   // Generates responsive custom properties
   @include generate-responsive-custom-properties($responsive-custom-properties, $responsive-custom-properties-prefix);

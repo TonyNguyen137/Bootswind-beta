@@ -8,6 +8,7 @@ Modifications may have been made to the original functions.
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
+@use 'sass:string';
 @use 'sass:list';
 @use 'variables' as *;
 
@@ -170,6 +171,10 @@ Modifications may have been made to the original functions.
   @return if(breakpoint-min($name, $breakpoints) == null, '', '-#{$name}');
 }
 
+@function null-safe-suffix($value) {
+  @return if($value == null, '', '-#{$value}');
+}
+
 @function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
   $min: map.get($breakpoints, $name);
   @return if($min != 0, $min, null);
@@ -242,6 +247,13 @@ Modifications may have been made to the original functions.
   // @debug _map $_map;
 
   @return $_map;
+}
+
+@function remove-prefix($string, $prefix) {
+  @if string.index($string, $prefix) == 1 {
+    @return string.slice($string, string.length($prefix) + 1);
+  }
+  @return $string;
 }
 
 @function normalize-value($value) {

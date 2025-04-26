@@ -1,9 +1,12 @@
 // SCSS Starter Kit
 // Version: 0.1.0-beta
 // Author: Tony Nguyen
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:meta';
+@use 'sass:string';
 
 @use 'abstracts' as *;
-@use 'sass:map';
 @use 'base';
 @use 'animation';
 @use 'effects';
@@ -13,3 +16,18 @@
 // @use 'components/nav-offcanvas';
 // @use 'components/backdrop';
 // @use 'components/tabs';
+
+// $string: display;
+// $string: list.zip($string, $string);
+
+// @debug here meta.type-of($string);
+
+// @each $key, $value in $string {
+//   @debug hereeee key $key;
+
+//   @debug heree $value;
+// }
+// $name: 'fs-tony';
+// $prefix: 't';
+
+// @debug hier string.index($name, $prefix);
