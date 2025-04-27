@@ -25,15 +25,5 @@ Modifications may have been made to the original code.
         @include generate-utility($utility, $infix, $key);
       }
     }
-
-    // Loop over each complex utility property
-    @each $key, $utility in $complex-utilities {
-      // @debug key $key;
-      // @debug utility $utility;
-
-      @if meta.type-of($utility) == 'map' and (map.get($utility, responsive) or $infix == '') {
-        @include generate-complex-utility($utility, $infix, $key);
-      }
-    }
   }
 }

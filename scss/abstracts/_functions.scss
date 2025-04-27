@@ -249,9 +249,26 @@ Modifications may have been made to the original functions.
   @return $_map;
 }
 
+@function to-list($value) {
+  @if meta.type-of($value) == 'list' {
+    @return $value;
+  } @else {
+    @return list.append((), $value); // Wrap it into a list
+  }
+}
+
 @function remove-prefix($string, $prefix) {
   @if string.index($string, $prefix) == 1 {
     @return string.slice($string, string.length($prefix) + 1);
+  }
+  @return $string;
+}
+
+@function remove-substring($string, $substring) {
+  @if string.index($string, $substring) {
+    $sub-string-index: string.index($string, $substring) - 1;
+
+    @return string.slice($string, 1, $sub-string-index);
   }
   @return $string;
 }
@@ -316,6 +333,54 @@ Modifications may have been made to the original functions.
   } @else {
     @return rgba(var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb), var(--#{$prefix}alpha, 1));
   }
+}
+
+@function add-hyphen($string, $position: 'append', $separator: '-') {
+  @if $string != null {
+    // Handle empty string
+    @if $string == '' {
+      @return $string;
+    }
+
+    $result: $string;
+    $first-char: string.slice($string, 1, 1);
+    $last-char: string.slice($string, -1);
+
+    // Append (only if doesn't already end with separator)
+    @if $position == 'append' and $last-char != $separator {
+      $result: $string + $separator;
+    }
+
+    // Prepend (only if doesn't already start with separator)
+    @if $position == 'prepend' and $first-char != $separator {
+      $result: $separator + $string;
+    }
+
+    // Wrap (add to both sides only if missing)
+    @if $position == 'wrap' {
+      @if $first-char != $separator {
+        $result: $separator + $result;
+      }
+      @if $last-char != $separator {
+        $result: $result + $separator;
+      }
+    }
+
+    @return $result;
+  }
+  @return null;
+}
+
+@function single-or-null($list) {
+  // @debug list length list.length($list);
+  // @debug meta.type-of($list);
+  // @debug meta.type-of($list) == list;
+
+  @if meta.type-of($list) == 'list' and list.length($list) == 1 {
+    // @debug list value list.nth($list, 1);
+    @return list.nth($list, 1);
+  }
+  @return null;
 }
 
 @function negativify-map($map) {

@@ -47,7 +47,7 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
-  3xl: 1600px,
+  '3xl': 1600px,
 );
 
 // rem values
@@ -70,7 +70,7 @@ $container-max-widths: (
   lg: 960px,
   xl: 1140px,
   xxl: 1320px,
-  3xl: 1500px,
+  '3xl': 1500px,
 );
 
 /* ****************************************************** */
@@ -217,7 +217,7 @@ $responsive-custom-properties: (
     'container-max-width': map.get($container-max-widths, xxl),
   ),
   '3xl': (
-    'container-max-width': map.get($container-max-widths, 3xl),
+    'container-max-width': map.get($container-max-widths, '3xl'),
   ),
 );
 
@@ -261,48 +261,28 @@ $sizes-irregular: ();
 }
 
 /* ****************************************************** */
-/* Font family
-/* ****************************************************** */
-
-$font-families: (
-  // custom-property-name: 'font-family',
-  values:
-    (
-      main: (
-        'Arial',
-        sans-serif,
-      ),
-      sub: (
-        'Liberation Mono',
-        monospace,
-      ),
-    )
-);
-
-/* ****************************************************** */
 /* Box shadows 
 /* ****************************************************** */
 
 $box-shadows: (
-  // custom-property-name: 'box-shadow',
-  values:
-    (
-      focus: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
-      focus-inset: inset 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
-      null: 0 0.5rem 1rem rgba(var(--clr-dark-rgb), 0.15),
-      sm: 0 0.125rem 0.25rem rgba(var(--clr-dark-rgb), 0.075),
-      lg: 0 1rem 3rem rgba(var(--clr-dark-rgb), 0.175),
-      inset: inset 0 1px 2px rgba(var(--clr-dark-rgb), 0.075),
-      none: none,
-    )
+  custom-property-prefix: 'box-shadow',
+  values: (
+    focus: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
+    focus-inset: inset 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
+    null: 0 0.5rem 1rem rgba(var(--clr-dark-rgb), 0.15),
+    sm: 0 0.125rem 0.25rem rgba(var(--clr-dark-rgb), 0.075),
+    lg: 0 1rem 3rem rgba(var(--clr-dark-rgb), 0.175),
+    inset: inset 0 1px 2px rgba(var(--clr-dark-rgb), 0.075),
+    none: none,
+  ),
 );
 
 /* ****************************************************** */
 /* Z-index 
 /* ****************************************************** */
 
-$z-indexes: (
-  custom-property-name: 'z',
+$z-indeces: (
+  custom-property-prefix: 'z',
   values: (
     n1: -1,
     0: 0,
@@ -318,11 +298,10 @@ $z-indexes: (
 /* ****************************************************** */
 
 $borders: (
-  // custom-property-name: 'border',
-  values:
-    (
-      main: 1px solid var(--#{$prefix}clr-zero),
-    )
+  custom-property-prefix: 'border',
+  values: (
+    main: 1px solid var(--#{$prefix}clr-zero),
+  ),
 );
 
 /* ****************************************************** */
@@ -330,13 +309,12 @@ $borders: (
 /* ****************************************************** */
 
 $border-radius: (
-  // custom-property-name: 'radius',
-  values:
-    (
-      sm: 4px,
-      base: 8px,
-      lg: 12px,
-    )
+  custom-property-prefix: 'radius',
+  values: (
+    sm: 4px,
+    base: 8px,
+    lg: 12px,
+  ),
 );
 
 /* ****************************************************** */
@@ -344,15 +322,14 @@ $border-radius: (
 /* ****************************************************** */
 
 $transitions: (
-  // custom-property-name: 'transition',
-  values:
-    (
-      focus: 0.15s ease-in-out,
-      base: all 0.2s ease-in-out,
-      fade: opacity 0.15s linear,
-      collapse: height 0.35s ease,
-      collapse-width: width 0.35s ease,
-    )
+  custom-property-prefix: 'transition',
+  values: (
+    focus: 0.15s ease-in-out,
+    base: all 0.2s ease-in-out,
+    fade: opacity 0.15s linear,
+    collapse: height 0.35s ease,
+    collapse-width: width 0.35s ease,
+  ),
 );
 
 /* ****************************************************** */
@@ -360,11 +337,28 @@ $transitions: (
 /* ****************************************************** */
 
 $focus-rings: (
-  // custom-property-name: 'focus-ring',
-  values:
-    (
-      primary: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
-    )
+  custom-property-name: 'focus-ring',
+  values: (
+    primary: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
+  ),
+);
+
+/* ****************************************************** */
+/* Font family
+/* ****************************************************** */
+
+$font-families: (
+  custom-property-name: 'font-family',
+  values: (
+    main: (
+      'Arial',
+      sans-serif,
+    ),
+    sub: (
+      'Liberation Mono',
+      monospace,
+    ),
+  ),
 );
 
 /* ****************************************************** */
@@ -411,6 +405,10 @@ $viewport-width-values: (
   100: 100vw,
 );
 
+// for width, height, and positions top-right-bottom-left utility classes:
 $fixed-values: (
+  25: 25px,
+  50: 50px,
+  100: 100px,
   200: 200px,
 );

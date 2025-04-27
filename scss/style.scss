@@ -9,25 +9,9 @@
 @use 'abstracts' as *;
 @use 'base';
 @use 'animation';
-@use 'effects';
 @use 'components';
 @use 'layout';
 @use 'utilities';
 // @use 'components/nav-offcanvas';
 // @use 'components/backdrop';
 // @use 'components/tabs';
-
-// $string: display;
-// $string: list.zip($string, $string);
-
-// @debug here meta.type-of($string);
-
-// @each $key, $value in $string {
-//   @debug hereeee key $key;
-
-//   @debug heree $value;
-// }
-// $name: 'fs-tony';
-// $prefix: 't';
-
-// @debug hier string.index($name, $prefix);
