@@ -2,19 +2,18 @@
 @use 'sass:map';
 
 /* == responsive grid without media queries == */
-
 .grid-even-cols {
-  --_min-col-size: 275px;
-  --_auto-mode: auto-fill;
+  --min-col-size: 275px;
+  --auto-mode: auto-fill;
 
   padding: 12px;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(var(--_auto-mode), minmax(min(var(--_min-col-size), 100%), 1fr));
+  grid-template-columns: repeat(var(--auto-mode), minmax(min(var(--min-col-size), 100%), 1fr));
 
   /* modifiers */
   &--auto-fit {
-    --_auto-mode: auto-fit;
+    --auto-mode: auto-fit;
   }
 }
 

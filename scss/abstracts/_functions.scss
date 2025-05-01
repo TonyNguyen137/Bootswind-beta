@@ -177,6 +177,8 @@ Modifications may have been made to the original functions.
 
 @function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
   $min: map.get($breakpoints, $name);
+
+  // @debug min $min;
   @return if($min != 0, $min, null);
 }
 

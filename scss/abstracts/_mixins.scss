@@ -86,11 +86,17 @@ Modifications may have been made to the original mixins.
 
 @mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
   $min: breakpoint-min($name, $breakpoints);
+
+  // @debug min $min;
   @if $min {
     @media screen and (min-width: $min) {
+      // @debug in media $min;
+
       @content;
     }
   } @else {
+    // @debug kein media;
+
     @content;
   }
 }
@@ -343,19 +349,23 @@ Modifications may have been made to the original mixins.
   $states: if($states-length == 1, to-list($states), $states);
   $css-var: map.get($map, css-var);
   $css-variable-name: map.get($map, css-variable-name);
+  $required-property: map.get($map, required-property);
 
-  // @debug properties $properties;
-  // @debug values $values;
-  // @debug inportant $important;
-  // @debug breakpoint-infix $breakpoint-infix;
-  // @debug key $key;
-  // @debug class $class;
-  // @debug state $states;
-  // @debug meta-state meta.type-of($states);
-  // @debug state-length $states-length;
-  // @debug local-vars $local-vars;
-  // @debug css-var $css-var;
-  // @debug css-variable-name $css-variable-name;
+  @debug -------normal-utility---------------;
+  @debug properties $properties;
+  @debug values $values;
+  @debug required-property $required-property;
+  @debug inportant $important;
+  @debug breakpoint-infix $breakpoint-infix;
+  @debug key $key;
+  @debug class $class;
+  @debug state $states;
+  @debug meta-state meta.type-of($states);
+  @debug state-length $states-length;
+  @debug local-vars $local-vars;
+  @debug css-var $css-var;
+  @debug css-variable-name $css-variable-name;
+  @debug --------------------------;
 
   @if ($values != null) {
     @if ($states and $states-length > 1) {
@@ -370,6 +380,13 @@ Modifications may have been made to the original mixins.
                 --#{$local-var}: #{$value};
               }
             }
+
+            @if $required-property != null {
+              @each $prop, $value in $required-property {
+                #{$prop}: $value #{$important};
+              }
+            }
+
             @each $property in $properties {
               // @debug property $property;
               #{$property}: $value #{$important};
@@ -391,6 +408,13 @@ Modifications may have been made to the original mixins.
               --#{$local-var}: #{$value};
             }
           }
+
+          @if $required-property != null {
+            @each $prop, $value in $required-property {
+              #{$prop}: $value #{$important};
+            }
+          }
+
           @each $property in $properties {
             #{$property}: $value #{$important};
           }
@@ -634,8 +658,13 @@ Modifications may have been made to the original mixins.
   $states-length: if($states, list.length($states), null);
   $states: if($states-length == 1, to-list($states), $states);
   $css-variable-name: map.get($map, css-variable-name);
+  $custom-property-trunks: if($values, map.keys($values), 'null');
+  $custom-property-prefix: map.get($map, custom-property-prefix);
 
+  // @debug --------------------------;
   // @debug properties $properties;
+  // @debug custom-property-trunks $custom-property-trunks;
+  // @debug custom-property-prefix $custom-property-prefix;
   // @debug values $values;
   // @debug inportant $important;
   // @debug breakpoint-infix $breakpoint-infix;
@@ -646,6 +675,7 @@ Modifications may have been made to the original mixins.
   // @debug state-length $states-length;
   // @debug local-vars $local-vars;
   // @debug css-variable-name $css-variable-name;
+  // @debug --------------------------;
 
   @if ($values != null) {
     @if ($states and $states-length > 1) {
@@ -653,20 +683,35 @@ Modifications may have been made to the original mixins.
       @each $state in $states {
         @each $key, $value in $values {
           $key-suffix: null-safe-suffix($key);
+          // @debug key-suffix $key-suffix;
 
-          .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
-            --#{$css-variable-name}: #{$value};
+          @if ($custom-property-prefix) {
+            .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
+              --#{$css-variable-name}: var(--#{$prefix}#{$custom-property-prefix}#{$key-suffix});
+            }
+          } @else {
+            .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
+              --#{$css-variable-name}: #{$value};
+            }
           }
         }
       }
     } @else {
       @each $key, $value in $values {
         $key-suffix: null-safe-suffix($key);
+        // @debug key $key;
+        // @debug key-suffix $key-suffix;
         $single-state: single-or-null($states);
-
-        // @debug single-state $single-state;
-        .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
-          --#{$css-variable-name}: #{$value};
+        // @debug $single-state;
+        @if ($custom-property-prefix) {
+          .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
+            --#{$css-variable-name}: var(--#{$prefix}#{$custom-property-prefix}#{$key}#{$single-state});
+          }
+        } @else {
+          // @debug single-state $single-state;
+          .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
+            --#{$css-variable-name}: #{$value};
+          }
         }
       }
     }
@@ -705,20 +750,30 @@ Modifications may have been made to the original mixins.
   $_prefix: if(string.length($local-prefix) > 0, $local-prefix + '-', '');
 
   @each $breakpoint in map.keys($map) {
+    // @debug bp $breakpoint;
+
     @include media-breakpoint-up($breakpoint) {
+      // @debug inside media-bp-up $breakpoint;
+
       @if ($breakpoint == 'xs') {
         // @debug map map.get($map, $breakpoint);
         @each $custom-property-name, $value-object in map.get($map, $breakpoint) {
           // @debug custom-property-name $custom-property-name;
           // @debug value-object $value-object;
+          // @debug ----------;
           --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
         }
       } @else {
         @each $custom-property-name, $value in map.get($map, $breakpoint) {
+          // @debug in else;
           // @debug custom-property-name $custom-property-name;
           // @debug value $value;
 
-          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{$value};
+          // @debug ----------;
+
+          & {
+            --#{$prefix}#{$_prefix}#{$custom-property-name}: #{$value};
+          }
         }
       }
     }
@@ -943,11 +998,15 @@ Modifications may have been made to the original mixins.
 @mixin generate-color-custom-properties-rgb($color-theme-map: (), $color-prefix: 'clr-') {
   // Only loop if the map has entries
 
+  // @debug MAPP $color-theme-map;
   @if $color-theme-map != null and list.length(map.keys($color-theme-map)) > 0 {
     @each $color, $rgb-value in $color-theme-map {
       $type: meta.type-of($rgb-value);
 
       @if ($type == 'list') {
+        // @debug color $color;
+        // @debug rgb $rgb-value;
+
         --#{$prefix}#{$color-prefix}#{$color}-rgb: #{$rgb-value};
       } @else {
         @error 'the color input is not correct';

@@ -8,7 +8,7 @@ html {
   @if ($enable-reduced-motion) {
     @media (prefers-reduced-motion: reduce) {
       &:focus-within {
-        scroll-behavior: auto;
+        scroll-behavior: auto !important;
       }
     }
   }
@@ -18,20 +18,20 @@ html {
 *::before,
 *::after {
   box-sizing: border-box;
-
+  margin: 0;
   @if ($enable-reduced-motion) {
     @media (prefers-reduced-motion: reduce) {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
     }
   }
 }
 
 body {
-  margin: 0;
   font-family: 'Montserrat', sans-serif;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
 
@@ -45,6 +45,7 @@ img {
   background-size: cover;
 }
 
+iframe,
 picture,
 video {
   display: block;
@@ -57,8 +58,7 @@ input,
 button,
 textarea {
   color: inherit;
-  font-family: inherit;
-  font-size: inherit;
+  font: inherit;
 }
 
 /* Set shorter line heights on headings and interactive elements */
@@ -72,10 +72,16 @@ label {
   line-height: 1.1;
 }
 
-/* Balance text wrapping on headings */
+/* Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }

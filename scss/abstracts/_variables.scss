@@ -47,7 +47,7 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
-  '3xl': 1600px,
+  3xl: 1600px,
 );
 
 // rem values
@@ -70,8 +70,16 @@ $container-max-widths: (
   lg: 960px,
   xl: 1140px,
   xxl: 1320px,
-  '3xl': 1500px,
+  3xl: 1500px,
 );
+
+// @debug map.get($container-max-widths, sm);
+// @debug map.get($container-max-widths, 3xl);
+// @debug map.get($grid-breakpoints, 3xl);
+
+.test-fluid {
+  font-size: fluid(12, 16, sm, 3xl);
+}
 
 /* ****************************************************** */
 /* Color theme
@@ -127,6 +135,11 @@ $selected-theme-hex-colors: if(
   map.get($color-theme, $selected-theme, color),
   null
 );
+
+// $selected-theme-rgb: (
+//   'primary': map.get($color-theme, default, color, primary),
+
+// );
 
 $enable-rgb-colors: true;
 $enable-color-themes: false;
@@ -193,31 +206,31 @@ $simple-custom-properties: (
 $responsive-custom-properties-prefix: '';
 
 $responsive-custom-properties: (
-  'xs': (
+  xs: (
     'heading-1': (
       value: 24px,
       property: font-size,
       class: res-heading-1,
     ),
   ),
-  'sm': (
-    'heading-1': 34px,
-    'container-max-width': map.get($container-max-widths, sm),
+  sm: (
+    // 'heading-1': 34px,
+    container: map.get($container-max-widths, sm),
   ),
-  'md': (
-    'container-max-width': map.get($container-max-widths, md),
+  md: (
+    container: map.get($container-max-widths, md),
   ),
-  'lg': (
-    'container-max-width': map.get($container-max-widths, lg),
+  lg: (
+    container: map.get($container-max-widths, lg),
   ),
-  'xl': (
-    'container-max-width': map.get($container-max-widths, xl),
+  xl: (
+    container: map.get($container-max-widths, xl),
   ),
-  'xxl': (
-    'container-max-width': map.get($container-max-widths, xxl),
+  xxl: (
+    container: map.get($container-max-widths, xxl),
   ),
-  '3xl': (
-    'container-max-width': map.get($container-max-widths, '3xl'),
+  3xl: (
+    container: map.get($container-max-widths, 3xl),
   ),
 );
 
@@ -230,7 +243,7 @@ $enable-negative-margins: true;
 $factor: 4px;
 $sizes-regular: ();
 
-@for $i from 0 through 30 {
+@for $i from 0 through 25 {
   $sizes-regular: map.merge(
     $sizes-regular,
     (
@@ -251,12 +264,7 @@ $sizes-irregular: ();
 
 @for $i from 1 through 30 {
   @if ($i % 4 != 0) {
-    $sizes-irregular: map.merge(
-      $sizes-irregular,
-      (
-        'i-#{$i}': $i * 1px,
-      )
-    );
+    $sizes-irregular: map.merge($sizes-irregular, (i-#{$i}: $i * 1px));
   }
 }
 
@@ -337,9 +345,9 @@ $transitions: (
 /* ****************************************************** */
 
 $focus-rings: (
-  custom-property-name: 'focus-ring',
+  custom-property-prefix: 'focus-ring',
   values: (
-    primary: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
+    main: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
   ),
 );
 

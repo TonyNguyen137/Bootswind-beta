@@ -22,6 +22,11 @@
 
   @include generate-color-custom-properties-rgb($selected-theme-rgb-colors, $color-prefix);
 
+  // @include generate-color-custom-properties-rgb(
+  //   if(meta.variable-exists(selected-theme-rgb), map-loop($selected-theme-rgb, to-rgb, '$value'), ()),
+  //   if(meta.variable-exists(color-prefix), $color-prefix, '')
+  // );
+
   // custom properties for default hover color
   @include generate-color-custom-properties(
     if(map.get($color-theme, $selected-theme, hover), map.get($color-theme, $selected-theme, hover), ()),
@@ -30,7 +35,7 @@
 
   @include generate-color-custom-properties-rgb(
     if(
-      map.get($color-theme, $selected-theme, hover),
+      $enable-rgb-colors and map.get($color-theme, $selected-theme, hover),
       map-loop(map.get($color-theme, $selected-theme, hover), to-rgb, '$value'),
       ()
     ),

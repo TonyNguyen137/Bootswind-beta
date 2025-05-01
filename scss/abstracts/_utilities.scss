@@ -13,7 +13,16 @@ Modifications may have been made to the original code.
 
 $negative-spacers: if($enable-negative-margins, negativify-map($sizes-regular), ());
 $negative-spacers-irregular: if($enable-negative-margins, negativify-map($sizes-irregular), ());
-$selected-theme-rgb-colors: if($enable-rgb-colors, map-loop($selected-theme-hex-colors, to-rgb, '$value'), null);
+$selected-theme-rgb-colors: if(
+  $enable-rgb-colors,
+  map-loop($selected-theme-hex-colors, to-rgb, '$value'),
+  if(
+    meta.variable-exists(selected-theme-rgb),
+    if(list.length(map.keys($selected-theme-rgb)) > 0, map-loop($selected-theme-rgb, to-rgb, '$value'), null),
+    null
+  )
+);
+
 $simple-custom-properties-merged: map.merge(
   if(meta.variable-exists(simple-custom-properties), $simple-custom-properties, ()),
   if(meta.variable-exists(responsive-custom-properties), map.get($responsive-custom-properties, xs), ())
@@ -40,6 +49,65 @@ $utilities: map.merge(
           margin-top: var(--flow-space, 1em),
         ),
       ),
+    ),
+    'flows-ring-a': (
+      function: 'nested-rules',
+      class: flows-rings-deep-a,
+      property: (
+        'a:focus': (
+          outline: 0,
+          box-shadow: var(--box-shadow-focus),
+        ),
+      ),
+    ),
+    'border-custom-properties': (
+      function: 'custom-property-value',
+      property: border,
+      class: border,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    ),
+    'border-cp-top': (
+      function: 'custom-property-value',
+      property: border-top,
+      class: border-top,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    ),
+    'border-cp-bottom': (
+      function: 'custom-property-value',
+      property: border-bottom,
+      class: border-bottom,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    ),
+    'border-cp-start': (
+      function: 'custom-property-value',
+      property: border-left,
+      class: border-start,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    ),
+    'border-cp-end': (
+      function: 'custom-property-value',
+      property: border-right,
+      class: border-end,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    ),
+    'border-cp-y': (
+      function: 'custom-property-value',
+      property: border-block,
+      class: border-y,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
+    ),
+    'border-cp-x': (
+      function: 'custom-property-value',
+      property: border-inline,
+      class: border-x,
+      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'fade': (
       function: 'nested-rules',
@@ -184,60 +252,6 @@ $utilities: map.merge(
       class: d,
       values: inline inline-block block grid inline-grid table table-row table-cell flex inline-flex none,
     ),
-    'focus-ring-focus': (
-      function: 'property-advanced',
-      class: focus-ring-f,
-      state: ':focus',
-      property: (
-        transition: var(--transition-focus),
-        outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 0.25rem) var(--focus-ring-color, rgba(var(--clr-primary-rgb), 0.7)),
-      ),
-    ),
-    'focus-ring-focus-visible': (
-      function: 'property-advanced',
-      class: focus-ring-fv,
-      state: ':focus-visible',
-      property: (
-        transition: var(--transition-focus),
-        outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 0.25rem) var(--focus-ring-color, rgba(var(--clr-primary-rgb), 0.7)),
-      ),
-    ),
-    'focus-ring-focus-focus-visible': (
-      function: 'property-advanced',
-      class: focus-ring-ffv,
-      state: ':focus' ':focus-visible',
-      property: (
-        transition: var(--transition-focus),
-        outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 0.25rem) var(--focus-ring-color, rgba(var(--clr-primary-rgb), 0.7)),
-      ),
-    ),
-    'focus-ring-colors': (
-      function: 'css-var',
-      css-variable-name: focus-ring-color,
-      class: focus-ring-clr,
-      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', 'focus-ring', $color-prefix),
-    ),
-    'focus-ring-opacity': (
-      function: 'css-var',
-      css-variable-name: focus-ring-opacity,
-      class: focus-ring-opacity,
-      values: $decimal-percentage-values,
-    ),
-    'focus-ring-width': (
-      function: 'css-var',
-      css-variable-name: focus-ring-width,
-      class: focus-ring-width,
-      values: (
-        1: 0.125rem,
-        2: 0.25rem,
-        3: 0.5rem,
-        4: 0.75rem,
-        5: 1rem,
-      ),
-    ),
     'translate-quarter': (
       property: transform,
       class: translate-quarter,
@@ -293,6 +307,13 @@ $utilities: map.merge(
         null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
       ),
     ),
+    'border-rgba': (
+      class: border-rgba,
+      property: border,
+      values: (
+        null: 1px solid var(--border-clr-rgb, rgba(var(--#{$prefix}clr-primary-rgb), 1)),
+      ),
+    ),
     'border-width': (
       property: border-width,
       class: border,
@@ -309,12 +330,85 @@ $utilities: map.merge(
         9: 9px,
         10: 10px,
       ),
+      important: true,
     ),
-    'border-colors': (
+    'border-styles': (
+      property: border-style,
+      class: border-style,
+      values: solid dashed dotted groove none double inset,
+    ),
+    'border-color-rgba-custom-property-value': (
+      function: 'css-var',
+      css-variable-name: border-clr-rgb,
+      class: border-clr-rgb,
+      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
+    ),
+    'border-colors-custom-property-value': (
       function: 'css-var',
       css-variable-name: border-clr,
       class: border-clr,
-      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    ),
+    'focus-ring': (
+      function: 'property-advanced',
+      class: focus-ring,
+      state: ':focus',
+      property: (
+        outline: 0,
+        box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'focus-ring-focus-visible': (
+      function: 'property-advanced',
+      class: focus-ring-fv,
+      state: ':focus-visible',
+      property: (
+        outline: 0,
+        box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'focus-ring-focus-focus-visible': (
+      function: 'property-advanced',
+      class: focus-ring-ffv,
+      state: ':focus' ':focus-visible',
+      property: (
+        outline: 0,
+        box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'focus-ring-rgba-colors-cp': (
+      function: 'css-var',
+      css-variable-name: focus-ring-color,
+      class: focus-ring-clr-rgb,
+      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', 'focus-ring', $color-prefix),
+    ),
+
+    'focus-ring-hex-colors-cp': (
+      function: 'css-var',
+      css-variable-name: focus-ring-color,
+      class: focus-ring-clr,
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    ),
+
+    'focus-ring-width': (
+      function: 'css-var',
+      css-variable-name: focus-ring-width,
+      class: focus-ring,
+      values: (
+        0: 0,
+        1: 1px,
+        2: 2px,
+        3: 3px,
+        4: 4px,
+        5: 5px,
+        6: 6px,
+        7: 7px,
+        8: 8px,
+        9: 9px,
+        10: 10px,
+      ),
     ),
     'fixed-width': (
       property: width,
@@ -669,60 +763,6 @@ $utilities: map.merge(
         if(meta.variable-exists(font-families), map.get($font-families, custom-property-prefix), null),
       values: if(meta.variable-exists(font-families), map.get($font-families, values), null),
     ),
-    'border-styles': (
-      property: border-style,
-      class: border-style,
-      values: solid dashed dotted groove none double inset,
-    ),
-    'border-custom-properties': (
-      function: 'custom-property-value',
-      property: border,
-      class: border,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
-    'border-cp-top': (
-      function: 'custom-property-value',
-      property: border-top,
-      class: border-top,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
-    'border-cp-bottom': (
-      function: 'custom-property-value',
-      property: border-bottom,
-      class: border-bottom,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
-    'border-cp-start': (
-      function: 'custom-property-value',
-      property: border-left,
-      class: border-start,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
-    'border-cp-end': (
-      function: 'custom-property-value',
-      property: border-right,
-      class: border-end,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
-    'border-cp-y': (
-      function: 'custom-property-value',
-      property: border-block,
-      class: border-y,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
-    'border-cp-x': (
-      function: 'custom-property-value',
-      property: border-inline,
-      class: border-x,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
-      values: if(meta.variable-exists(borders), map.get($borders, values), null),
-    ),
     'box-shadow': (
       function: 'custom-property-value',
       property: box-shadow,
@@ -730,7 +770,7 @@ $utilities: map.merge(
       custom-property-prefix: if(meta.variable-exists(box-shadows), map.get($box-shadows, custom-property-prefix), null),
       values: if(meta.variable-exists(box-shadows), map.get($box-shadows, values), null),
     ),
-    'focus-ring': (
+    'focus-ring-main': (
       function: 'custom-property-value',
       state: ':focus',
       required-property: (
