@@ -33,7 +33,7 @@ $grid-row-columns: 6;
 $enable-container-classes: true;
 $enable-max-container-classes: false;
 $enable-max-container-fluid-classes: false;
-$container-padding-x: 12px;
+$container-padding: 12px;
 
 /* ****************************************************** */
 /* Breakpoints 
@@ -155,8 +155,8 @@ $size-clamp: (
     // default true
     use-custom-property: true,
     threshold: (
-      576px: 32,
-      1400px: 150,
+      sm: 32,
+      1800: 80,
     ),
     // default rem
     threshold-unit: 'rem',
@@ -168,20 +168,20 @@ $size-clamp: (
 );
 
 $spacing-clamp: (
-  'fluid-15-30': (
-    // default true
-    use-custom-property: true,
-    threshold: (
-      576px: 32,
-      1400px: 150,
-    ),
-    // default px
-    threshold-unit: 'px',
-    // default rem
-    preferred-unit: 'rem',
-    // default viewport
-    relative-to: 'viewport',
-  ),
+  // 'fluid-15-30': (
+  //   // default true
+  //   use-custom-property: true,
+  //   threshold: (
+  //     576px: 32,
+  //     1400px: 150,
+  //   ),
+  //   // default px
+  //   threshold-unit: 'px',
+  //   // default rem
+  //   preferred-unit: 'rem',
+  //   // default viewport
+  //   relative-to: 'viewport',
+  // ),
 );
 
 /* ************************************************************* */
@@ -190,7 +190,7 @@ $spacing-clamp: (
 
 $simple-custom-properties: (
   'container-padding-x': (
-    value: $container-padding-x,
+    value: $container-padding,
   ),
   'example-custom-property': (
     value: 32px,

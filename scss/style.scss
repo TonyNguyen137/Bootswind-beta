@@ -12,3 +12,7 @@
 @use 'components';
 @use 'layout';
 @use 'utilities';
+
+.test {
+  font-size: var(--fs-fluid-heading-primary);
+}

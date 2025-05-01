@@ -72,13 +72,13 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin make-container($gutter: $container-padding-x) {
+@mixin make-container($gutter: $container-padding) {
   width: 100%;
   padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
   margin-inline: auto;
 }
 
-@mixin make-container-fluid-max($max-width, $gutter: $container-padding-x) {
+@mixin make-container-fluid-max($max-width, $gutter: $container-padding) {
   max-width: $max-width;
   padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
   margin-inline: auto;
@@ -351,21 +351,21 @@ Modifications may have been made to the original mixins.
   $css-variable-name: map.get($map, css-variable-name);
   $required-property: map.get($map, required-property);
 
-  @debug -------normal-utility---------------;
-  @debug properties $properties;
-  @debug values $values;
-  @debug required-property $required-property;
-  @debug inportant $important;
-  @debug breakpoint-infix $breakpoint-infix;
-  @debug key $key;
-  @debug class $class;
-  @debug state $states;
-  @debug meta-state meta.type-of($states);
-  @debug state-length $states-length;
-  @debug local-vars $local-vars;
-  @debug css-var $css-var;
-  @debug css-variable-name $css-variable-name;
-  @debug --------------------------;
+  // @debug -------normal-utility---------------;
+  // @debug properties $properties;
+  // @debug values $values;
+  // @debug required-property $required-property;
+  // @debug inportant $important;
+  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug key $key;
+  // @debug class $class;
+  // @debug state $states;
+  // @debug meta-state meta.type-of($states);
+  // @debug state-length $states-length;
+  // @debug local-vars $local-vars;
+  // @debug css-var $css-var;
+  // @debug css-variable-name $css-variable-name;
+  // @debug --------------------------;
 
   @if ($values != null) {
     @if ($states and $states-length > 1) {
@@ -433,16 +433,17 @@ Modifications may have been made to the original mixins.
 
   $fluid-map: $values;
 
+  // @debug -------- fluid ----------------;
   // @debug property $property;
   // @debug type-of property meta.type-of($property);
   // @debug property string #{$property};
   // @debug #{$property} == $property;
   // @debug font-size #{$property} == 'font-size';
-  // @debug v $values;
-  // @debug i $important;
-  // @debug bp $breakpoint-infix;
-  // @debug class selector $class;
-  // @debug bp $breakpoint-infix;
+  // @debug values $values;
+  // @debug important $important;
+  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug class $class;
+  // @debug -------------------------;
 
   @if ($values != null) {
     // Loop through each key in the map
@@ -465,12 +466,19 @@ Modifications may have been made to the original mixins.
 
       // Get keys (the viewports)
       $viewports: map.keys($threshold-map);
+
       $min-viewport: list.nth($viewports, 1);
       $max-viewport: list.nth($viewports, 2);
+
+      @debug min-viewport $min-viewport;
+      @debug max-viewport $max-viewport;
 
       // Get sizes
       $min-size: map.get($threshold-map, $min-viewport);
       $max-size: map.get($threshold-map, $max-viewport);
+
+      @debug min-size $min-size;
+      @debug max-size $max-size;
 
       $threshold-unit: if(
         map.has-key($map, threshold-unit),
@@ -835,7 +843,7 @@ Modifications may have been made to the original mixins.
       // @debug key $key;
       // @debug map $map;
 
-      $has-custom-property: if(map.has-key($map, has-custom-property), map.get($map, has-custom-property), true);
+      $has-custom-property: if(map.has-key($map, use-custom-property), map.get($map, use-custom-property), true);
 
       @if ($has-custom-property) {
         // @debug inside;
@@ -846,7 +854,9 @@ Modifications may have been made to the original mixins.
 
         $threshold-keys: map.keys(map.get($map, threshold));
         $threshold-map: map.get($map, threshold);
-        // @debug th $threshold-keys;
+
+        // @debug threshold-keys $threshold-keys;
+        // @debug threshold-map $threshold-keys;
 
         $min-size: map.get($threshold-map, list.nth($threshold-keys, 1));
         $max-size: map.get($threshold-map, list.nth($threshold-keys, 2));
@@ -857,8 +867,32 @@ Modifications may have been made to the original mixins.
         // @debug min-size $min-size;
         // @debug max-size $max-size;
 
-        $min-viewport: remove-unit-and-convert(list.nth($threshold-keys, 1));
-        $max-viewport: remove-unit-and-convert(list.nth($threshold-keys, 2));
+        // @debug list-1 list.nth($threshold-keys, 1);
+        // @debug list-2 list.nth($threshold-keys, 2);
+
+        // @debug meta-list-1 meta.type-of(list.nth($threshold-keys, 1));
+        // @debug meta-list-2 meta.type-of(list.nth($threshold-keys, 2));
+
+        // @debug map.has-key($grid-breakpoints, list.nth($threshold-keys, 1));
+
+        // convert the keys to its corresponding pixel value. Otherwise, use the value as-is.
+        $key-min-formatted: if(
+          meta.type-of(list.nth($threshold-keys, 1)) ==
+            'string' and
+            map.has-key($grid-breakpoints, list.nth($threshold-keys, 1)),
+          map.get($grid-breakpoints, list.nth($threshold-keys, 1)),
+          list.nth($threshold-keys, 1)
+        );
+        $key-max-formatted: if(
+          meta.type-of(list.nth($threshold-keys, 2)) ==
+            'string' and
+            map.has-key($grid-breakpoints, list.nth($threshold-keys, 2)),
+          map.get($grid-breakpoints, list.nth($threshold-keys, 2)),
+          list.nth($threshold-keys, 2)
+        );
+
+        $min-viewport: remove-unit-and-convert($key-min-formatted);
+        $max-viewport: remove-unit-and-convert($key-max-formatted);
 
         // @debug min-viewport $min-viewport;
         // @debug max-viewport $max-viewport;
