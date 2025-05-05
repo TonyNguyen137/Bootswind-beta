@@ -45,8 +45,45 @@ $utilities: map.merge(
       function: 'nested-rules',
       class: flows,
       property: (
+        '*:where(:not(:first-child))': (
+          margin-top: var(--flow-space, 1em),
+        ),
+      ),
+    ),
+    'flow-easy': (
+      function: 'nested-rules',
+      class: flow-simple,
+      property: (
         '> *:where(:not(:first-child))': (
           margin-top: var(--flow-space, 1em),
+        ),
+      ),
+    ),
+    'flow': (
+      function: 'nested-rules',
+      class: flow,
+      property: (
+        '> :first-child': (
+          margin: 0,
+        ),
+        '> * + *': (
+          margin-top: var(--flow-space, 16px),
+        ),
+      ),
+    ),
+    'flow-deep': (
+      function: 'nested-rules',
+      class: flow-deep,
+      property: (
+        '> :first-child': (
+          margin: 0,
+        ),
+        '> * + *': (
+          margin-top: var(--flow-space, 16px),
+          margin-bottom: 0,
+        ),
+        '> :last-child': (
+          margin-bottom: var(--flow-space-last, 0px),
         ),
       ),
     ),
@@ -137,7 +174,7 @@ $utilities: map.merge(
       property: (
         height: 0,
         overflow: hidden,
-        trasnsition: height 0.35 ease,
+        transition: height 0.35s ease,
       ),
     ),
     'collapsing-horizontal': (
@@ -146,45 +183,27 @@ $utilities: map.merge(
       property: (
         width: 0,
         height: auto,
-        trasnsition: width 0.35 ease,
+        transition: width 0.35 ease,
       ),
     ),
-    'flow': (
-      function: 'nested-rules',
-      class: flow,
-      property: (
-        '> :first-child': (
-          margin: 0,
-        ),
-        '> * + *': (
-          margin-top: var(--flow-space, 16px),
-        ),
-      ),
-    ),
-    'flow-deep': (
-      function: 'nested-rules',
-      class: flow-deep,
-      property: (
-        '> :first-child': (
-          margin: 0,
-        ),
-        '> * + *': (
-          margin-top: var(--flow-space, 16px),
-          margin-bottom: 0,
-        ),
-        '> :last-child': (
-          margin-bottom: var(--flow-space-last, 0px),
-        ),
-      ),
-    ),
+
     'flow-ring': (
       function: 'nested-rules',
       class: flow-ring,
       property: (
         '*:focus': (
           outline: 0,
-          transition: var(--transition-focus),
-          box-shadow: 0 0 0 var(--focus-ring-width, 0.25rem) var(--focus-ring-color, rgba(var(--clr-primary-rgb), 0.7)),
+          box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+        ),
+      ),
+    ),
+    'flow-ring-a': (
+      function: 'nested-rules',
+      class: flow-ring-a,
+      property: (
+        'a:focus': (
+          outline: 0,
+          box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
         ),
       ),
     ),
@@ -307,6 +326,35 @@ $utilities: map.merge(
         null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
       ),
     ),
+    'border-top': (
+      class: border-top,
+      property: border-top,
+      values: (
+        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'border-bottom': (
+      class: border-bottom,
+      property: border-bottom,
+      values: (
+        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'border-left': (
+      class: border-start,
+      property: border-left,
+      values: (
+        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'border-right': (
+      class: border-end,
+      property: border-right,
+      values: (
+        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+
     'border-rgba': (
       class: border-rgba,
       property: border,
@@ -317,20 +365,54 @@ $utilities: map.merge(
     'border-width': (
       property: border-width,
       class: border,
-      values: (
-        0: 0,
-        1: 1px,
-        2: 2px,
-        3: 3px,
-        4: 4px,
-        5: 5px,
-        6: 6px,
-        7: 7px,
-        8: 8px,
-        9: 9px,
-        10: 10px,
-      ),
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
       important: true,
+      responsive: true,
+    ),
+    'border-block-width': (
+      property: border-width,
+      class: border-y,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+
+    'border-inline-width': (
+      property: border-width,
+      class: border-x,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+
+    'border-width-top': (
+      class: border-top,
+      property: border-top-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+
+    'border-width-bottom': (
+      class: border-bottom,
+      property: border-bottom-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-width-left': (
+      class: border-start,
+      property: border-left-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-width-right': (
+      class: border-end,
+      property: border-right-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
     ),
     'border-styles': (
       property: border-style,
@@ -729,6 +811,18 @@ $utilities: map.merge(
       class: list,
       values: none,
     ),
+
+    'list-reset-a': (
+      function: 'nested-rules',
+      class: list-reset-deep-a,
+      property: (
+        list-style: none,
+        padding-left: 0,
+        a: (
+          text-decoration: none,
+        ),
+      ),
+    ),
     'list-none-deep': (
       function: 'nested-rules',
       class: list-none-deep,
@@ -743,9 +837,12 @@ $utilities: map.merge(
       function: 'nested-rules',
       class: list-reset-deep,
       property: (
-        list-style: none,
-        padding-left: 0,
-        margin-block: 0,
+        'ul,ol': (
+          list-style: none,
+          padding-left: 0,
+          margin-block: 0,
+        ),
+
         a: (
           text-decoration: none,
         ),

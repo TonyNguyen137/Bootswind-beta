@@ -200,16 +200,16 @@ export class Utils {
   static forceReflow(el) {
     el.offsetHeight;
   }
-}
 
-export function isIosDevice() {
-  return (
-    typeof window !== 'undefined' &&
-    window.navigator &&
-    window.navigator.platform &&
-    (/iP(ad|hone|od)/.test(window.navigator.platform) ||
-      (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1))
-  );
+  static isIosDevice() {
+    return (
+      typeof window !== 'undefined' &&
+      window.navigator &&
+      window.navigator.platform &&
+      (/iP(ad|hone|od)/.test(window.navigator.platform) ||
+        (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1))
+    );
+  }
 }
 
 export function rangeWrapper(min, max) {

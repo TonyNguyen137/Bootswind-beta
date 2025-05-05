@@ -13,6 +13,6 @@
 @use 'layout';
 @use 'utilities';
 
-.test {
-  font-size: var(--fs-fluid-heading-primary);
+html {
+  overscroll-behavior-block: none;
 }
