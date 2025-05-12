@@ -644,7 +644,10 @@ Modifications may have been made to the original mixins.
 
         #{$_nested-selector} {
           @each $nested-property, $nested-value in $value {
-            #{$nested-property}: #{$nested-value};
+            $formatted_value: if($nested-value == "", "\"\"", $nested-value);
+            #{$nested-property}: #{$formatted_value};
+
+            
           }
         }
       } @else {
