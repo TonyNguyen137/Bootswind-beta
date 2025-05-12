@@ -41,6 +41,11 @@ $utilities: map.merge(
         ),
       ),
     ),
+     'hyphen': (
+      class: hyphens,
+      property: hyphens,
+      values: auto none manual,
+    ),
     'flows': (
       function: 'nested-rules',
       class: flows,
