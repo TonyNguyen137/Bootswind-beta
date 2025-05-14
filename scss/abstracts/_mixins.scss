@@ -525,15 +525,15 @@ Modifications may have been made to the original mixins.
       $min-viewport: list.nth($viewports, 1);
       $max-viewport: list.nth($viewports, 2);
 
-      @debug min-viewport $min-viewport;
-      @debug max-viewport $max-viewport;
+      // @debug min-viewport $min-viewport;
+      // @debug max-viewport $max-viewport;
 
       // Get sizes
       $min-size: map.get($threshold-map, $min-viewport);
       $max-size: map.get($threshold-map, $max-viewport);
 
-      @debug min-size $min-size;
-      @debug max-size $max-size;
+      // @debug min-size $min-size;
+      // @debug max-size $max-size;
 
       $threshold-unit: if(
         map.has-key($map, threshold-unit),
