@@ -11,21 +11,41 @@ Modifications may have been made to the original code.
 @use 'functions' as *;
 @use 'variables' as *;
 
-$negative-spacers: if($enable-negative-margins, negativify-map($sizes-regular), ());
-$negative-spacers-irregular: if($enable-negative-margins, negativify-map($sizes-irregular), ());
+$negative-spacers: if(
+  $enable-negative-margins,
+  negativify-map($sizes-regular),
+  ()
+);
+$negative-spacers-irregular: if(
+  $enable-negative-margins,
+  negativify-map($sizes-irregular),
+  ()
+);
 $selected-theme-rgb-colors: if(
   $enable-rgb-colors,
   map-loop($selected-theme-hex-colors, to-rgb, '$value'),
   if(
     meta.variable-exists(selected-theme-rgb),
-    if(list.length(map.keys($selected-theme-rgb)) > 0, map-loop($selected-theme-rgb, to-rgb, '$value'), null),
+    if(
+      list.length(map.keys($selected-theme-rgb)) > 0,
+      map-loop($selected-theme-rgb, to-rgb, '$value'),
+      null
+    ),
     null
   )
 );
 
 $simple-custom-properties-merged: map.merge(
-  if(meta.variable-exists(simple-custom-properties), $simple-custom-properties, ()),
-  if(meta.variable-exists(responsive-custom-properties), map.get($responsive-custom-properties, xs), ())
+  if(
+    meta.variable-exists(simple-custom-properties),
+    $simple-custom-properties,
+    ()
+  ),
+  if(
+    meta.variable-exists(responsive-custom-properties),
+    map.get($responsive-custom-properties, xs),
+    ()
+  )
 );
 
 $utilities: ();
@@ -41,7 +61,7 @@ $utilities: map.merge(
         ),
       ),
     ),
-     'hyphen': (
+    'hyphen': (
       class: hyphens,
       property: hyphens,
       values: auto none manual,
@@ -106,49 +126,84 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border,
       class: border,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'border-cp-top': (
       function: 'custom-property-value',
       property: border-top,
       class: border-top,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'border-cp-bottom': (
       function: 'custom-property-value',
       property: border-bottom,
       class: border-bottom,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'border-cp-start': (
       function: 'custom-property-value',
       property: border-left,
       class: border-start,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'border-cp-end': (
       function: 'custom-property-value',
       property: border-right,
       class: border-end,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'border-cp-y': (
       function: 'custom-property-value',
       property: border-block,
       class: border-y,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'border-cp-x': (
       function: 'custom-property-value',
       property: border-inline,
       class: border-x,
-      custom-property-prefix: if(meta.variable-exists(borders), map.get($borders, custom-property-prefix), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(borders),
+          map.get($borders, custom-property-prefix),
+          null
+        ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
     'fade': (
@@ -198,7 +253,8 @@ $utilities: map.merge(
       property: (
         '*:focus': (
           outline: 0,
-          box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+          box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+            var(--focus-ring-color, var(--#{$prefix}clr-primary)),
         ),
       ),
     ),
@@ -208,7 +264,8 @@ $utilities: map.merge(
       property: (
         'a:focus': (
           outline: 0,
-          box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+          box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+            var(--focus-ring-color, var(--#{$prefix}clr-primary)),
         ),
       ),
     ),
@@ -269,12 +326,18 @@ $utilities: map.merge(
         none: none,
       ),
     ),
+    'object-position': (
+      responsive: true,
+      property: object-position,
+      values: top bottom left right center,
+    ),
     'display': (
       responsive: true,
       print: true,
       property: display,
       class: d,
-      values: inline inline-block block grid inline-grid table table-row table-cell flex inline-flex none,
+      values: inline inline-block block grid inline-grid table table-row
+        table-cell flex inline-flex none,
     ),
     'translate-quarter': (
       property: transform,
@@ -364,7 +427,8 @@ $utilities: map.merge(
       class: border-rgba,
       property: border,
       values: (
-        null: 1px solid var(--border-clr-rgb, rgba(var(--#{$prefix}clr-primary-rgb), 1)),
+        null: 1px solid
+          var(--border-clr-rgb, rgba(var(--#{$prefix}clr-primary-rgb), 1)),
       ),
     ),
     'border-width': (
@@ -428,14 +492,27 @@ $utilities: map.merge(
       function: 'css-var',
       css-variable-name: border-clr-rgb,
       class: border-clr-rgb,
-      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
+      values:
+        map-loop(
+          $selected-theme-rgb-colors,
+          rgba-css-var-advanced,
+          '$key',
+          null,
+          $color-prefix
+        ),
     ),
     'border-colors-custom-property-value': (
       function: 'css-var',
       css-variable-name: border-clr,
       class: border-clr,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
     'focus-ring': (
       function: 'property-advanced',
@@ -443,7 +520,8 @@ $utilities: map.merge(
       state: ':focus',
       property: (
         outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+        box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+          var(--focus-ring-color, var(--#{$prefix}clr-primary)),
       ),
     ),
     'focus-ring-focus-visible': (
@@ -452,7 +530,8 @@ $utilities: map.merge(
       state: ':focus-visible',
       property: (
         outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+        box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+          var(--focus-ring-color, var(--#{$prefix}clr-primary)),
       ),
     ),
     'focus-ring-focus-focus-visible': (
@@ -461,22 +540,36 @@ $utilities: map.merge(
       state: ':focus' ':focus-visible',
       property: (
         outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 4px) var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+        box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+          var(--focus-ring-color, var(--#{$prefix}clr-primary)),
       ),
     ),
     'focus-ring-rgba-colors-cp': (
       function: 'css-var',
       css-variable-name: focus-ring-color,
       class: focus-ring-clr-rgb,
-      values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', 'focus-ring', $color-prefix),
+      values:
+        map-loop(
+          $selected-theme-rgb-colors,
+          rgba-css-var-advanced,
+          '$key',
+          'focus-ring',
+          $color-prefix
+        ),
     ),
 
     'focus-ring-hex-colors-cp': (
       function: 'css-var',
       css-variable-name: focus-ring-color,
       class: focus-ring-clr,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
 
     'focus-ring-width': (
@@ -523,13 +616,18 @@ $utilities: map.merge(
     ),
     'max-width-fixed': (
       property: max-width,
-      class: mw-f,
+      class: max-w-f,
       values: $fixed-values,
     ),
     'viewport-width': (
       property: width,
       class: vw,
       values: $viewport-width-values,
+    ),
+    'min-width': (
+      property: min-width,
+      class: min-w-f,
+      values: $fixed-values,
     ),
     'min-viewport-width': (
       property: min-width,
@@ -679,7 +777,12 @@ $utilities: map.merge(
       responsive: true,
       property: font-size,
       class: fs,
-      values: map-loop(map.merge($sizes-regular, ($sizes-irregular)), to-rem, '$value'),
+      values:
+        map-loop(
+          map.merge($sizes-regular, ($sizes-irregular)),
+          to-rem,
+          '$value'
+        ),
     ),
     'font-style': (
       property: font-style,
@@ -862,15 +965,34 @@ $utilities: map.merge(
       property: font-family,
       class: ff,
       custom-property-prefix:
-        if(meta.variable-exists(font-families), map.get($font-families, custom-property-prefix), null),
-      values: if(meta.variable-exists(font-families), map.get($font-families, values), null),
+        if(
+          meta.variable-exists(font-families),
+          map.get($font-families, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(font-families),
+          map.get($font-families, values),
+          null
+        ),
     ),
     'box-shadow': (
       function: 'custom-property-value',
       property: box-shadow,
       class: box-shadow,
-      custom-property-prefix: if(meta.variable-exists(box-shadows), map.get($box-shadows, custom-property-prefix), null),
-      values: if(meta.variable-exists(box-shadows), map.get($box-shadows, values), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(box-shadows),
+          map.get($box-shadows, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(box-shadows),
+          map.get($box-shadows, values),
+          null
+        ),
     ),
     'focus-ring-main': (
       function: 'custom-property-value',
@@ -880,22 +1002,82 @@ $utilities: map.merge(
       ),
       property: box-shadow,
       class: focus-ring,
-      custom-property-prefix: if(meta.variable-exists(focus-rings), map.get($focus-rings, custom-property-prefix), null),
-      values: if(meta.variable-exists(focus-rings), map.get($focus-rings, values), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(focus-rings),
+          map.get($focus-rings, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(focus-rings),
+          map.get($focus-rings, values),
+          null
+        ),
     ),
-    'transition': (
+    'transition-custom': (
       function: 'custom-property-value',
       property: transition,
       class: transition,
-      custom-property-prefix: if(meta.variable-exists(transitions), map.get($transitions, custom-property-prefix), null),
-      values: if(meta.variable-exists(transitions), map.get($transitions, values), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(transitions),
+          map.get($transitions, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(transitions),
+          map.get($transitions, values),
+          null
+        ),
+    ),
+    'transition': (
+      property: transition,
+      class: transition,
+      values: (
+        all: all 0.3s,
+        background: background 0.3s,
+        opacity: opacity 0.3s,
+        shadow: box-shadow 0.3s,
+        height: height 0.3s,
+      ),
+    ),
+    'transition-duration': (
+      property: transition-duration,
+      class: duration,
+      values: (
+        100: 100ms,
+        200: 200ms,
+        300: 300ms,
+        400: 400ms,
+        500: 500ms,
+        600: 600ms,
+        700: 700ms,
+        800: 800ms,
+        900: 900ms,
+        1000: 1000ms,
+        2000: 2000ms,
+        3000: 3000ms,
+      ),
+    ),
+    'transition-timing': (
+      property: transition-timing-function,
+      class: timing,
+      values: linear ease-in ease-out ease-in-out,
     ),
     'z-index': (
       function: 'custom-property-value',
       property: z-index,
       class: z,
-      custom-property-prefix: if(meta.variable-exists(z-indeces), map.get($z-indeces, custom-property-prefix), null),
-      values: if(meta.variable-exists(z-indeces), map.get($z-indeces, values), null),
+      custom-property-prefix:
+        if(
+          meta.variable-exists(z-indeces),
+          map.get($z-indeces, custom-property-prefix),
+          null
+        ),
+      values:
+        if(meta.variable-exists(z-indeces), map.get($z-indeces, values), null),
     ),
     'border-radius-rounded': (
       property: border-radius,
@@ -910,72 +1092,153 @@ $utilities: map.merge(
       property: border-radius,
       class: radius,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-radius-start': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-top-left-radius,
       class: radius-start,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-radius-end': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-top-right-radius,
       class: radius-end,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-radius-top': (
       function: 'custom-property-value',
       property: border-top-left-radius border-top-right-radius,
       class: radius-top,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-bottom-radius': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-bottom-right-radius,
       class: radius-bottom,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-top-left-radius': (
       function: 'custom-property-value',
       property: border-top-left-radius,
       class: radius-top-start,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-top-right-radius': (
       function: 'custom-property-value',
       property: border-top-right-radius,
       class: radius-top-end,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-bottom-left-radius': (
       function: 'custom-property-value',
       property: border-bottom-left-radius,
       class: radius-bottom-start,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'border-bottom-right-radius': (
       function: 'custom-property-value',
       property: border-bottom-right-radius,
       class: radius-bottom-end,
       custom-property-prefix:
-        if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-prefix), null),
-      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-prefix),
+          null
+        ),
+      values:
+        if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, values),
+          null
+        ),
     ),
     'flex-center': (
       function: 'property-advanced',
@@ -1233,12 +1496,19 @@ $utilities: map.merge(
     'background-colors-rgba-hover': (
       state: ':hover',
       property: background-color,
-      class: bga-hover,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      class: hover-bga,
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
       values:
         if(
           $enable-rgb-colors,
-          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $hover-prefix),
+          map-loop(
+            $selected-theme-rgb-colors,
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $hover-prefix
+          ),
           null
         ),
     ),
@@ -1246,15 +1516,26 @@ $utilities: map.merge(
       state: ':hover',
       function: 'custom-property-value',
       property: background-color,
-      class: bg-hover,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      class: hover-bg,
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
     'background-colors-hex-hover': (
       property: background-color,
-      class: bg-hover,
+      class: hover-bg,
       state: ':hover',
-      values: if(map.has-key($color-theme, $selected-theme, hover), map.get($color-theme, $selected-theme, hover), null),
+      values:
+        if(
+          map.has-key($color-theme, $selected-theme, hover),
+          map.get($color-theme, $selected-theme, hover),
+          null
+        ),
     ),
     'background-colors-alpha': (
       property: background-color,
@@ -1262,7 +1543,13 @@ $utilities: map.merge(
       values:
         if(
           enable-rgb-colors,
-          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
+          map-loop(
+            $selected-theme-rgb-colors,
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $color-prefix
+          ),
           null
         ),
     ),
@@ -1270,13 +1557,24 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: background-color,
       class: bg,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
     'background-colors-hex': (
       property: background-color,
       class: bg-h,
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
     'background-transparent': (
       property: background-color,
@@ -1297,7 +1595,13 @@ $utilities: map.merge(
       values:
         if(
           $enable-rgb-colors,
-          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
+          map-loop(
+            $selected-theme-rgb-colors,
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $color-prefix
+          ),
           null
         ),
     ),
@@ -1305,19 +1609,35 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: color,
       class: text,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
     'text-color-hex': (
       property: color,
       class: text-hex,
-      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
     ),
     'text-color-hex-hover': (
       property: color,
       state: ':hover',
       class: text-hover#{'-' + remove-substring($color-prefix, '-')},
-      values: if(map.has-key($color-theme, $selected-theme, hover), map.get($color-theme, $selected-theme, hover), null),
+      values:
+        if(
+          map.has-key($color-theme, $selected-theme, hover),
+          map.get($color-theme, $selected-theme, hover),
+          null
+        ),
     ),
     'text-color-rgba-hover': (
       property: color,
@@ -1326,7 +1646,13 @@ $utilities: map.merge(
       values:
         if(
           map.has-key($color-theme, $selected-theme, hover),
-          map-loop(map.get($color-theme, $selected-theme, hover), rgba-css-var-advanced, '$key', null, $hover-prefix),
+          map-loop(
+            map.get($color-theme, $selected-theme, hover),
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $hover-prefix
+          ),
           null
         ),
     ),

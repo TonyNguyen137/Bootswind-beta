@@ -31,7 +31,12 @@ Modifications may have been made to the original mixins.
       transition: $transition;
     }
 
-    @if $enable-reduced-motion and list.nth($transition, 1) != null and list.nth($transition, 1) != none {
+    @if $enable-reduced-motion and
+      list.nth($transition, 1) !=
+      null and
+      list.nth($transition, 1) !=
+      none
+    {
       @media (prefers-reduced-motion: reduce) {
         transition: none;
       }
@@ -74,13 +79,21 @@ Modifications may have been made to the original mixins.
 
 @mixin make-container($gutter: $container-padding) {
   width: 100%;
-  padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
+  padding-inline: if(
+    $gutter == 'responsive',
+    var(--container-padding-res),
+    $gutter
+  );
   margin-inline: auto;
 }
 
 @mixin make-container-fluid-max($max-width, $gutter: $container-padding) {
   max-width: $max-width;
-  padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
+  padding-inline: if(
+    $gutter == 'responsive',
+    var(--container-padding-res),
+    $gutter
+  );
   margin-inline: auto;
 }
 
@@ -121,15 +134,24 @@ Modifications may have been made to the original mixins.
 
 @mixin make-col-ready() {
   // Add box sizing if only the grid is loaded
-  box-sizing: if(meta.variable-exists(include-column-box-sizing) and $include-column-box-sizing, border-box, null);
+  box-sizing: if(
+    meta.variable-exists(include-column-box-sizing) and
+      $include-column-box-sizing,
+    border-box,
+    null
+  );
   // Prevent columns from becoming too narrow when at smaller grid tiers by
   // always setting `width: 100%;`. This works because we set the width
   // later on to override this initial width.
   flex-shrink: 0;
   width: 100%;
   max-width: 100%; // Prevent `.col-auto`, `.col` (& responsive variants) from breaking out the grid
-  padding-right: calc(var(--#{$bs-prefix}gutter-x) * 0.5); // stylelint-disable-line function-disallowed-list
-  padding-left: calc(var(--#{$bs-prefix}gutter-x) * 0.5); // stylelint-disable-line function-disallowed-list
+  padding-right: calc(
+    var(--#{$bs-prefix}gutter-x) * 0.5
+  ); // stylelint-disable-line function-disallowed-list
+  padding-left: calc(
+    var(--#{$bs-prefix}gutter-x) * 0.5
+  ); // stylelint-disable-line function-disallowed-list
   margin-top: var(--#{$bs-prefix}gutter-y);
 }
 
@@ -153,7 +175,11 @@ Modifications may have been made to the original mixins.
   margin-left: if($num == 0, 0, math.percentage($num));
 }
 
-@mixin make-grid-columns($columns: $grid-columns, $gutter: $grid-gutter-width, $breakpoints: $grid-breakpoints) {
+@mixin make-grid-columns(
+  $columns: $grid-columns,
+  $gutter: $grid-gutter-width,
+  $breakpoints: $grid-breakpoints
+) {
   @each $breakpoint in map.keys($breakpoints) {
     $infix: breakpoint-infix($breakpoint, $breakpoints);
 
@@ -241,14 +267,27 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-utility($utility, $infix: '', $key, $is-rfs-media-query: false) {
+@mixin generate-utility(
+  $utility,
+  $infix: '',
+  $key,
+  $is-rfs-media-query: false
+) {
   $values: map.get($utility, values);
-  $selected-function: if(map.has-key($utility, function), map.get($utility, function), 'normal');
+  $selected-function: if(
+    map.has-key($utility, function),
+    map.get($utility, function),
+    'normal'
+  );
 
   // Check if the list is not empty before accessing the first element
   @if list.length($values) > 0 and $values != null {
     // If the values are a list or string, convert it into a map
-    @if meta.type-of($values) == 'string' or meta.type-of(list.nth($values, 1)) != 'list' {
+    @if meta.type-of($values) ==
+      'string' or
+      meta.type-of(list.nth($values, 1)) !=
+      'list'
+    {
       $values: list.zip($values, $values);
     }
   }
@@ -258,7 +297,11 @@ Modifications may have been made to the original mixins.
 
   $is-important: if(map.get($utility, important), !important, null);
 
-  $required-property: if(map.has-key($utility, required-property), map.get($utility, required-property), null);
+  $required-property: if(
+    map.has-key($utility, required-property),
+    map.get($utility, required-property),
+    null
+  );
   $properties: map.get($utility, property);
   $custom-property-value: if(
     map.has-key($utility, custom-property-value),
@@ -283,8 +326,16 @@ Modifications may have been made to the original mixins.
   $local-vars: map.get($utility, local-vars);
   $is-rtl: map.get($utility, rtl);
   $custom-property-name: map.get($utility, custom-property-name);
-  $nested-selectors: if(map.has-key($utility, complex-selectors), map.get($utility, complex-selectors), null);
-  $complex-selectors: if(map.has-key($utility, complex-selectors), map.get($utility, complex-selectors), null);
+  $nested-selectors: if(
+    map.has-key($utility, complex-selectors),
+    map.get($utility, complex-selectors),
+    null
+  );
+  $complex-selectors: if(
+    map.has-key($utility, complex-selectors),
+    map.get($utility, complex-selectors),
+    null
+  );
   $state: map.get($utility, state);
   $custom-property-prefix: map.get($utility, custom-property-prefix);
   $css-variable-name: map.get($utility, css-variable-name);
@@ -457,7 +508,11 @@ Modifications may have been made to the original mixins.
 
       // @debug remove-prefix remove-prefix($key, 'fs-');
 
-      $use-custom-property: if(map.has-key($map, use-custom-property), map.get($map, use-custom-property), true);
+      $use-custom-property: if(
+        map.has-key($map, use-custom-property),
+        map.get($map, use-custom-property),
+        true
+      );
 
       // @debug custom-property-name $custom-property-name;
       // @debug use-custom-property $use-custom-property;
@@ -485,8 +540,16 @@ Modifications may have been made to the original mixins.
         map.get($map, threshold-unit),
         if(#{$property} == 'font-size', 'rem', 'px')
       );
-      $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
-      $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
+      $preferred-unit: if(
+        map.has-key($map, preferred-unit),
+        map.get($map, preferred-unit),
+        'rem'
+      );
+      $relative-to: if(
+        map.has-key($map, relative-to),
+        map.get($map, relative-to),
+        'viewport'
+      );
 
       // @debug min-vp $min-viewport;
       // @debug max-vp $max-viewport;
@@ -562,7 +625,8 @@ Modifications may have been made to the original mixins.
             }
           }
           @each $prop in $properties {
-            #{$prop}: var(--#{$prefix}#{$formatted-prefix}#{$trunk}) #{$important};
+            #{$prop}: var(--#{$prefix}#{$formatted-prefix}#{$trunk})
+              #{$important};
           }
         }
       }
@@ -644,10 +708,8 @@ Modifications may have been made to the original mixins.
 
         #{$_nested-selector} {
           @each $nested-property, $nested-value in $value {
-            $formatted_value: if($nested-value == "", "\"\"", $nested-value);
+            $formatted_value: if($nested-value == '', '""', $nested-value);
             #{$nested-property}: #{$formatted_value};
-
-            
           }
         }
       } @else {
@@ -698,7 +760,9 @@ Modifications may have been made to the original mixins.
 
           @if ($custom-property-prefix) {
             .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
-              --#{$css-variable-name}: var(--#{$prefix}#{$custom-property-prefix}#{$key-suffix});
+              --#{$css-variable-name}: var(
+                --#{$prefix}#{$custom-property-prefix}#{$key-suffix}
+              );
             }
           } @else {
             .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
@@ -716,7 +780,9 @@ Modifications may have been made to the original mixins.
         // @debug $single-state;
         @if ($custom-property-prefix) {
           .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
-            --#{$css-variable-name}: var(--#{$prefix}#{$custom-property-prefix}#{$key}#{$single-state});
+            --#{$css-variable-name}: var(
+              --#{$prefix}#{$custom-property-prefix}#{$key}#{$single-state}
+            );
           }
         } @else {
           // @debug single-state $single-state;
@@ -742,7 +808,11 @@ Modifications may have been made to the original mixins.
         // @debug key $key;
         // @debug value-map $value-map;
 
-        $_class: if(map.has-key($value-map, class), map.get($value-map, class), $key);
+        $_class: if(
+          map.has-key($value-map, class),
+          map.get($value-map, class),
+          $key
+        );
         $_property: map.get($value-map, property);
 
         @if ($_property) {
@@ -768,11 +838,15 @@ Modifications may have been made to the original mixins.
 
       @if ($breakpoint == 'xs') {
         // @debug map map.get($map, $breakpoint);
-        @each $custom-property-name, $value-object in map.get($map, $breakpoint) {
+        @each $custom-property-name, $value-object in map.get($map, $breakpoint)
+        {
           // @debug custom-property-name $custom-property-name;
           // @debug value-object $value-object;
           // @debug ----------;
-          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
+          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get(
+              $value-object,
+              value
+            )};
         }
       } @else {
         @each $custom-property-name, $value in map.get($map, $breakpoint) {
@@ -846,14 +920,30 @@ Modifications may have been made to the original mixins.
       // @debug key $key;
       // @debug map $map;
 
-      $has-custom-property: if(map.has-key($map, use-custom-property), map.get($map, use-custom-property), true);
+      $has-custom-property: if(
+        map.has-key($map, use-custom-property),
+        map.get($map, use-custom-property),
+        true
+      );
 
       @if ($has-custom-property) {
         // @debug inside;
-        $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
+        $relative-to: if(
+          map.has-key($map, relative-to),
+          map.get($map, relative-to),
+          'viewport'
+        );
 
-        $threshold-unit: if(map.has-key($map, threshold-unit), map.get($map, threshold-unit), 'px');
-        $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
+        $threshold-unit: if(
+          map.has-key($map, threshold-unit),
+          map.get($map, threshold-unit),
+          'px'
+        );
+        $preferred-unit: if(
+          map.has-key($map, preferred-unit),
+          map.get($map, preferred-unit),
+          'rem'
+        );
 
         $threshold-keys: map.keys(map.get($map, threshold));
         $threshold-map: map.get($map, threshold);
@@ -906,7 +996,10 @@ Modifications may have been made to the original mixins.
 
         $preferred: if(
           $preferred-unit == 'rem',
-          round-to(math.div($max-size - ($max-viewport * $change), 16) * 1rem, 4),
+          round-to(
+            math.div($max-size - ($max-viewport * $change), 16) * 1rem,
+            4
+          ),
           round-to($max-size - ($max-viewport * $change), 4) * 1px
         );
 
@@ -920,10 +1013,22 @@ Modifications may have been made to the original mixins.
           @error 'Invalid value for $relativeTo. Expected "viewport" or "container".';
         }
 
-        $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
-        $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
+        $min-size: if(
+          $threshold-unit == 'rem',
+          px-to-rem($min-size),
+          $min-size * 1px
+        );
+        $max-size: if(
+          $threshold-unit == 'rem',
+          px-to-rem($max-size),
+          $max-size * 1px
+        );
 
-        --#{$prefix}#{$key}: clamp(#{$min-size}, calc(#{$preferred} + #{$rate-of-change}), #{$max-size});
+        --#{$prefix}#{$key}: clamp(
+          #{$min-size},
+          calc(#{$preferred} + #{$rate-of-change}),
+          #{$max-size}
+        );
       }
     }
   }
@@ -992,7 +1097,11 @@ Modifications may have been made to the original mixins.
     $sizeMin: if($threshold-unit == 'rem', px-to-rem($sizeMin), $sizeMin * 1px);
     $sizeMax: if($threshold-unit == 'rem', px-to-rem($sizeMax), $sizeMax * 1px);
 
-    --#{$prefix}#{$clamp-prefix}#{$key}: clamp(#{$sizeMin}, calc(#{$preferred} + #{$rateOfChange}), #{$sizeMax});
+    --#{$prefix}#{$clamp-prefix}#{$key}: clamp(
+      #{$sizeMin},
+      calc(#{$preferred} + #{$rateOfChange}),
+      #{$sizeMax}
+    );
   }
 }
 
@@ -1006,7 +1115,11 @@ Modifications may have been made to the original mixins.
 
   @each $theme, $color-map, $color-hover in $_theme-map {
     $colors: map.get($color-map, color);
-    $colors-hover: if(map.get($color-map, hover) != null, map.get($color-map, hover), ());
+    $colors-hover: if(
+      map.get($color-map, hover) != null,
+      map.get($color-map, hover),
+      ()
+    );
     // @debug theme $theme;
     // @debug color $colors;
     // @debug color-hover $colors-hover;
@@ -1032,7 +1145,10 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-color-custom-properties-rgb($color-theme-map: (), $color-prefix: 'clr-') {
+@mixin generate-color-custom-properties-rgb(
+  $color-theme-map: (),
+  $color-prefix: 'clr-'
+) {
   // Only loop if the map has entries
 
   // @debug MAPP $color-theme-map;
