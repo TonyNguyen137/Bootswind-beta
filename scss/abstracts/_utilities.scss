@@ -1036,6 +1036,7 @@ $utilities: map.merge(
       property: transition,
       class: transition,
       values: (
+        none: none,
         all: all 0.3s,
         background: background 0.3s,
         opacity: opacity 0.3s,
