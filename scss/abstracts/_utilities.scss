@@ -595,6 +595,12 @@ $utilities: map.merge(
       class: w-f,
       values: $fixed-values,
     ),
+
+    'width-height': (
+      class: wh,
+      property:width height,
+      values: $percentage-values,
+    ),
     'width': (
       property: width,
       class: w,
