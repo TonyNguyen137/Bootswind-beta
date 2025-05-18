@@ -983,7 +983,7 @@ $utilities: map.merge(
           null
         ),
     ),
-    'box-shadow': (
+    'box-shadow-custom': (
       function: 'custom-property-value',
       property: box-shadow,
       class: box-shadow,
@@ -999,6 +999,13 @@ $utilities: map.merge(
           map.get($box-shadows, values),
           null
         ),
+    ),
+    "box-shadow": (
+      property: box-shadow,
+      class: box-shadow,
+      values: (
+        none: none,
+      ),
     ),
     'focus-ring-main': (
       function: 'custom-property-value',
