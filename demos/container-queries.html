@@ -359,5 +359,155 @@
     <br />
     <br />
     <br />
+    <hr />
+    <div class="wrapper">
+      <div class="main">
+        <div class="tile-wrapper">
+          <div class="tile">
+            <img src="https://picsum.photos/id/235/300/300" alt="" />
+            <h2>My title blog</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+              assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+              atque consequuntur sunt beatae veniam quasi necessitatibus cum
+              dolor, expedita iure. Ratione!
+            </p>
+          </div>
+        </div>
+
+        <div class="tile-wrapper">
+          <div class="tile">
+            <img src="https://picsum.photos/id/230/300/300" alt="" />
+            <h2>My title blog</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+              assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+              atque consequuntur sunt beatae veniam quasi necessitatibus cum
+              dolor, expedita iure. Ratione!
+            </p>
+          </div>
+        </div>
+        <div class="tile-wrapper">
+          <div class="tile">
+            <img src="https://picsum.photos/id/225/300/300" alt="" />
+            <h2>My title blog</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+              assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+              atque consequuntur sunt beatae veniam quasi necessitatibus cum
+              dolor, expedita iure. Ratione!
+            </p>
+          </div>
+        </div>
+
+        <div class="tile-wrapper">
+          <div class="tile">
+            <img src="https://picsum.photos/id/219/300/300" alt="" />
+            <h2>My title blog</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+              assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+              atque consequuntur sunt beatae veniam quasi necessitatibus cum
+              dolor, expedita iure. Ratione!
+            </p>
+          </div>
+        </div>
+
+        <div class="tile-wrapper">
+          <div class="tile">
+            <img src="https://picsum.photos/id/223/300/300" alt="" />
+            <h2>My title blog</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+              assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+              atque consequuntur sunt beatae veniam quasi necessitatibus cum
+              dolor, expedita iure. Ratione!
+            </p>
+          </div>
+        </div>
+
+        <div class="tile-wrapper">
+          <div class="tile">
+            <img src="https://picsum.photos/id/222/300/300" alt="" />
+            <h2>My title blog</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+              assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+              atque consequuntur sunt beatae veniam quasi necessitatibus cum
+              dolor, expedita iure. Ratione!
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="aside">
+        <div class="tile">
+          <img src="https://picsum.photos/id/237/300/300" alt="" />
+          <h2>My title blog</h2>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae hic
+            assumenda ut nihil! Modi voluptatibus obcaecati pariatur voluptate
+            atque consequuntur sunt beatae veniam quasi necessitatibus cum
+            dolor, expedita iure. Ratione!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .wrapper {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr 300px;
+      }
+
+      .tile-wrapper {
+        container-type: inline-size;
+      }
+      .tile {
+        border: 1px solid lightgrey;
+        padding: 0.5rem;
+
+        & img {
+          width: 100%;
+          aspect-ratio: 1;
+        }
+      }
+
+      .aside {
+        background-color: lightblue;
+        max-width: 300px;
+      }
+
+      .main,
+      .aside {
+        container-type: inline-size;
+      }
+
+      .main {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+      }
+
+      @container (min-width: 500px) {
+        .tile {
+          display: grid;
+          grid-template:
+            'image header' auto 'image text' 1fr / minmax(150px, 300px)
+            1fr;
+          gap: 16px;
+          & img {
+            grid-area: image;
+          }
+        }
+      }
+    </style>
+    <ul>
+      <li>Grid expands in three stages:</li>
+      <li>1. auto</li>
+      <li>2. min max</li>
+      <li>3. fractions</li>
+    </ul>
+
+    <a href="https://www.youtube.com/watch?v=eTTdl5CZDlo">youtube link</a>
   </body>
 </html>

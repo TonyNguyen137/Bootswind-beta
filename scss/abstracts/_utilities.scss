@@ -61,6 +61,11 @@ $utilities: map.merge(
         ),
       ),
     ),
+    'container-type': (
+      class: container-type,
+      property: container-type,
+      values: inline-size size normal revert,
+    ),
     'hyphen': (
       class: hyphens,
       property: hyphens,
@@ -598,7 +603,7 @@ $utilities: map.merge(
 
     'width-height': (
       class: wh,
-      property:width height,
+      property: width height,
       values: $percentage-values,
     ),
     'width': (
@@ -1000,7 +1005,7 @@ $utilities: map.merge(
           null
         ),
     ),
-    "box-shadow": (
+    'box-shadow': (
       property: box-shadow,
       class: box-shadow,
       values: (
