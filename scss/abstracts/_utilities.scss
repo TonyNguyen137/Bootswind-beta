@@ -335,6 +335,7 @@ $utilities: map.merge(
     'object-position': (
       responsive: true,
       property: object-position,
+      class: object,
       values: top bottom left right center,
     ),
     'display': (
