@@ -323,6 +323,7 @@ $utilities: map.merge(
     'object-fit': (
       responsive: true,
       property: object-fit,
+      class: object,
       values: (
         contain: contain,
         cover: cover,
