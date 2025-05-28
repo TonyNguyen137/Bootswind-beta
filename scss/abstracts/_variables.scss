@@ -35,9 +35,9 @@ $enable-max-container-classes: false;
 $enable-max-container-fluid-classes: false;
 $container-padding: 12px;
 
-/* ****************************************************** */
+/* ******************************************************* */
 /* Breakpoints 
-/* ****************************************************** */
+/* ******************************************************* */
 
 // px values
 $grid-breakpoints: (
@@ -76,10 +76,6 @@ $container-max-widths: (
 // @debug map.get($container-max-widths, sm);
 // @debug map.get($container-max-widths, 3xl);
 // @debug map.get($grid-breakpoints, 3xl);
-
-.test-fluid {
-  font-size: fluid(12, 16, sm, 3xl);
-}
 
 /* ****************************************************** */
 /* Color theme
@@ -136,9 +132,9 @@ $selected-theme-hex-colors: if(
   null
 );
 
+// pick which colors should have a rgb custom property
 // $selected-theme-rgb: (
-//   'primary': map.get($color-theme, default, color, primary),
-
+//   'primary': map.get($color-theme, $selected-theme, color, primary),
 // );
 
 $enable-rgb-colors: true;
@@ -153,7 +149,7 @@ $enable-color-themes: false;
 $size-clamp: (
   fs-fluid-heading-primary: (
     // default true
-    use-custom-property: true,
+    create-custom-property: true,
     threshold: (
       sm: 32,
       1800: 80,
@@ -168,20 +164,20 @@ $size-clamp: (
 );
 
 $spacing-clamp: (
-  // 'fluid-15-30': (
-  //   // default true
-  //   use-custom-property: true,
-  //   threshold: (
-  //     576px: 32,
-  //     1400px: 150,
-  //   ),
-  //   // default px
-  //   threshold-unit: 'px',
-  //   // default rem
-  //   preferred-unit: 'rem',
-  //   // default viewport
-  //   relative-to: 'viewport',
-  // ),
+  'fluid-15-30': (
+    // default true
+    create-custom-property: true,
+    threshold: (
+      576px: 32,
+      1400px: 150,
+    ),
+    // default px
+    threshold-unit: 'px',
+    // default rem
+    preferred-unit: 'rem',
+    // default viewport
+    relative-to: 'viewport',
+  ),
 );
 
 /* ************************************************************* */
@@ -243,7 +239,7 @@ $enable-negative-margins: true;
 $factor: 4px;
 $sizes-regular: ();
 
-@for $i from 0 through 25 {
+@for $i from 0 through 50 {
   $sizes-regular: map.merge(
     $sizes-regular,
     (
@@ -256,17 +252,25 @@ $sizes-regular: ();
 $sizes-regular: map.merge(
   $sizes-regular,
   (
-    40: 40 * $factor,
+    100: 100 * $factor,
   )
 );
 
 $sizes-irregular: ();
 
-@for $i from 1 through 30 {
+@for $i from 1 through 200 {
   @if ($i % 4 != 0) {
     $sizes-irregular: map.merge($sizes-irregular, (i-#{$i}: $i * 1px));
   }
 }
+
+// Add additional irregular sizes manually
+$sizes-irregular: map.merge(
+  $sizes-irregular,
+  (
+    i-201: 201px,
+  )
+);
 
 /* ****************************************************** */
 /* Box shadows 
@@ -373,18 +377,27 @@ $font-families: (
 /* Maps
 /* ****************************************************** */
 
-$line-heights: (
-  base: 1.5,
-  heading: 1.1,
-  sm: 1.25,
-  lg: 2,
-);
-
 $percentage-values: (
   0: 0,
+  5: 5%,
+  10: 10%,
+  15: 15%,
+  20: 20%,
   25: 25%,
+  30: 30%,
+  35: 35%,
+  40: 40%,
+  45: 45%,
   50: 50%,
+  55: 55%,
+  60: 60%,
+  65: 65%,
+  70: 70%,
   75: 75%,
+  80: 80%,
+  85: 85%,
+  90: 90%,
+  95: 95%,
   100: 100%,
 );
 
@@ -410,6 +423,15 @@ $decimal-percentage-values: (
   90: 0.9,
   95: 0.95,
   100: 1,
+  101: 1.01,
+  102: 1.02,
+  103: 1.03,
+  104: 1.04,
+  105: 1.05,
+  110: 1.1,
+  115: 1.15,
+  120: 1.2,
+  130: 1.3,
 );
 
 $viewport-height-values: (
@@ -427,11 +449,51 @@ $viewport-width-values: (
 
 // for width, height, and positions top-right-bottom-left utility classes:
 $fixed-values: (
+  n100: -100px,
+  n150: -150px,
+  n200: -200px,
+  n250: -250px,
+  n300: -300px,
+  n16: -16px,
+  n24: -24px,
+  n25: -25px,
+  n50: -50px,
+  n75: -75px,
   0: 0,
+  16: 16px,
+  24: 24px,
   25: 25px,
   50: 50px,
+  75: 75px,
   100: 100px,
+  150: 150px,
   200: 200px,
+  250: 250px,
+  300: 300px,
+  350: 350px,
+  400: 400px,
+  450: 450px,
+  500: 500px,
+  550: 550px,
+  600: 600px,
+  650: 650px,
+  700: 700px,
+  750: 750px,
+  800: 800px,
+  850: 850px,
+  900: 900px,
+  950: 950px,
+  1000: 1000px,
+  1050: 1050px,
+  1100: 1100px,
+  1200: 1200px,
+  1300: 1300px,
+  1400: 1400px,
+  1500: 1500px,
+  1600: 1600px,
+  1700: 1700px,
+  1800: 1800px,
+  1920: 1920px,
 );
 
 $border-widths: (

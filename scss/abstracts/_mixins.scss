@@ -406,7 +406,7 @@ Modifications may have been made to the original mixins.
   $media: map.get($map, media);
 
   // @debug -------normal-utility---------------;
-  @debug media $media;
+  // @debug media $media;
 
   // @debug properties $properties;
   // @debug values $values;
@@ -451,7 +451,7 @@ Modifications may have been made to the original mixins.
         }
       }
     } @else {
-      @debug no state;
+      // @debug no state;
 
       @each $key, $value in $values {
         $key-suffix: null-safe-suffix($key);
@@ -511,7 +511,7 @@ Modifications may have been made to the original mixins.
     // Loop through each key in the map
     @each $key in map.keys($fluid-map) {
       $map: map.get($fluid-map, $key);
-
+      // @debug map $map;
       $selector-suffix: remove-prefix($key, 'fs-');
 
       // @debug selector-suffix $selector-suffix;
@@ -520,11 +520,12 @@ Modifications may have been made to the original mixins.
       // @debug remove-prefix remove-prefix($key, 'fs-');
 
       $use-custom-property: if(
-        map.has-key($map, use-custom-property),
-        map.get($map, use-custom-property),
+        map.has-key($map, create-custom-property),
+        map.get($map, create-custom-property),
         true
       );
 
+      // @debug use $use-custom-property;
       // @debug custom-property-name $custom-property-name;
       // @debug use-custom-property $use-custom-property;
 
@@ -571,6 +572,7 @@ Modifications may have been made to the original mixins.
       // @debug relative-to $relative-to;
 
       @if ($use-custom-property) {
+        // @debug inside;
         .#{$prefix-class}#{$class}#{$breakpoint-infix}-#{$selector-suffix} {
           @each $prop in $property {
             #{$prop}: var(--#{$prefix}#{$custom-property-name}) #{$important};
@@ -922,7 +924,7 @@ Modifications may have been made to the original mixins.
     }
   }
 }
-@mixin generate-clamp-custom-properties($clamp-map) {
+@mixin generate-clamp-custom-properties($clamp-map, $default-unit: rem) {
   // Only loop if the map has entries
   // @debug map $clamp-map;
 
@@ -932,8 +934,8 @@ Modifications may have been made to the original mixins.
       // @debug map $map;
 
       $has-custom-property: if(
-        map.has-key($map, use-custom-property),
-        map.get($map, use-custom-property),
+        map.has-key($map, create-custom-property),
+        map.get($map, create-custom-property),
         true
       );
 
@@ -948,7 +950,7 @@ Modifications may have been made to the original mixins.
         $threshold-unit: if(
           map.has-key($map, threshold-unit),
           map.get($map, threshold-unit),
-          'px'
+          $default-unit
         );
         $preferred-unit: if(
           map.has-key($map, preferred-unit),

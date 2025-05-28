@@ -59,7 +59,7 @@ Modifications may have been made to the original functions.
   $max-viewport: normalize-breakpoint($max-viewport, 'max-viewport');
 
   // @debug minvp $min-viewport;
-  // @debug maxvip $max-viewport;
+  // @debug maxvp $max-viewport;
 
   $delta-size: $max-size - $min-size;
   $delta-viewport: $max-viewport - $min-viewport;
@@ -81,8 +81,16 @@ Modifications may have been made to the original functions.
     @error 'Invalid value for $relative-to. Expected "viewport" or "container".';
   }
 
-  $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
-  $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
+  $min-size: if(
+    $threshold-unit == 'rem',
+    px-to-rem($min-size),
+    $min-size * 1px
+  );
+  $max-size: if(
+    $threshold-unit == 'rem',
+    px-to-rem($max-size),
+    $max-size * 1px
+  );
 
   $should-swap: $min-size > $max-size;
 
@@ -92,26 +100,42 @@ Modifications may have been made to the original functions.
     $max-size: $temp;
   }
 
-  $preferred-value: calc(#{$preferred} #{if($should-swap, '-', '+')} #{$rate-of-change});
+  $preferred-value: calc(
+    #{$preferred} #{if($should-swap, '-', '+')} #{$rate-of-change}
+  );
 
   @return clamp(#{$min-size}, #{$preferred-value}, #{$max-size});
 }
 
-@function fluid-px($min-size, $max-size, $min-viewport, $max-viewport, $relative-to: 'viewport') {
-  @return fluid($min-size, $max-size, $min-viewport, $max-viewport, 'px', 'rem' $relative-to);
+@function fluid-px(
+  $min-size,
+  $max-size,
+  $min-viewport,
+  $max-viewport,
+  $relative-to: 'viewport'
+) {
+  @return fluid(
+    $min-size,
+    $max-size,
+    $min-viewport,
+    $max-viewport,
+    'px',
+    'rem' $relative-to
+  );
 }
 
 @function normalize-breakpoint($value, $name) {
-  @if meta.type-of($value) == string {
-    @if map.has-key($grid-breakpoints, $value) {
-      @return remove-unit-and-convert(map.get($grid-breakpoints, $value));
-    } @else {
-      @error 'Invalid breakpoint "#{$value}" for #{$name}". Available: #{map-keys($grid-breakpoints)} (from abstracts/_variables.scss)';
-    }
+  // @debug value $value;
+  // @debug name $name;
+  // @debug map.has-key($grid-breakpoints, $value);
+
+  @if map.has-key($grid-breakpoints, $value) {
+    @debug in else if value $value;
+    @return remove-unit-and-convert(map.get($grid-breakpoints, $value));
   } @else if meta.type-of($value) == number {
     @return remove-unit-and-convert($value);
   } @else {
-    @error 'Invalid value "#{$value}" for #{$name}". Must be breakpoint string or number.';
+    @error 'Invalid value "#{$value}" for #{$name}". Must be a breakpoint identifier or a nnumber.';
   }
 }
 
@@ -233,10 +257,18 @@ Modifications may have been made to the original functions.
 
     $_args: ();
     @each $arg in $args {
-      $_args: list.append($_args, if($arg == '$key', $key, if($arg == '$value', $value, $arg)));
+      $_args: list.append(
+        $_args,
+        if(
+          $arg == '$key',
+          $key,
+          if($arg == '$value', $value, if($arg == '$pair', $key $value, $arg))
+        )
+      );
 
       // @debug _args $_args;
     }
+    // @debug _args after loop $_args;
 
     $_map: map.merge(
       $_map,
@@ -282,7 +314,8 @@ Modifications may have been made to the original functions.
 @function to-rgb($value) {
   // @debug value $value;
   $_value: if($value == null, #000, $value);
-  @return color.channel($_value, 'red'), color.channel($_value, 'green'), color.channel($_value, 'blue');
+  @return color.channel($_value, 'red'), color.channel($_value, 'green'),
+    color.channel($_value, 'blue');
 }
 
 @function hover-color($identifier, $target, $color-prefix, $prefix: '') {
@@ -317,23 +350,56 @@ Modifications may have been made to the original functions.
 // stylelint-disable scss/dollar-variable-pattern
 @function rgba-css-var($identifier, $target) {
   @if $identifier == 'body' and $target == 'bg' {
-    @return rgba(var(--#{$prefix}#{$identifier}-bg-rgb), var(--#{$prefix}#{$target}-opacity));
+    @return rgba(
+      var(--#{$prefix}#{$identifier}-bg-rgb),
+      var(--#{$prefix}#{$target}-opacity)
+    );
   }
   @if $identifier == 'body' and $target == 'text' {
-    @return rgba(var(--#{$prefix}#{$identifier}-color-rgb), var(--#{$prefix}#{$target}-opacity));
+    @return rgba(
+      var(--#{$prefix}#{$identifier}-color-rgb),
+      var(--#{$prefix}#{$target}-opacity)
+    );
   } @else {
-    @return rgba(var(--#{$prefix}#{$identifier}-rgb), var(--#{$prefix}#{$target}-opacity));
+    @return rgba(
+      var(--#{$prefix}#{$identifier}-rgb),
+      var(--#{$prefix}#{$target}-opacity)
+    );
   }
 }
 
 @function rgba-css-var-advanced($identifier, $target, $local-prefix: '') {
+  // @debug advanced identifier $identifier;
+  // @debug advanced target $target;
+
   @if $identifier == 'body' and $target == 'bg' {
-    @return rgba(var(--#{$prefix}#{$identifier}-bg-rgb), var(--#{$prefix}alpha, 1));
+    @return rgba(
+      var(--#{$prefix}#{$identifier}-bg-rgb),
+      var(--#{$prefix}alpha, 1)
+    );
   }
   @if $identifier == 'body' and $target == 'text' {
-    @return rgba(var(--#{$prefix}#{$identifier}-color-rgb), var(--#{$prefix}alpha, 1));
+    @return rgba(
+      var(--#{$prefix}#{$identifier}-color-rgb),
+      var(--#{$prefix}alpha, 1)
+    );
   } @else {
-    @return rgba(var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb), var(--#{$prefix}alpha, 1));
+    @return rgba(
+      var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb),
+      var(--#{$prefix}alpha, 1)
+    );
+  }
+}
+
+@function value-to-css-translate($value, $axis: null) {
+  // @debug value $value;
+  // @debug axis $axis;
+  @if $axis == x {
+    @return translateX(#{$value});
+  } @else if $axis ==y {
+    @return translateY(#{$value});
+  } @else {
+    @return translate(#{$value});
   }
 }
 

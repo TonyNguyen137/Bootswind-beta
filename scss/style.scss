@@ -1,18 +1,9 @@
 // SCSS Starter Kit
 // Version: 0.1.0-beta
 // Author: Tony Nguyen
-@use 'sass:map';
-@use 'sass:list';
-@use 'sass:meta';
-@use 'sass:string';
 
-@use 'abstracts' as *;
 @use 'base';
 @use 'animation';
 @use 'components';
 @use 'layout';
 @use 'utilities';
-
-html {
-  overscroll-behavior-block: none;
-}

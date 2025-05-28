@@ -36,6 +36,8 @@ $selected-theme-rgb-colors: if(
   )
 );
 
+// @debug selected-theme $selected-theme-rgb-colors;
+
 $simple-custom-properties-merged: map.merge(
   if(
     meta.variable-exists(simple-custom-properties),
@@ -48,7 +50,7 @@ $simple-custom-properties-merged: map.merge(
     ()
   )
 );
-
+//
 $utilities: ();
 $utilities: map.merge(
   (
@@ -66,6 +68,92 @@ $utilities: map.merge(
       class: container-type,
       property: container-type,
       values: inline-size size normal revert,
+    ),
+    'marker': (
+      function: 'nested-rules',
+      class: marker,
+      property: (
+        '& li::marker': (
+          color: var(--marker-color),
+          font-size: var(--marker-font-size),
+        ),
+      ),
+    ),
+    'custom-container': (
+      function: 'property-advanced',
+      class: container-dynamic,
+      property: (
+        padding-inline: $container-padding,
+        margin-inline: auto,
+        width: 100%,
+        max-width: var(--container-dynamic-max-width),
+      ),
+    ),
+    'text-shorten': (
+      function: 'property-advanced',
+      class: shorten,
+      property: (
+        overflow: hidden,
+        line-height: var(--shorten-line-height, 1.5),
+        max-height:
+          calc(
+            1em * var(--shorten-line-height, 1.5) * var(--shorten-max-line, 4)
+          ),
+      ),
+    ),
+    'text-shorten-1': (
+      function: 'property-advanced',
+      class: shorten-1,
+      property: (
+        overflow: hidden,
+        line-height: var(--shorten-line-height, 1.5),
+        max-height: calc(1em * var(--shorten-line-height, 1.5) * 1),
+      ),
+    ),
+    'text-shorten-2': (
+      function: 'property-advanced',
+      class: shorten-2,
+      property: (
+        overflow: hidden,
+        line-height: var(--shorten-line-height, 1.5),
+        max-height: calc(1em * var(--shorten-line-height, 1.5) * 2),
+      ),
+    ),
+    'text-shorten-3': (
+      function: 'property-advanced',
+      class: shorten-3,
+      property: (
+        overflow: hidden,
+        line-height: var(--shorten-line-height, 1.5),
+        max-height: calc(1em * var(--shorten-line-height, 1.5) * 3),
+      ),
+    ),
+    'text-shorten-4': (
+      function: 'property-advanced',
+      class: shorten-4,
+      property: (
+        overflow: hidden,
+        line-height: var(--shorten-line-height, 1.5),
+        max-height: calc(1em * var(--shorten-line-height, 1.5) * 4),
+      ),
+    ),
+    'text-shorten-5': (
+      function: 'property-advanced',
+      class: shorten-5,
+      property: (
+        overflow: hidden,
+        line-height: var(--shorten-line-height, 1.5),
+        max-height: calc(1em * var(--shorten-line-height, 1.5) * 5),
+      ),
+    ),
+    'marker-image': (
+      function: 'nested-rules',
+      class: marker-image,
+      property: (
+        '& li::marker': (
+          list-style-image: var(--marker-image-src),
+        ),
+      ),
     ),
     'hyphen': (
       class: hyphens,
@@ -122,7 +210,6 @@ $utilities: map.merge(
         background-color: rgba(0, 0, 0, 0.3),
       ),
     ),
-
     'scrollbar-hide-on-touch-device': (
       media: '(hover: none) and (pointer: coarse)',
       class: scrollbar-touch,
@@ -138,7 +225,13 @@ $utilities: map.merge(
       class: aspect-ratio,
       property: aspect-ratio,
       values: (
+        none: var(--aspect-ratio),
         square: string.unquote('1 / 1'),
+        video: string.unquote('16 / 9'),
+        classic: string.unquote('4 / 3'),
+        photo: string.unquote('3 / 2'),
+        portrait: string.unquote('2 / 3'),
+        ultrawide: string.unquote('21 / 9'),
       ),
     ),
     'flows': (
@@ -355,27 +448,45 @@ $utilities: map.merge(
     ),
     'isolation': (
       property: isolation,
-      class: isolation,
-      values: isolate,
+      class: isolate,
+      values: (
+        null: isolate,
+      ),
     ),
     'cursor': (
       property: cursor,
       class: cursor,
       values: pointer help wait crosshair not-allowed zoom-in grab,
     ),
+
+    'overlay-custom': (
+      function: 'nested-rules',
+      class: overlay,
+      property: (
+        position: relative,
+        '&::after': (
+          content: "''",
+          position: absolute,
+          inset: 0,
+          background-color: var(--overlay-background, var(--clr-black)),
+          opacity: var(--alpha, 0.5),
+          z-index: var(--overlay-zindex, -1),
+        ),
+      ),
+    ),
     'overlay-dark': (
       property: border-image,
       class: overlay-dark,
       values: (
-        1: fill 0 linear-gradient(rgba(0,0,0, 0.1), rgba(0, 0, 0, 0.1))),
-        2: fill 0 linear-gradient(rgba(0,0,0, 0.2), rgba(0, 0, 0, 0.2))),
-        3: fill 0 linear-gradient(rgba(0,0,0, 0.3), rgba(0, 0, 0, 0.3))),
-        4: fill 0 linear-gradient(rgba(0,0,0, 0.5), rgba(0, 0, 0, 0.4))),
-        5: fill 0 linear-gradient(rgba(0,0,0, 0.5), rgba(0, 0, 0, 0.5))),
-        6: fill 0 linear-gradient(rgba(0,0,0, 0.6), rgba(0, 0, 0, 0.6))),
-        7: fill 0 linear-gradient(rgba(0,0,0, 0.7), rgba(0, 0, 0, 0.7))),
-        8: fill 0 linear-gradient(rgba(0,0,0, 0.8), rgba(0, 0, 0, 0.8))),
-        9: fill 0 linear-gradient(rgba(0,0,0, 0.9), rgba(0, 0, 0, 0.9))),
+        1: fill 0 linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+        2: fill 0 linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        3: fill 0 linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        4: fill 0 linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4)),
+        5: fill 0 linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        6: fill 0 linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        7: fill 0 linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        8: fill 0 linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        9: fill 0 linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
       ),
     ),
     'resize': (
@@ -442,6 +553,21 @@ $utilities: map.merge(
         4: span 4,
         5: span 5,
       ),
+    ),
+    'translate-fixed': (
+      property: transform,
+      class: translate-f,
+      values: map-loop($fixed-values, value-to-css-translate, '$value'),
+    ),
+    'translate-x-fixed': (
+      property: transform,
+      class: translate-y-f,
+      values: map-loop($fixed-values, value-to-css-translate, '$value', x),
+    ),
+    'translate-y-fixed': (
+      property: transform,
+      class: translate-x-f,
+      values: map-loop($fixed-values, value-to-css-translate, '$value', y),
     ),
     'translate-quarter': (
       property: transform,
@@ -843,7 +969,6 @@ $utilities: map.merge(
         evenly: space-evenly,
       ),
     ),
-
     'align-items': (
       responsive: true,
       property: align-items,
@@ -867,7 +992,6 @@ $utilities: map.merge(
         stretch: stretch,
       ),
     ),
-
     'align-self': (
       responsive: true,
       property: align-self,
@@ -954,7 +1078,23 @@ $utilities: map.merge(
     'line-height': (
       property: line-height,
       class: lh,
-      values: if(meta.variable-exists(line-heights), $line-heights, null),
+      values: (
+        70: 0.7,
+        75: 0.75,
+        80: 0.8,
+        85: 0.85,
+        90: 0.9,
+        95: 0.95,
+        100: 1,
+        110: 1.1,
+        120: 1.2,
+        130: 1.3,
+        140: 1.4,
+        base: 1.5,
+        heading: 1.1,
+        sm: 1.25,
+        lg: 2,
+      ),
     ),
     'text-align': (
       responsive: true,
@@ -1016,7 +1156,7 @@ $utilities: map.merge(
       ),
     ),
     'text-underline': (
-      property: text,
+      property: text-decoration-line,
       class: text,
       values: (
         underline: underline,
@@ -1038,10 +1178,26 @@ $utilities: map.merge(
       ),
     ),
     'text-decoration-color': (
+      function: 'custom-property-value',
       property: text-decoration-color,
       class: text-underline,
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
+    ),
+    'hover-text-underline': (
+      state: ':hover',
+      property: text-decoration-line,
+      class: hover-text,
       values: (
-        primary: var(--clr-primary),
+        underline: underline,
+        underline-dotted: underline dotted,
+        line-through: line-through,
       ),
     ),
     'user-select': (
@@ -1657,6 +1813,37 @@ $utilities: map.merge(
       class: end,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
+    'hover-opacity': (
+      state: ':hover',
+      property: opacity,
+      class: hover-opacity,
+      values: $decimal-percentage-values,
+    ),
+    'hover-scale': (
+      state: ':hover',
+      property: scale,
+      class: hover-scale,
+      values:
+        map.merge(
+          (
+            none: var(--scale-value),
+          ),
+          $decimal-percentage-values
+        ),
+    ),
+    'fill': (
+      function: 'custom-property-value',
+      property: fill,
+      class: fill,
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values:
+        if(
+          meta.variable-exists(selected-theme-hex-colors),
+          $selected-theme-hex-colors,
+          null
+        ),
+    ),
     'background-colors-rgba-hover': (
       state: ':hover',
       property: background-color,
@@ -1690,7 +1877,7 @@ $utilities: map.merge(
           null
         ),
     ),
-    'background-colors-hex-hover': (
+    'hover-background-colors-hex': (
       property: background-color,
       class: hover-bg,
       state: ':hover',
@@ -1825,6 +2012,13 @@ $utilities: map.merge(
       class: fs,
       property: font-size,
       values: if(meta.variable-exists(size-clamp), $size-clamp, null),
+      responsive: true,
+    ),
+    'margin-fluid': (
+      function: 'fluid',
+      class: m,
+      property: margin,
+      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
     ),
     'margin-top-fluid': (
