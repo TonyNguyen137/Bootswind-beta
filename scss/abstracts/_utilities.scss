@@ -363,11 +363,19 @@ $utilities: map.merge(
       class: cursor,
       values: pointer help wait crosshair not-allowed zoom-in grab,
     ),
-    'overlay': (
+    'overlay-dark': (
       property: border-image,
-      class: overlay,
+      class: overlay-dark,
       values: (
-        dark: fill 0 linear-gradient(#0003, #000),
+        1: fill 0 linear-gradient(rgba(0,0,0, 0.1), rgba(0, 0, 0, 0.1))),
+        2: fill 0 linear-gradient(rgba(0,0,0, 0.2), rgba(0, 0, 0, 0.2))),
+        3: fill 0 linear-gradient(rgba(0,0,0, 0.3), rgba(0, 0, 0, 0.3))),
+        4: fill 0 linear-gradient(rgba(0,0,0, 0.5), rgba(0, 0, 0, 0.4))),
+        5: fill 0 linear-gradient(rgba(0,0,0, 0.5), rgba(0, 0, 0, 0.5))),
+        6: fill 0 linear-gradient(rgba(0,0,0, 0.6), rgba(0, 0, 0, 0.6))),
+        7: fill 0 linear-gradient(rgba(0,0,0, 0.7), rgba(0, 0, 0, 0.7))),
+        8: fill 0 linear-gradient(rgba(0,0,0, 0.8), rgba(0, 0, 0, 0.8))),
+        9: fill 0 linear-gradient(rgba(0,0,0, 0.9), rgba(0, 0, 0, 0.9))),
       ),
     ),
     'resize': (
@@ -392,6 +400,7 @@ $utilities: map.merge(
     'object-fit': (
       responsive: true,
       property: object-fit,
+      class: object,
       values: (
         contain: contain,
         cover: cover,
@@ -403,6 +412,7 @@ $utilities: map.merge(
     'object-position': (
       responsive: true,
       property: object-position,
+      class: object,
       values: top bottom left right center,
     ),
     'display': (
