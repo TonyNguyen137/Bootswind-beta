@@ -8,6 +8,7 @@ Modifications may have been made to the original code.
 @use 'sass:map';
 @use 'sass:list';
 @use 'sass:meta';
+@use 'sass:string';
 @use 'functions' as *;
 @use 'variables' as *;
 
@@ -70,6 +71,75 @@ $utilities: map.merge(
       class: hyphens,
       property: hyphens,
       values: auto none manual,
+    ),
+    'linear-gradient': (
+      class: linear-gradient,
+      property: background,
+      values: (
+        null:
+          linear-gradient(
+            var(--gradient-direction, to top),
+            var(--gradient-first-color) var(--gradient-first-stop),
+            var(--gradient-second-color) var(--gradient-second-stop)
+          ),
+      ),
+    ),
+    'backdrop-blur': (
+      class: backdrop-blur,
+      property: backdrop-filter,
+      values: (
+        null: blur(var(--backdrop-blur)),
+        1: blur(1px),
+        2: blur(2px),
+        3: blur(3px),
+        4: blur(4px),
+        5: blur(5px),
+        6: blur(6px),
+        7: blur(7px),
+        8: blur(8px),
+        9: blur(9px),
+        10: blur(10px),
+      ),
+    ),
+    'scrollbar-webkit-custom': (
+      state: '::-webkit-scrollbar',
+      class: custom-scrollbar,
+      required-property: (
+        '-webkit-appearance': none,
+      ),
+      property: width height,
+      values: (
+        null: 14px,
+      ),
+    ),
+    'scrollthumb-webkit-custom': (
+      function: 'property-advanced',
+      state: '::-webkit-scrollbar-thumb',
+      class: custom-scrollthumb,
+      property: (
+        border-radius: 8px,
+        border: 3px solid #fff,
+        background-color: rgba(0, 0, 0, 0.3),
+      ),
+    ),
+
+    'scrollbar-hide-on-touch-device': (
+      media: '(hover: none) and (pointer: coarse)',
+      class: scrollbar-touch,
+      property: scrollbar-width,
+      values: none,
+    ),
+    'scrollbar': (
+      class: scrollbar,
+      property: scrollbar-width,
+      values: auto thin none,
+    ),
+    'aspect-ratio': (
+      class: aspect-ratio,
+      property: aspect-ratio,
+      values: (
+        square: string.unquote('1 / 1'),
+      ),
     ),
     'flows': (
       function: 'nested-rules',
@@ -251,7 +321,6 @@ $utilities: map.merge(
         transition: width 0.35 ease,
       ),
     ),
-
     'flow-ring': (
       function: 'nested-rules',
       class: flow-ring,
@@ -338,11 +407,31 @@ $utilities: map.merge(
     ),
     'display': (
       responsive: true,
-      print: true,
       property: display,
       class: d,
       values: inline inline-block block grid inline-grid table table-row
         table-cell flex inline-flex none,
+    ),
+    'grid-template-rows': (
+      property: grid-template-rows,
+      class: grid-template-rows,
+      values: subgrid,
+    ),
+    'grid-template-columns': (
+      property: grid-template-columns,
+      class: grid-template-columns,
+      values: subgrid,
+    ),
+    'grid-span': (
+      property: grid-row,
+      class: span,
+      values: (
+        1: span 1,
+        2: span 2,
+        3: span 3,
+        4: span 4,
+        5: span 5,
+      ),
     ),
     'translate-quarter': (
       property: transform,
@@ -392,6 +481,20 @@ $utilities: map.merge(
         y: translateY(100%),
       ),
     ),
+    'translate-x': (
+      property: transform,
+      class: translate-x,
+      values: (
+        null: translateX(var(--translate-x)),
+      ),
+    ),
+    'translate-y': (
+      property: transform,
+      class: translate-full,
+      values: (
+        null: translateY(var(--translate-y)),
+      ),
+    ),
     'border': (
       class: border,
       property: border,
@@ -427,7 +530,6 @@ $utilities: map.merge(
         null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
       ),
     ),
-
     'border-rgba': (
       class: border-rgba,
       property: border,
@@ -450,7 +552,6 @@ $utilities: map.merge(
       important: true,
       responsive: true,
     ),
-
     'border-inline-width': (
       property: border-width,
       class: border-x,
@@ -458,7 +559,6 @@ $utilities: map.merge(
       important: true,
       responsive: true,
     ),
-
     'border-width-top': (
       class: border-top,
       property: border-top-width,
@@ -466,7 +566,6 @@ $utilities: map.merge(
       important: true,
       responsive: true,
     ),
-
     'border-width-bottom': (
       class: border-bottom,
       property: border-bottom-width,
@@ -562,7 +661,6 @@ $utilities: map.merge(
           $color-prefix
         ),
     ),
-
     'focus-ring-hex-colors-cp': (
       function: 'css-var',
       css-variable-name: focus-ring-color,
@@ -576,7 +674,6 @@ $utilities: map.merge(
           null
         ),
     ),
-
     'focus-ring-width': (
       function: 'css-var',
       css-variable-name: focus-ring-width,
@@ -595,12 +692,12 @@ $utilities: map.merge(
         10: 10px,
       ),
     ),
-    'fixed-width': (
+    'width-fixed': (
       property: width,
       class: w-f,
       values: $fixed-values,
+      responsive: true,
     ),
-
     'width-height': (
       class: wh,
       property: width height,
@@ -615,7 +712,7 @@ $utilities: map.merge(
           (
             auto: auto,
             fit-content: fit-content,
-            min-content: min-width,
+            min-content: min-content,
             max-content: max-content,
           )
         ),
@@ -685,6 +782,7 @@ $utilities: map.merge(
       responsive: true,
       property: flex,
       values: (
+        1: 1,
         fill: 1 1 auto,
         none: none,
       ),
@@ -735,6 +833,7 @@ $utilities: map.merge(
         evenly: space-evenly,
       ),
     ),
+
     'align-items': (
       responsive: true,
       property: align-items,
@@ -758,16 +857,43 @@ $utilities: map.merge(
         stretch: stretch,
       ),
     ),
+
     'align-self': (
       responsive: true,
       property: align-self,
       values: (
         auto: auto,
-        start: flex-start,
-        end: flex-end,
+        start: start,
+        end: end,
         center: center,
         baseline: baseline,
         stretch: stretch,
+      ),
+    ),
+    'justify-self': (
+      class: justify-self,
+      responsive: true,
+      property: justify-self,
+      values: (
+        start: start,
+        end: end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        evenly: space-evenly,
+      ),
+    ),
+    'place-self': (
+      class: place-self,
+      responsive: true,
+      property: place-self,
+      values: (
+        start: start,
+        end: end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        evenly: space-evenly,
       ),
     ),
     'order': (
@@ -880,7 +1006,7 @@ $utilities: map.merge(
       ),
     ),
     'text-underline': (
-      property: text-decoration,
+      property: text,
       class: text,
       values: (
         underline: underline,
@@ -890,7 +1016,7 @@ $utilities: map.merge(
       ),
     ),
     'text-underline-offset': (
-      property: text-decoration,
+      property: text-underline-offset,
       class: text,
       values: (
         0: 0,
@@ -899,6 +1025,13 @@ $utilities: map.merge(
         3: 3px,
         4: 4px,
         5: 5px,
+      ),
+    ),
+    'text-decoration-color': (
+      property: text-decoration-color,
+      class: text-underline,
+      values: (
+        primary: var(--clr-primary),
       ),
     ),
     'user-select': (
@@ -930,7 +1063,6 @@ $utilities: map.merge(
       class: list,
       values: none,
     ),
-
     'list-reset-a': (
       function: 'nested-rules',
       class: list-reset-deep-a,
@@ -961,7 +1093,6 @@ $utilities: map.merge(
           padding-left: 0,
           margin-block: 0,
         ),
-
         a: (
           text-decoration: none,
         ),
@@ -1098,13 +1229,17 @@ $utilities: map.merge(
       values:
         if(meta.variable-exists(z-indeces), map.get($z-indeces, values), null),
     ),
-    'border-radius-rounded': (
+    'border-radius-merged': (
       property: border-radius,
       class: radius,
-      values: (
-        circle: 50%,
-        round: 100%,
-      ),
+      values:
+        map.merge(
+          $fixed-values,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
     ),
     'border-radius': (
       function: 'custom-property-value',
@@ -1724,6 +1859,13 @@ $utilities: map.merge(
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
     ),
+    'padding-fluid': (
+      function: 'fluid',
+      class: p,
+      property: padding,
+      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+      responsive: true,
+    ),
     'padding-top-fluid': (
       function: 'fluid',
       class: pt,
@@ -1948,7 +2090,10 @@ $utilities: map.merge(
             $sizes-irregular,
             (
               container-gutter:
-                calc((100vw - var(--container)) / 2 + var(--container-padding)),
+                calc(
+                  (100vw - var(--container, 100vw)) / 2 +
+                    var(--container-padding)
+                ),
             )
           )
         ),

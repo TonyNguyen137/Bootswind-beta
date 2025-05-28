@@ -339,6 +339,7 @@ Modifications may have been made to the original mixins.
   $state: map.get($utility, state);
   $custom-property-prefix: map.get($utility, custom-property-prefix);
   $css-variable-name: map.get($utility, css-variable-name);
+  $media: map.get($utility, media);
 
   $configuration-map: (
     properties: $properties,
@@ -356,6 +357,7 @@ Modifications may have been made to the original mixins.
     is-rtl: $is-rtl,
     nested-selectors: $nested-selectors,
     state: $state,
+    media: $media,
   );
 
   @if $selected-function == 'normal' {
@@ -401,8 +403,11 @@ Modifications may have been made to the original mixins.
   $css-var: map.get($map, css-var);
   $css-variable-name: map.get($map, css-variable-name);
   $required-property: map.get($map, required-property);
+  $media: map.get($map, media);
 
   // @debug -------normal-utility---------------;
+  @debug media $media;
+
   // @debug properties $properties;
   // @debug values $values;
   // @debug required-property $required-property;
@@ -446,7 +451,7 @@ Modifications may have been made to the original mixins.
         }
       }
     } @else {
-      // @debug no state;
+      @debug no state;
 
       @each $key, $value in $values {
         $key-suffix: null-safe-suffix($key);
@@ -467,7 +472,13 @@ Modifications may have been made to the original mixins.
           }
 
           @each $property in $properties {
-            #{$property}: $value #{$important};
+            @if $media {
+              @media #{$media} {
+                #{$property}: $value #{$important};
+              }
+            } @else {
+              #{$property}: $value #{$important};
+            }
           }
         }
       }

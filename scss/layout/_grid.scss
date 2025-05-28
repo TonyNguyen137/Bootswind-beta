@@ -78,12 +78,12 @@ $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
 /* == grid advanced == */
 .grid {
   --gap: 16px;
-  --col-temp: none;
+  --column-temp: none;
   --row-temp: none;
 
   display: grid;
   gap: var(--gap);
-  grid-template-columns: var(--col-temp);
+  grid-template-columns: var(--column-temp);
   grid-template-rows: var(--row-temp);
 
   $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
@@ -91,7 +91,7 @@ $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
   @each $bp in map.keys($grid-breakpoints-without-xs) {
     @include mq($bp) {
       &--#{$bp} {
-        grid-template-columns: var(--col-#{$bp}-temp, var(--col-temp));
+        grid-template-columns: var(--col-#{$bp}-temp, var(--column-temp));
         grid-template-rows: var(--row-#{$bp}-temp, var(--row-temp));
         gap: var(--gap-#{$bp}, var(--gap));
       }
@@ -107,7 +107,7 @@ $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
 
       @for $start from 1 through $grid-columns {
         @for $end from ($start + 1) through ($grid-columns + 1) {
-          .#{$prefix-class}grid-col#{$infix}-#{$start}-#{$end} {
+          .#{$prefix-class}grid-column#{$infix}-#{$start}-#{$end} {
             grid-column: #{$start} / #{$end};
           }
 
@@ -115,7 +115,7 @@ $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
             grid-row: #{$start} / #{$end};
           }
         }
-        .#{$prefix-class}grid-col#{$infix}-#{$start}-end {
+        .#{$prefix-class}grid-column#{$infix}-#{$start}-end {
           grid-column: #{$start} / -1;
         }
 
