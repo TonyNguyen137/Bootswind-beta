@@ -2283,6 +2283,14 @@ $utilities: map.merge(
       class: p,
       values: map.merge($sizes-regular, $sizes-irregular),
     ),
+    'padding-x-container': (
+      responsive: true,
+      property: padding-right padding-left,
+      class: px,
+      values: (
+        container: var(--container-padding),
+      ),
+    ),
     'padding-x': (
       responsive: true,
       property: padding-right padding-left,
