@@ -74,6 +74,12 @@ Each SCSS folder contains an `_index.scss` file that uses `@forward` to expose t
 
 The main `scss/style.scss` file imports all necessary modules using `@use`, typically pointing to each folder's `_index.scss`. This modular structure keeps the codebase organized and makes it easy to scale or maintain.
 
+For details on how SCSS modules are structured and loaded using @use and @forward, check the official Sass documentation here:
+
+[@use](https://sass-lang.com/documentation/at-rules/use/)
+
+[@forward](https://sass-lang.com/documentation/at-rules/forward/)
+
 Every `main SCSS file` is compiled via Webpack. Entry point:
 
 ```scss
@@ -112,7 +118,7 @@ $utilities: map-merge(
       property: display,
       values: inline block flex,
       responsive: true // default false,
-      important: true // default false,,,,,,,
+      important: true // default false,,,,,,,,,,,,,
     ),
   )
 );
@@ -173,7 +179,16 @@ You can also attach a custom function to your utility definition to implement mo
 
 Afterward:
 
-Define your custom mixin in abstracts/\_mixins.scss using the same name as the function (e.g., @mixin your-function(...)).
+Define your custom mixin in abstracts/\_mixins.scss using the same name as the function:
+
+```
+_mixins.scss
+
+@mixin your-function() {
+  ....
+}
+
+```
 
 Locate the @mixin generate-utility in utilities/\_generator.scss **(around line 270)**.
 
@@ -229,7 +244,7 @@ After any changes, make sure to recompile your styles so updates take effect acr
 
 ## 🎨 Adjusting Color Themes
 
-Color variables and theme colors are defined in the `/abstracts/_variables.scss` file, starting around line 96:
+Colors are defined in the `/abstracts/_variables.scss` file, starting around line **96**:
 
 ```scss
 // Line 96 — /abstracts/_variables.scss
@@ -247,6 +262,8 @@ $color-theme: (
 );
 ```
 
+The system automatically generates corresponding CSS custom properties:
+
 ```
 :root {
   --clr-primary: #0d6efd;
@@ -263,7 +280,5 @@ These maps define the main colors and their hover states for the default theme.
 You can customize the color values or add new keys to extend the theme.
 
 Make sure to update both the color and hover maps for consistent UI behavior.
-
-The system automatically generates corresponding CSS custom properties:
 
 > 💡 **Note**: Changing colors here affects all components using the theme variables. Test thoroughly to ensure good contrast and accessibility.
