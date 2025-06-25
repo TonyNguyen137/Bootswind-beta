@@ -207,18 +207,39 @@ export class Utils {
       window.navigator &&
       window.navigator.platform &&
       (/iP(ad|hone|od)/.test(window.navigator.platform) ||
-        (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1))
+        (window.navigator.platform === 'MacIntel' &&
+          window.navigator.maxTouchPoints > 1))
     );
   }
 }
 
+export function toArray(input, scope = document) {
+  if (typeof input === 'string') {
+    const elements = Array.from(scope.querySelectorAll(input));
+    return elements.length ? elements : false;
+  }
+
+  return Array.from(input);
+}
+
+export function getRandomNumber(max, min = 0) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export function rangeWrapper(min, max) {
   return function (value) {
-    return ((((value - min) % (max - min + 1)) + (max - min + 1)) % (max - min + 1)) + min;
+    return (
+      ((((value - min) % (max - min + 1)) + (max - min + 1)) %
+        (max - min + 1)) +
+      min
+    );
   };
 }
 
-export function toggleTheme(selector = '.switch__input', options = { onTrue: 'dark' }) {
+export function toggleTheme(
+  selector = '.switch__input',
+  options = { onTrue: 'dark' }
+) {
   let input = document.querySelector(selector);
   let theme = options.onTrue;
 

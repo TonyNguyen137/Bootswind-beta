@@ -1,7 +1,10 @@
-import { Utils } from '../utils';
+import { toArray } from '../utils';
 export class Accordion {
   constructor(rootElSelector = '.accordion', config = {}) {
-    this._rootEls = Utils.toArray(rootElSelector);
+    this._rootEls =
+      typeof rootElSelector === 'string'
+        ? toArray(rootElSelector)
+        : [rootElSelector];
     if (!this._rootEls.length) return;
     this._rootEls.forEach((rootEl) => this._initRootEl(rootEl));
   }
@@ -9,9 +12,13 @@ export class Accordion {
   _initRootEl(rootEl) {
     rootEl._itemEls = Utils.toArray('.accordion__item', rootEl);
     rootEl._isTransitioning = false;
-    rootEl._currentActiveItem = rootEl.querySelector('[aria-expanded=true]') || null;
+    rootEl._currentActiveItem =
+      rootEl.querySelector('[aria-expanded=true]') || null;
     rootEl.addEventListener('click', this._handleClick.bind(this));
-    rootEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));
+    rootEl.addEventListener(
+      'transitionend',
+      this._handleTransitionEnd.bind(this)
+    );
   }
 
   /* == Event Handler == */
