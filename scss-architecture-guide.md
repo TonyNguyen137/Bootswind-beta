@@ -4,6 +4,18 @@ Welcome to the SCSS structure of this project.
 
 This project follows a **component-based** and **utility class** approach for styling. The goal is to keep the codebase **modular**, **scalable**, and **easy to maintain**, especially as the project grows.
 
+## Inhaltsverzeichnis
+
+- [Component Styles](#1-component-styles-components)
+- [Utility Classes](#2-utility-classes-utils)
+- [Layout Grid System](#3-layout-grid-system-layout)
+- [Compiling](#compiling)
+- [Best Practice](#best-practice)
+- [Creating a Utility Class](#creating-a-utility-class)
+- [🧩 Adjusting Grid Breakpoints](#adjusting-grid-breakpoints)
+- [📦 Adjusting Container Max Widths](#adjusting-container-max-widths)
+- [🎨 Adjusting Color Themes](#adjusting-color-themes)
+
 ## Structure Overview
 
 The SCSS files are organized into several key layers:
@@ -58,7 +70,7 @@ For the layout of components, you can use either the **Bootstrap grid system** o
 
 The custom grid offers more control and flexibility if Bootstrap doesn't fit certain design requirements.
 
-## Best Practices
+## Best Practice
 
 - **One component = one SCSS file in /components**
 - **Avoid global styles unless necessary**
@@ -118,7 +130,7 @@ $utilities: map-merge(
       property: display,
       values: inline block flex,
       responsive: true // default false,
-      important: true // default false,,,,,,,,,,,,,
+      important: true // default false,,,,,,,,,,,,,,,,,,,,,,,,
     ),
   )
 );
@@ -201,7 +213,7 @@ Inside that mixin, call your defined function and pass all necessary data to it.
 > This can help you understand what data is passed and how it's structured.  
 > 📚 Official Sass docs: [https://sass-lang.com/documentation/at-rules/debug/](https://sass-lang.com/documentation/at-rules/debug/)
 
-## 🧩 Adjusting Grid Breakpoints
+## Adjusting Grid Breakpoints
 
 The grid system in this project follows a mobile-first approach, based on the `$grid-breakpoints` map defined in `/abstracts/_variables.scss`.
 
@@ -219,7 +231,7 @@ $grid-breakpoints: (
 );
 ```
 
-## 📦 Adjusting Container Max Widths
+## Adjusting Container Max Widths
 
 The maximum widths for containers at different breakpoints are defined in the same `/abstracts/_variables.scss` file, around line 67:
 
@@ -242,7 +254,7 @@ After any changes, make sure to recompile your styles so updates take effect acr
 
 > 💡 **Note:** Adjusting container widths affects overall layout and spacing, so test your pages thoroughly after changes.
 
-## 🎨 Adjusting Color Themes
+## Adjusting Color Themes
 
 Colors are defined in the `/abstracts/_variables.scss` file, starting around line **96**:
 
