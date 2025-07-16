@@ -109,3 +109,5 @@ mdn sticky scrollable sidebar
 
 flex-children klassen
 flex 1
+
+add media query 375 xsm
