@@ -130,7 +130,7 @@ Modifications may have been made to the original functions.
   // @debug map.has-key($grid-breakpoints, $value);
 
   @if map.has-key($grid-breakpoints, $value) {
-    @debug in else if value $value;
+    // @debug in else if value $value;
     @return remove-unit-and-convert(map.get($grid-breakpoints, $value));
   } @else if meta.type-of($value) == number {
     @return remove-unit-and-convert($value);
@@ -190,10 +190,55 @@ Modifications may have been made to the original functions.
 //     @error '$spacers does not have that size!';
 //   }
 // }
+@function breakpoint-prefix($name, $breakpoints: $grid-breakpoints) {
+  // @debug before meta.type-of($name);
+  // @debug name $name;
 
+  @if breakpoint-min($name, $breakpoints) == null {
+    @return '';
+  } @else if meta.type-of($name) == number {
+    // @debug is number;
+    @return '\\00003#{$name}\\:';
+
+    @return escape-leading-digit(to-string($name));
+  } @else {
+    @return '#{$name}\\:';
+  }
+
+  // @return if(breakpoint-min($name, $breakpoints) == null, '', '#{$name}\\:');
+}
 @function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
   @return if(breakpoint-min($name, $breakpoints) == null, '', '-#{$name}');
 }
+
+@function starts-with-digit($value) {
+  @if meta.type-of($value) != 'string' or string.length($value) == 0 {
+    @return false;
+  }
+
+  $first: string.slice($value, 1, 1); // first character
+  @return string.index('0123456789', $first) != null;
+}
+
+// @function escape-leading-digit($token) {
+//   // Normalize to string (handles numbers like 3xl which Sass treats as number + unit)
+//   $s: if(
+//     meta.type-of($token) == 'string',
+//     $token,
+//     meta.inspect($token)
+//   ); // "3xl"
+
+//   $first: string.slice($s, 1, 1);
+//   @if string.index('0123456789', $first) {
+//     // Make the first char a hex escape for that digit.
+//     // Short form: \3 + <digit>  → \33 for '3', \37 for '7', etc.
+//     // Or use 6-digit for nicer serialization: \00003<digit>
+//     $s: '\\3#{$first}'+ string.slice($s, 2) + '\\:'; // -> "\33xl"
+//     // $s: "\\00003#{$first}" + string.slice($s, 2);   // -> "\000033xl" (no visual gap)
+//   }
+
+//   @return $s;
+// }
 
 @function null-safe-suffix($value) {
   @return if($value == null, '', '-#{$value}');
@@ -210,6 +255,11 @@ Modifications may have been made to the original functions.
   $rem-value: if(math.unit($value) == 'px', px-to-rem($value), $value);
 
   @return $rem-value;
+}
+@function to-string($value) {
+  // meta.inspect returns a string representation
+  // Use string.unquote to ensure it’s unquoted (e.g. turns `"3xl"` into 3xl)
+  @return string.unquote(meta.inspect($value));
 }
 
 // @function map-loop-advanced($map, $func, $args...) {

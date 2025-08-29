@@ -245,7 +245,7 @@ Modifications may have been made to the original mixins.
 
 @mixin make-cssgrid($columns: $grid-columns, $breakpoints: $grid-breakpoints) {
   @each $breakpoint in map-keys($breakpoints) {
-    $infix: breakpoint-infix($breakpoint, $breakpoints);
+    $infix: breakpoint($breakpoint, $breakpoints);
 
     @include media-breakpoint-up($breakpoint, $breakpoints) {
       @if $columns > 0 {
@@ -269,7 +269,8 @@ Modifications may have been made to the original mixins.
 
 @mixin generate-utility(
   $utility,
-  $infix: '',
+  $bp: '',
+  $breakpoint-key,
   $key,
   $is-rfs-media-query: false
 ) {
@@ -341,12 +342,16 @@ Modifications may have been made to the original mixins.
   $css-variable-name: map.get($utility, css-variable-name);
   $media: map.get($utility, media);
 
+  $arbitary-custom-property: map.get($utility, arbitary-custom-property);
+
   $configuration-map: (
+    arbitary-custom-property: $arbitary-custom-property,
     properties: $properties,
     values: $values,
     important: $is-important,
     required-property: $required-property,
-    breakpoint-infix: $infix,
+    breakpoint: $bp,
+    breakpoint-key: $breakpoint-key,
     class: $class,
     key: $key,
     custom-property-name: $custom-property-name,
@@ -362,30 +367,140 @@ Modifications may have been made to the original mixins.
 
   @if $selected-function == 'normal' {
     @include create-normal-utility($configuration-map);
-  }
-
-  @if $selected-function == 'fluid' {
+  } @else if $selected-function == 'arbitary-value' {
+    @include create-arbitary-value-utility($configuration-map);
+  } @else if $selected-function == 'fluid' {
     @include create-fluid-utility($configuration-map);
-  }
-
-  @if $selected-function == 'custom-property-value' {
+  } @else if $selected-function == 'custom-property-value' {
     @include create-custom-property-value-utility($configuration-map);
-  }
-
-  @if $selected-function == 'property-advanced' {
+  } @else if $selected-function == 'simple-custom-property' {
+    @include create-simple-custom-property-utility($configuration-map);
+  } @else if $selected-function == 'css-var' {
+    @include create-css-var-utility($configuration-map);
+  } @else if $selected-function == 'property-advanced' {
     @include create-property-advanced-utility($configuration-map);
   }
+}
+
+@mixin generate-pattern($pattern, $bp: '', $key, $is-rfs-media-query: false) {
+  $values: map.get($pattern, values);
+  $selected-function: if(
+    map.has-key($pattern, function),
+    map.get($pattern, function),
+    null
+  );
+
+  // Check if the list is not empty before accessing the first element
+  @if list.length($values) > 0 and $values != null {
+    // If the values are a list or string, convert it into a map
+    @if meta.type-of($values) ==
+      'string' or
+      meta.type-of(list.nth($values, 1)) !=
+      'list'
+    {
+      $values: list.zip($values, $values);
+    }
+  }
+
+  // @debug values $values;
+  // @debug meta.type-of($values);
+
+  $is-important: if(map.get($pattern, important), !important, null);
+
+  $required-property: if(
+    map.has-key($pattern, required-property),
+    map.get($pattern, required-property),
+    null
+  );
+  $properties: map.get($pattern, property);
+  $custom-property-value: if(
+    map.has-key($pattern, custom-property-value),
+    map.get($pattern, custom-property-value),
+    null
+  );
+
+  // @debug $custom-property-value;
+  $class: map.get($pattern, class);
+
+  // Multiple properties are possible, for example with vertical or horizontal margins or paddings
+  // @debug properties before $properties;
+
+  @if meta.type-of($properties) == 'string' {
+    $properties: list.append((), $properties);
+
+    // @debug properties inside $properties;
+  }
+
+  // @debug properties after $properties;
+
+  $local-vars: map.get($pattern, local-vars);
+  $is-rtl: map.get($pattern, rtl);
+  $custom-property-name: map.get($pattern, custom-property-name);
+  $nested-selectors: if(
+    map.has-key($pattern, complex-selectors),
+    map.get($pattern, complex-selectors),
+    null
+  );
+  $complex-selectors: if(
+    map.has-key($pattern, complex-selectors),
+    map.get($pattern, complex-selectors),
+    null
+  );
+
+  $state: map.get($pattern, state);
+  $custom-property-prefix: map.get($pattern, custom-property-prefix);
+  $css-variable-name: map.get($pattern, css-variable-name);
+  $media: map.get($pattern, media);
+
+  $configuration-map: (
+    properties: $properties,
+    values: $values,
+    important: $is-important,
+    required-property: $required-property,
+    breakpoint: $bp,
+    class: $class,
+    key: $key,
+    custom-property-name: $custom-property-name,
+    custom-property-value: $custom-property-value,
+    custom-property-prefix: $custom-property-prefix,
+    css-variable-name: $css-variable-name,
+    local-vars: $local-vars,
+    is-rtl: $is-rtl,
+    nested-selectors: $nested-selectors,
+    state: $state,
+    media: $media,
+  );
 
   @if $selected-function == 'nested-rules' {
-    @include create-nested-rules-utility($configuration-map);
+    @include create-nested-rules-pattern($configuration-map);
   }
+}
 
-  @if $selected-function == 'simple-custom-property' {
-    @include create-simple-custom-property-utility($configuration-map);
-  }
+@mixin create-arbitary-value-utility($map) {
+  $arbitary-custom-property: map.get($map, arbitary-custom-property);
+  $property: map.get($map, properties);
+  $key: map.get($map, key);
+  $values: map.get($map, values);
+  $important: map.get($map, important);
+  $breakpoint: map.get($map, breakpoint);
+  $breakpoint-key: if(
+    map.get($map, breakpoint-key) != '',
+    map.get($map, breakpoint-key) + '-',
+    ''
+  );
 
-  @if $selected-function == 'css-var' {
-    @include create-css-var-utility($configuration-map);
+  $class: map.get($map, class);
+
+  $class-suffix: '-\\\[arbitary\\\]';
+
+  // @debug bp-key $breakpoint-key;
+
+  .#{$breakpoint}#{$class}#{$class-suffix} {
+    #{$property}: if(
+      $arbitary-custom-property,
+      var(--#{$breakpoint-key}#{$arbitary-custom-property}),
+      var(--#{$breakpoint-key}#{$property}-arbitary)
+    );
   }
 }
 
@@ -394,8 +509,8 @@ Modifications may have been made to the original mixins.
   $key: map.get($map, key);
   $values: map.get($map, values);
   $important: map.get($map, important);
-  $breakpoint-infix: map.get($map, breakpoint-infix);
-  $class: if(map.get($map, class) != null, map.get($map, class), $key);
+  $breakpoint: map.get($map, breakpoint);
+  $class: map.get($map, class);
   $local-vars: map.get($map, local-vars);
   $states: map.get($map, state);
   $states-length: if($states, list.length($states), null);
@@ -410,9 +525,10 @@ Modifications may have been made to the original mixins.
 
   // @debug properties $properties;
   // @debug values $values;
+  // @debug map.get($map, class);
   // @debug required-property $required-property;
   // @debug inportant $important;
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug key $key;
   // @debug class $class;
   // @debug state $states;
@@ -430,7 +546,10 @@ Modifications may have been made to the original mixins.
         @each $key, $value in $values {
           $key-suffix: null-safe-suffix($key);
 
-          .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
+          // @debug what type meta.type-of($breakpoint);
+          // @debug breakpoint 1 $breakpoint;
+
+          .#{$breakpoint}#{$prefix-class}#{if($class, $class, $value)}#{$key-suffix}#{$state} {
             @if $local-vars {
               @each $local-var, $value in $local-vars {
                 --#{$local-var}: #{$value};
@@ -457,8 +576,24 @@ Modifications may have been made to the original mixins.
         $key-suffix: null-safe-suffix($key);
         $single-state: single-or-null($states);
 
+        // @debug key-suffix $key-suffix;
+
         // @debug single-state $single-state;
-        .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
+        // @debug $breakpoint;
+        // @debug meta.type-of($breakpoint);
+
+        // @debug meta.type-of($breakpoint) == number;
+        // $breakpoint: if(
+        //   meta.type-of($breakpoint) == number,
+        //   '\\'+ $breakpoint,
+        //   $breakpoint
+        // );
+
+        // @debug new bp $breakpoint;
+
+        .#{$breakpoint}#{$prefix-class}#{if($class, $class, $value)}#{if($class, $key-suffix, '')}#{$single-state} {
+          // @debug value hier- if($class, $class, $value);
+
           @if $local-vars {
             @each $local-var, $value in $local-vars {
               --#{$local-var}: #{$value};
@@ -490,7 +625,7 @@ Modifications may have been made to the original mixins.
   $property: map.get($map, properties);
   $values: map.get($map, values);
   $important: map.get($map, important);
-  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $breakpoint: map.get($map, breakpoint);
   $class: map.get($map, class);
 
   $fluid-map: $values;
@@ -503,7 +638,7 @@ Modifications may have been made to the original mixins.
   // @debug font-size #{$property} == 'font-size';
   // @debug values $values;
   // @debug important $important;
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug class $class;
   // @debug -------------------------;
 
@@ -573,13 +708,13 @@ Modifications may have been made to the original mixins.
 
       @if ($use-custom-property) {
         // @debug inside;
-        .#{$prefix-class}#{$class}#{$breakpoint-infix}-#{$selector-suffix} {
+        .#{$prefix-class}#{$class}#{$breakpoint}-#{$selector-suffix} {
           @each $prop in $property {
             #{$prop}: var(--#{$prefix}#{$custom-property-name}) #{$important};
           }
         }
       } @else {
-        .#{$prefix-class}#{$class}#{$breakpoint-infix}-#{$selector-suffix} {
+        .#{$prefix-class}#{$class}#{$breakpoint}-#{$selector-suffix} {
           @each $prop in $property {
             #{$prop}: fluid(
                 $min-size,
@@ -607,7 +742,7 @@ Modifications may have been made to the original mixins.
   $formatted-prefix: add-hyphen($custom-property-prefix);
 
   $important: map.get($map, important);
-  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $breakpoint: map.get($map, breakpoint);
   $class: map.get($map, class);
   $local-vars: map.get($map, local-vars);
   $state: if(map.get($map, state), to-list(map.get($map, state)), null);
@@ -621,17 +756,17 @@ Modifications may have been made to the original mixins.
   // @debug trunks $custom-property-trunks;
 
   // @debug important $important;
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug class $class;
   // @debug state $state;
 
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug local-vars $local-vars;
 
   @if ($values != null) {
     @if ($formatted-prefix != null) {
       @each $trunk in $custom-property-trunks {
-        .#{$prefix-class}#{$class}#{$breakpoint-infix}-#{$trunk}#{$state} {
+        .#{$prefix-class}#{$class}#{$breakpoint}-#{$trunk}#{$state} {
           @if ($required-property != null) {
             @each $prop, $value in $required-property {
               #{$prop}: $value #{$important};
@@ -646,7 +781,7 @@ Modifications may have been made to the original mixins.
     } @else {
       @each $trunk, $value in $values {
         $formatted-trunk: add-hyphen(#{$trunk}, prepend);
-        .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$formatted-trunk}#{$state} {
+        .#{$prefix-class}#{$class}#{$breakpoint}#{$formatted-trunk}#{$state} {
           @if ($required-property != null) {
             @each $prop, $value in $required-property {
               #{$prop}: $value #{$important};
@@ -665,7 +800,7 @@ Modifications may have been made to the original mixins.
   $properties: map.get($map, properties);
   $values: map.get($map, values);
   $important: map.get($map, important);
-  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $breakpoint: map.get($map, breakpoint);
   $class: map.get($map, class);
   $local-vars: map.get($map, local-vars);
   $states: map.get($map, state);
@@ -673,7 +808,7 @@ Modifications may have been made to the original mixins.
   $states: if($states-length == 1, to-list($states), $states);
   // @debug properties $properties;
   // @debug important $important;
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug class $class;
   // @debug state $states;
   // @debug state-length $states-length;
@@ -684,7 +819,7 @@ Modifications may have been made to the original mixins.
   @if ($states and $states-length > 1) {
     $formatted-states: list.join($states, (), comma);
 
-    .#{$prefix-class}#{$class}#{$breakpoint-infix}:where(#{$formatted-states}) {
+    .#{$prefix-class}#{$class}#{$breakpoint}:where(#{$formatted-states}) {
       @each $prop, $value in $properties {
         #{$prop}: $value #{$important};
       }
@@ -693,7 +828,7 @@ Modifications may have been made to the original mixins.
     // Get single state from $states list, returns null if unset
     $single-state: single-or-null($states);
 
-    .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$single-state} {
+    .#{$prefix-class}#{$class}#{$breakpoint}#{$single-state} {
       @each $prop, $value in $properties {
         #{$prop}: $value #{$important};
       }
@@ -701,32 +836,68 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin create-nested-rules-utility($map) {
+@mixin create-nested-rules-pattern($map) {
   $properties: map.get($map, properties);
   $values: map.get($map, values);
   $important: map.get($map, important);
-  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $breakpoint: map.get($map, breakpoint);
   $class: map.get($map, class);
 
   // @debug properties $properties;
   // @debug important $important;
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug class $class;
+  // @debug values $values;
 
-  .#{$class} {
-    // Loop through the properties defined for each utility
-    @each $property, $value in $properties {
-      @if meta.type-of($value) == 'map' {
-        $_nested-selector: $property;
+  // @debug meta.type-of($values);
 
-        #{$_nested-selector} {
-          @each $nested-property, $nested-value in $value {
-            $formatted_value: if($nested-value == '', '""', $nested-value);
-            #{$nested-property}: #{$formatted_value};
+  @if ($values != null and meta.type-of($values) == map) {
+    @each $key, $value in $values {
+      .#{$class}-#{$key} {
+        @each $property, $property-value in $properties {
+          // @debug property $property;
+          // @debug property-value $value;
+
+          @if meta.type-of($property-value) == 'map' {
+            $_nested-selector: $property;
+
+            #{$_nested-selector} {
+              @each $nested-property, $nested-value in $property-value {
+                $formatted_value: null;
+
+                @if ($nested-value == '') {
+                  $formatted_value: '""';
+                } @else if($nested-value == VALUE) {
+                  $formatted_value: $value;
+                } @else {
+                  $formatted_value: $nested-value;
+                }
+
+                #{$nested-property}: #{$formatted_value};
+              }
+            }
+          } @else {
+            #{$property}: #{$value};
           }
         }
-      } @else {
-        #{$property}: #{$value};
+      }
+    }
+  } @else {
+    .#{$class} {
+      // Loop through the properties defined for each utility
+      @each $property, $property-value in $properties {
+        @if meta.type-of($property-value) == 'map' {
+          $_nested-selector: $property;
+
+          #{$_nested-selector} {
+            @each $nested-property, $nested-value in $property-value {
+              $formatted_value: if($nested-value == '', '""', $nested-value);
+              #{$nested-property}: #{$formatted_value} #{$important};
+            }
+          }
+        } @else {
+          #{$property}: #{$value} #{$important};
+        }
       }
     }
   }
@@ -737,7 +908,7 @@ Modifications may have been made to the original mixins.
   $key: map.get($map, key);
   $values: map.get($map, values);
   $important: map.get($map, important);
-  $breakpoint-infix: map.get($map, breakpoint-infix);
+  $breakpoint: map.get($map, breakpoint);
   $class: if(map.get($map, class) != null, map.get($map, class), $key);
   $local-vars: map.get($map, local-vars);
   $states: map.get($map, state);
@@ -753,7 +924,7 @@ Modifications may have been made to the original mixins.
   // @debug custom-property-prefix $custom-property-prefix;
   // @debug values $values;
   // @debug inportant $important;
-  // @debug breakpoint-infix $breakpoint-infix;
+  // @debug breakpoint $breakpoint;
   // @debug key $key;
   // @debug class $class;
   // @debug state $states;
@@ -772,13 +943,13 @@ Modifications may have been made to the original mixins.
           // @debug key-suffix $key-suffix;
 
           @if ($custom-property-prefix) {
-            .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
+            .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
               --#{$css-variable-name}: var(
                 --#{$prefix}#{$custom-property-prefix}#{$key-suffix}
               );
             }
           } @else {
-            .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$state} {
+            .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
               --#{$css-variable-name}: #{$value};
             }
           }
@@ -792,14 +963,14 @@ Modifications may have been made to the original mixins.
         $single-state: single-or-null($states);
         // @debug $single-state;
         @if ($custom-property-prefix) {
-          .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
+          .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
             --#{$css-variable-name}: var(
               --#{$prefix}#{$custom-property-prefix}#{$key}#{$single-state}
             );
           }
         } @else {
           // @debug single-state $single-state;
-          .#{$prefix-class}#{$class}#{$breakpoint-infix}#{$key-suffix}#{$single-state} {
+          .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
             --#{$css-variable-name}: #{$value};
           }
         }

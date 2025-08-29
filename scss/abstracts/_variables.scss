@@ -110,16 +110,17 @@ $color-theme: (
       'white': #fff,
     ),
     hover: (
-      'primary': #012345,
-      'secondary': $secondary,
-      'success': $success,
-      'info': $info,
-      'warning': $warning,
-      'danger': $danger,
-      'light': $light,
-      'dark': $dark,
-      'zero': #000,
-      'quindecenary': #fff,
+      'gold': #ffd700,
+      // 'primary': #012345,
+      // 'secondary': $secondary,
+      // 'success': $success,
+      // 'info': $info,
+      // 'warning': $warning,
+      // 'danger': $danger,
+      // 'light': $light,
+      // 'dark': $dark,
+      // 'zero': #000,
+      // 'quindecenary': #fff,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     ),
   ),
 );
@@ -129,6 +130,12 @@ $selected-theme: default;
 $selected-theme-hex-colors: if(
   map.has-key($color-theme, $selected-theme, color),
   map.get($color-theme, $selected-theme, color),
+  null
+);
+
+$selected-theme-hover-hex-colors: if(
+  map.has-key($color-theme, $selected-theme, hover),
+  map.get($color-theme, $selected-theme, hover),
   null
 );
 
@@ -279,13 +286,12 @@ $sizes-irregular: map.merge(
 $box-shadows: (
   custom-property-prefix: 'box-shadow',
   values: (
-    focus: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
+    focus: 0 0 0 var(--shadow-width, 0.25rem) rgba(var(--clr-primary-rgb), 0.25),
     focus-inset: inset 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
     null: 0 0.5rem 1rem rgba(var(--clr-dark-rgb), 0.15),
     sm: 0 0.125rem 0.25rem rgba(var(--clr-dark-rgb), 0.075),
     lg: 0 1rem 3rem rgba(var(--clr-dark-rgb), 0.175),
     inset: inset 0 1px 2px rgba(var(--clr-dark-rgb), 0.075),
-    none: none,
   ),
 );
 
@@ -341,19 +347,21 @@ $transitions: (
     fade: opacity 0.15s linear,
     collapse: height 0.35s ease,
     collapse-width: width 0.35s ease,
+    bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5),
   ),
 );
 
-/* ****************************************************** */
-/* Focus rings
-/* ****************************************************** */
+// /* ****************************************************** */
+// /* Focus rings
+// /* ****************************************************** */
 
-$focus-rings: (
-  custom-property-prefix: 'focus-ring',
-  values: (
-    main: 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.75),
-  ),
-);
+// $focus-rings: (
+//   custom-property-prefix: 'focus-ring',
+//   values: (
+//     main: 0 0 0 var(--focus-ring-width, 0.25rem)
+//       rgba(var(--clr-primary-rgb), 0.75),
+//   ),
+// );
 
 /* ****************************************************** */
 /* Font family
@@ -497,6 +505,9 @@ $fixed-values: (
 );
 
 $border-widths: (
+  n3: -3px,
+  n2: -2px,
+  n1: -1px,
   0: 0px,
   1: 1px,
   2: 2px,
@@ -508,4 +519,58 @@ $border-widths: (
   8: 8px,
   9: 9px,
   10: 10px,
+  11: 11px,
+  12: 12px,
+  13: 13px,
+  14: 14px,
+  15: 15px,
+  16: 16px,
+  17: 17px,
+  18: 18px,
+  19: 19px,
+  20: 20px,
+  '01lh': 0.1lh,
+  '02lh': 0.2lh,
+  '03lh': 0.3lh,
+  '04lh': 0.4lh,
+  '05lh': 0.5lh,
+);
+
+$border-styles: (
+  solid: solid,
+  dashed: dashed,
+  dotted: dotted,
+  groove: groove,
+  none: none,
+  double: double,
+  inset: inset,
+);
+
+$duration-values-map: (
+  100: 100ms,
+  200: 200ms,
+  300: 300ms,
+  400: 400ms,
+  500: 500ms,
+  600: 600ms,
+  700: 700ms,
+  800: 800ms,
+  900: 900ms,
+  1000: 1000ms,
+  1500: 1500ms,
+  2000: 2000ms,
+  2500: 2500ms,
+  3000: 3000ms,
+);
+
+$font-weights: (
+  thin: 100,
+  extra-light: 200,
+  light: 300,
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extra-bold: 800,
+  'black': 900,
 );

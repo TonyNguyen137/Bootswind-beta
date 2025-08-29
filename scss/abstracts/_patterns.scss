@@ -1,0 +1,456 @@
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'functions' as *;
+@use 'variables' as *;
+
+$patterns: (
+  // 'children-reset-spacing': (
+  //   function: 'nested-rules',
+  //   class: children\:spacing-0,
+  //   property: (
+  //     '& *': (
+  //       padding: 0,
+  //       margin: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'direct-children-reset-spacing': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:spacing-0,
+  //   property: (
+  //     '& > *': (
+  //       padding: 0,
+  //       margin: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'children-remove-margin': (
+  //   function: 'nested-rules',
+  //   class: children\:margin-0,
+  //   property: (
+  //     '& *': (
+  //       margin: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'direct-children-remove-margin': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:margin-0,
+  //   property: (
+  //     '& > *': (
+  //       margin: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'first-child-reset-margin': (
+  //   function: 'nested-rules',
+  //   class: first-child\:margin-0,
+  //   property: (
+  //     '& > *:first-child': (
+  //       margin: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'last-child-reset-margin': (
+  //   function: 'nested-rules',
+  //   class: last-child\:margin-0,
+  //   property: (
+  //     '& > *:first-child': (
+  //       margin: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'children-custom-marker': (
+  //   function: 'nested-rules',
+  //   class: children\:custom-marker,
+  //   property: (
+  //     '& li::marker': (
+  //       color: var(--marker-color),
+  //       font-size: var(--marker-font-size),
+  //     ),
+  //   ),
+  // ),
+  // 'children-marker-image': (
+  //   function: 'nested-rules',
+  //   class: children\:custom-marker-image,
+  //   property: (
+  //     '& li::marker': (
+  //       list-style-image: var(--marker-image-src),
+  //     ),
+  //   ),
+  // ),
+  // 'direct-children-marker-image': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:custom-marker-image,
+  //   property: (
+  //     '& li::marker': (
+  //       list-style-image: var(--marker-image-src),
+  //     ),
+  //   ),
+  // ),
+  // 'direct-child-custom-marker': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:custom-marker,
+  //   property: (
+  //     '& > li::marker': (
+  //       color: var(--marker-color),
+  //       font-size: var(--marker-font-size),
+  //     ),
+  //   ),
+  // ),
+  // 'focus-visible-children': (
+  //   function: 'nested-rules',
+  //   class: focus-visible\:children,
+  //   property: (
+  //     '& :where(a, button, input, textarea, select, details, iframe):focus-visible':
+  //     (
+  //       outline: 0,
+  //       box-shadow: var(--box-shadow-focus),
+  //     ),
+  //   ),
+  // ),
+  // 'custom-container': (
+  //   function: 'property-advanced',
+  //   class: container-dynamic,
+  //   property: (
+  //     padding-inline: $container-padding,
+  //     margin-inline: auto,
+  //     width: 100%,
+  //     max-width: var(--container-dynamic-max-width),
+  //   ),
+  // ),
+  // 'text-shorten': (
+  //   function: 'property-advanced',
+  //   class: shorten,
+  //   property: (
+  //     overflow: hidden,
+  //     line-height: var(--shorten-line-height, 1.5),
+  //     max-height:
+  //       calc(1em * var(--shorten-line-height, 1.5) * var(--shorten-max-line, 4)),
+  //   ),
+  // ),
+  // 'text-shorten-1': (
+  //   function: 'property-advanced',
+  //   class: shorten-1,
+  //   property: (
+  //     overflow: hidden,
+  //     line-height: var(--shorten-line-height, 1.5),
+  //     max-height: calc(1em * var(--shorten-line-height, 1.5) * 1),
+  //   ),
+  // ),
+  // 'text-shorten-2': (
+  //   function: 'property-advanced',
+  //   class: shorten-2,
+  //   property: (
+  //     overflow: hidden,
+  //     line-height: var(--shorten-line-height, 1.5),
+  //     max-height: calc(1em * var(--shorten-line-height, 1.5) * 2),
+  //   ),
+  // ),
+  // 'text-shorten-3': (
+  //   function: 'property-advanced',
+  //   class: shorten-3,
+  //   property: (
+  //     overflow: hidden,
+  //     line-height: var(--shorten-line-height, 1.5),
+  //     max-height: calc(1em * var(--shorten-line-height, 1.5) * 3),
+  //   ),
+  // ),
+  // 'text-shorten-4': (
+  //   function: 'property-advanced',
+  //   class: shorten-4,
+  //   property: (
+  //     overflow: hidden,
+  //     line-height: var(--shorten-line-height, 1.5),
+  //     max-height: calc(1em * var(--shorten-line-height, 1.5) * 4),
+  //   ),
+  // ),
+  // 'text-shorten-5': (
+  //   function: 'property-advanced',
+  //   class: shorten-5,
+  //   property: (
+  //     overflow: hidden,
+  //     line-height: var(--shorten-line-height, 1.5),
+  //     max-height: calc(1em * var(--shorten-line-height, 1.5) * 5),
+  //   ),
+  // ),
+  // 'flow-direct-children': (
+  //   function: 'nested-rules',
+  //   class: flows,
+  //   property: (
+  //     '& > * + *': (
+  //       margin-top: var(--flow-space, 1em),
+  //     ),
+  //   ),
+  // ),
+  // 'flow-all': (
+  //   function: 'nested-rules',
+  //   class: flow-all,
+  //   property: (
+  //     '& * + *': (
+  //       margin-top: var(--flow-space, 1em),
+  //     ),
+  //   ),
+  // ),
+  // 'overlay-custom': (
+  //   function: 'nested-rules',
+  //   class: overlay,
+  //   property: (
+  //     position: relative,
+  //     '&::after': (
+  //       content: "''",
+  //       position: absolute,
+  //       inset: 0,
+  //       background-color: var(--overlay-background, var(--clr-black)),
+  //       opacity: var(--alpha, 0.5),
+  //       z-index: var(--overlay-zindex, -1),
+  //     ),
+  //   ),
+  // ),
+  // 'fade': (
+  //   function: 'nested-rules',
+  //   class: fade,
+  //   property: (
+  //     transition: opacity 0.15s linear,
+  //     '&:not(.show)': (
+  //       opacity: 0,
+  //     ),
+  //     '&.show': (
+  //       opacity: 0.5,
+  //     ),
+  //   ),
+  // ),
+  // 'collapse': (
+  //   function: 'nested-rules',
+  //   class: collapse,
+  //   property: (
+  //     '&:not(.show)': (
+  //       display: none,
+  //     ),
+  //   ),
+  // ),
+  // 'collapsing': (
+  //   function: 'property-advanced',
+  //   class: collapsing,
+  //   property: (
+  //     height: 0,
+  //     overflow: hidden,
+  //     transition: height 0.35s ease,
+  //   ),
+  // ),
+  // 'collapsing-horizontal': (
+  //   function: 'property-advanced',
+  //   class: collapsing-horizontal,
+  //   property: (
+  //     width: 0,
+  //     height: auto,
+  //     transition: width 0.35 ease,
+  //   ),
+  // ),
+  // 'fixed-bottom': (
+  //   function: 'property-advanced',
+  //   class: fixed-bottom,
+  //   property: (
+  //     position: fixed,
+  //     bottom: 0,
+  //     right: 0,
+  //     left: 0,
+  //     z-index: var(--#{$prefix}z-1, 999),
+  //   ),
+  // ),
+  // 'fixed-top': (
+  //   function: 'property-advanced',
+  //   class: fixed-top,
+  //   property: (
+  //     position: fixed,
+  //     top: 0,
+  //     right: 0,
+  //     left: 0,
+  //     z-index: var(--#{$prefix}z-1),
+  //   ),
+  // ),
+  // 'clear-float': (
+  //   function: 'property-advanced',
+  //   class: clear-float,
+  //   state: '::after',
+  //   property: (
+  //     content: '',
+  //     display: block,
+  //     clear: both,
+  //   ),
+  // ),
+  // 'sr-only-focusable': (
+  //   function: 'property-advanced',
+  //   class: sr-only-focusable,
+  //   state: ':active' ':focus',
+  //   property: (
+  //     clip: auto,
+  //     -webkit-clip-path: none,
+  //     clip-path: none,
+  //     height: auto,
+  //     margin: auto,
+  //     overflow: visible,
+  //     width: auto,
+  //     white-space: normal,
+  //   ),
+  // ),
+  // 'sr-only': (
+  //   function: 'property-advanced',
+  //   class: sr-only,
+  //   property: (
+  //     border: 0,
+  //     clip: rect(1px, 1px, 1px, 1px),
+  //     -webkit-clip-path: inset(50%),
+  //     clip-path: inset(50%),
+  //     height: 1px,
+  //     margin: -1px,
+  //     overflow: hidden,
+  //     padding: 0,
+  //     position: absolute,
+  //     width: 1px,
+  //     white-space: nowrap,
+  //   ),
+  // ),
+  // 'sticky-top': (
+  //   function: 'property-advanced',
+  //   class: sticky-top,
+  //   property: (
+  //     position: sticky,
+  //     top: 0,
+  //     z-index: var(--#{$prefix}z-1),
+  //   ),
+  // ),
+  // 'sticky-bottom': (
+  //   function: 'property-advanced',
+  //   class: sticky-bottom,
+  //   property: (
+  //     position: sticky,
+  //     bottom: 0,
+  //     z-index: var(--#{$prefix}z-1),
+  //   ),
+  // ),
+  // 'default-button-style': (
+  //   function: 'property-advanced',
+  //   class: btn-style-reset,
+  //   property: (
+  //     background-color: transparent,
+  //     cursor: pointer,
+  //     border: none,
+  //   ),
+  // ),
+  // 'flex-center': (
+  //   function: 'property-advanced',
+  //   class: flex-center,
+  //   property: (
+  //     display: flex,
+  //     justify-content: center,
+  //     align-items: center,
+  //   ),
+  // ),
+  // 'place-center': (
+  //   function: 'property-advanced',
+  //   class: place-items-center,
+  //   property: (
+  //     display: grid,
+  //     place-items: center,
+  //   ),
+  // ),
+  // 'direct-child-a-text-none': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:a-text-none,
+  //   property: (
+  //     '& > a': (
+  //       text-decoration: none,
+  //     ),
+  //   ),
+  // ),
+  // 'children-a-text-none': (
+  //   function: 'nested-rules',
+  //   class: children\:a-text-none,
+  //   property: (
+  //     '&  a': (
+  //       text-decoration: none,
+  //     ),
+  //   ),
+  // ),
+  // 'children-list-reset': (
+  //   function: 'nested-rules',
+  //   class: children\:list-reset,
+  //   property: (
+  //     '&  ul': (
+  //       list-style: none,
+  //       padding-left: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'children-list-none': (
+  //   function: 'nested-rules',
+  //   class: children\:list-reset,
+  //   property: (
+  //     '&  ul': (
+  //       list-style: none,
+  //     ),
+  //   ),
+  // ),
+  // 'direct-children-list-reset': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:list-none,
+  //   property: (
+  //     '& > ul': (
+  //       list-style: none,
+  //       padding-left: 0,
+  //     ),
+  //   ),
+  // ),
+  // 'direct-children-list-none': (
+  //   function: 'nested-rules',
+  //   class: direct-children\:list-none,
+  //   property: (
+  //     '& > ul': (
+  //       list-style: none,
+  //     ),
+  //   ),
+  // ),
+  // 'children-center': (
+  //   function: 'nested-rules',
+  //   class: children\:center,
+  //   property: (
+  //     '& *': (
+  //       text-align: center,
+  //     ),
+  //   ),
+  // ),
+  // 'children-a-text-color': (
+  //   function: 'nested-rules',
+  //   class: children\:a-text-color,
+  //   property: (
+  //     '& a': (
+  //       color: var(--a-clr),
+  //     ),
+  //   ),
+  // ),
+  // 'focus-within-outline': (
+  //   function: 'nested-rules',
+  //   class: focus-within\:outline,
+  //   property: (
+  //     '&:focus-within': (
+  //       outline: var(--outline-width, 2px) var(--outline-style, solid)
+  //         var(--outline-color, currentColor),
+  //       outline-offset: var(--outline-offset, 0.2lh),
+  //     ),
+  //   ),
+  // ),
+  'children-font-weight':
+    (
+      function: 'nested-rules',
+      values: $font-weights,
+      class: children\:fw,
+      property: (
+        '& *': (
+          font-weight: #{VALUE},
+        ),
+      ),
+    )
+);

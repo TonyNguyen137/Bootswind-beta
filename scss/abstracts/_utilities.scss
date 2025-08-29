@@ -36,6 +36,12 @@ $selected-theme-rgb-colors: if(
   )
 );
 
+$selected-theme-hover-colors: if(
+  $enable-rgb-colors,
+  map-loop($selected-theme-hover-hex-colors, to-rgb, '$value'),
+  null
+);
+
 // @debug selected-theme $selected-theme-rgb-colors;
 
 $simple-custom-properties-merged: map.merge(
@@ -54,106 +60,10 @@ $simple-custom-properties-merged: map.merge(
 $utilities: ();
 $utilities: map.merge(
   (
-    'revert-spacing': (
-      function: 'nested-rules',
-      class: revert-spacing,
-      property: (
-        '*': (
-          padding: revert,
-          margin: revert,
-        ),
-      ),
-    ),
     'container-type': (
       class: container-type,
-      property: container-type,
+      property: container,
       values: inline-size size normal revert,
-    ),
-    'marker': (
-      function: 'nested-rules',
-      class: marker,
-      property: (
-        '& li::marker': (
-          color: var(--marker-color),
-          font-size: var(--marker-font-size),
-        ),
-      ),
-    ),
-    'custom-container': (
-      function: 'property-advanced',
-      class: container-dynamic,
-      property: (
-        padding-inline: $container-padding,
-        margin-inline: auto,
-        width: 100%,
-        max-width: var(--container-dynamic-max-width),
-      ),
-    ),
-    'text-shorten': (
-      function: 'property-advanced',
-      class: shorten,
-      property: (
-        overflow: hidden,
-        line-height: var(--shorten-line-height, 1.5),
-        max-height:
-          calc(
-            1em * var(--shorten-line-height, 1.5) * var(--shorten-max-line, 4)
-          ),
-      ),
-    ),
-    'text-shorten-1': (
-      function: 'property-advanced',
-      class: shorten-1,
-      property: (
-        overflow: hidden,
-        line-height: var(--shorten-line-height, 1.5),
-        max-height: calc(1em * var(--shorten-line-height, 1.5) * 1),
-      ),
-    ),
-    'text-shorten-2': (
-      function: 'property-advanced',
-      class: shorten-2,
-      property: (
-        overflow: hidden,
-        line-height: var(--shorten-line-height, 1.5),
-        max-height: calc(1em * var(--shorten-line-height, 1.5) * 2),
-      ),
-    ),
-    'text-shorten-3': (
-      function: 'property-advanced',
-      class: shorten-3,
-      property: (
-        overflow: hidden,
-        line-height: var(--shorten-line-height, 1.5),
-        max-height: calc(1em * var(--shorten-line-height, 1.5) * 3),
-      ),
-    ),
-    'text-shorten-4': (
-      function: 'property-advanced',
-      class: shorten-4,
-      property: (
-        overflow: hidden,
-        line-height: var(--shorten-line-height, 1.5),
-        max-height: calc(1em * var(--shorten-line-height, 1.5) * 4),
-      ),
-    ),
-    'text-shorten-5': (
-      function: 'property-advanced',
-      class: shorten-5,
-      property: (
-        overflow: hidden,
-        line-height: var(--shorten-line-height, 1.5),
-        max-height: calc(1em * var(--shorten-line-height, 1.5) * 5),
-      ),
-    ),
-    'marker-image': (
-      function: 'nested-rules',
-      class: marker-image,
-      property: (
-        '& li::marker': (
-          list-style-image: var(--marker-image-src),
-        ),
-      ),
     ),
     'hyphen': (
       class: hyphens,
@@ -210,6 +120,7 @@ $utilities: map.merge(
         background-color: rgba(0, 0, 0, 0.3),
       ),
     ),
+
     'scrollbar-hide-on-touch-device': (
       media: '(hover: none) and (pointer: coarse)',
       class: scrollbar-touch,
@@ -225,69 +136,13 @@ $utilities: map.merge(
       class: aspect-ratio,
       property: aspect-ratio,
       values: (
-        none: var(--aspect-ratio),
+        null: var(--aspect-ratio),
         square: string.unquote('1 / 1'),
         video: string.unquote('16 / 9'),
         classic: string.unquote('4 / 3'),
         photo: string.unquote('3 / 2'),
         portrait: string.unquote('2 / 3'),
         ultrawide: string.unquote('21 / 9'),
-      ),
-    ),
-    'flows': (
-      function: 'nested-rules',
-      class: flows,
-      property: (
-        '*:where(:not(:first-child))': (
-          margin-top: var(--flow-space, 1em),
-        ),
-      ),
-    ),
-    'flow-easy': (
-      function: 'nested-rules',
-      class: flow-simple,
-      property: (
-        '> *:where(:not(:first-child))': (
-          margin-top: var(--flow-space, 1em),
-        ),
-      ),
-    ),
-    'flow': (
-      function: 'nested-rules',
-      class: flow,
-      property: (
-        '> :first-child': (
-          margin: 0,
-        ),
-        '> * + *': (
-          margin-top: var(--flow-space, 16px),
-        ),
-      ),
-    ),
-    'flow-deep': (
-      function: 'nested-rules',
-      class: flow-deep,
-      property: (
-        '> :first-child': (
-          margin: 0,
-        ),
-        '> * + *': (
-          margin-top: var(--flow-space, 16px),
-          margin-bottom: 0,
-        ),
-        '> :last-child': (
-          margin-bottom: var(--flow-space-last, 0px),
-        ),
-      ),
-    ),
-    'flows-ring-a': (
-      function: 'nested-rules',
-      class: flows-rings-deep-a,
-      property: (
-        'a:focus': (
-          outline: 0,
-          box-shadow: var(--box-shadow-focus),
-        ),
       ),
     ),
     'border-custom-properties': (
@@ -374,71 +229,8 @@ $utilities: map.merge(
         ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
-    'fade': (
-      function: 'nested-rules',
-      class: fade,
-      property: (
-        transition: opacity 0.15s linear,
-        '&:not(.show)': (
-          opacity: 0,
-        ),
-        '&.show': (
-          opacity: 0.5,
-        ),
-      ),
-    ),
-    'collapse': (
-      function: 'nested-rules',
-      class: collapse,
-      property: (
-        '&:not(.show)': (
-          display: none,
-        ),
-      ),
-    ),
-    'collapsing': (
-      function: 'property-advanced',
-      class: collapsing,
-      property: (
-        height: 0,
-        overflow: hidden,
-        transition: height 0.35s ease,
-      ),
-    ),
-    'collapsing-horizontal': (
-      function: 'property-advanced',
-      class: collapsing-horizontal,
-      property: (
-        width: 0,
-        height: auto,
-        transition: width 0.35 ease,
-      ),
-    ),
-    'flow-ring': (
-      function: 'nested-rules',
-      class: flow-ring,
-      property: (
-        '*:focus': (
-          outline: 0,
-          box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-            var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-        ),
-      ),
-    ),
-    'flow-ring-a': (
-      function: 'nested-rules',
-      class: flow-ring-a,
-      property: (
-        'a:focus': (
-          outline: 0,
-          box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-            var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-        ),
-      ),
-    ),
     'box-sizing': (
       property: box-sizing,
-      class: box,
       values: border-box content-box,
     ),
     'inset': (
@@ -448,33 +240,14 @@ $utilities: map.merge(
     ),
     'isolation': (
       property: isolation,
-      class: isolate,
-      values: (
-        null: isolate,
-      ),
+      values: isolate,
     ),
-    'cursor': (
+    'cursor-classless': (
       property: cursor,
-      class: cursor,
+      // class: cursor,
       values: pointer help wait crosshair not-allowed zoom-in grab,
     ),
-
-    'overlay-custom': (
-      function: 'nested-rules',
-      class: overlay,
-      property: (
-        position: relative,
-        '&::after': (
-          content: "''",
-          position: absolute,
-          inset: 0,
-          background-color: var(--overlay-background, var(--clr-black)),
-          opacity: var(--alpha, 0.5),
-          z-index: var(--overlay-zindex, -1),
-        ),
-      ),
-    ),
-    'overlay-dark': (
+    'overlay-dark-border-image': (
       property: border-image,
       class: overlay-dark,
       values: (
@@ -532,6 +305,12 @@ $utilities: map.merge(
       class: d,
       values: inline inline-block block grid inline-grid table table-row
         table-cell flex inline-flex none,
+    ),
+    'display-classless': (
+      responsive: true,
+      property: display,
+      values: inline inline-block block table table-row table-cell flex
+        inline-flex none,
     ),
     'grid-template-rows': (
       property: grid-template-rows,
@@ -631,12 +410,111 @@ $utilities: map.merge(
         null: translateY(var(--translate-y)),
       ),
     ),
+    'focus-within:outline': (
+      class: focus-within\:outline,
+      state: ':focus-within',
+      property: outline,
+      values: (
+        none: none,
+        null: var(--border-width, 1px) var(--border-type, solid)
+          var(--border-clr, var(--#{$prefix}clr-primary)),
+      ),
+    ),
+    'outline': (
+      class: outline,
+      property: outline,
+      values: (
+        none: none,
+        null: var(--outline-width, 1px) var(--outline-type, solid)
+          var(--outline-color, currentColor),
+      ),
+    ),
+    'outline-offset': (
+      class: outline-os,
+      property: outline-offset,
+      values: $border-widths,
+    ),
+    'outline-color-rgba-custom-property-value': (
+      function: 'css-var',
+      css-variable-name: outline-color,
+      class: outline,
+      values:
+        map-loop(
+          $selected-theme-rgb-colors,
+          rgba-css-var-advanced,
+          '$key',
+          null,
+          $color-prefix
+        ),
+    ),
+
+    'outline-width-custom-property': (
+      function: 'css-var',
+      css-variable-name: outline-width,
+      class: outline,
+      values: $border-widths,
+    ),
+    'outline-style-custom-property': (
+      function: 'css-var',
+      css-variable-name: outline-style,
+      class: outline,
+      values: $border-styles,
+    ),
+    'outline-offset-custom-property': (
+      function: 'css-var',
+      css-variable-name: outline-offset,
+      class: outline-offset,
+      values: $border-widths,
+    ),
+
+    'focus-color': (
+      function: 'css-var',
+      css-variable-name: focus-color,
+      class: focus,
+      values:
+        map-loop(
+          $selected-theme-rgb-colors,
+          rgba-css-var-advanced,
+          '$key',
+          null,
+          $color-prefix
+        ),
+    ),
+
+    'focus-width-custom-property': (
+      function: 'css-var',
+      css-variable-name: focus-width,
+      class: focus-w,
+      values: $border-widths,
+    ),
+
+    'focus-style-custom-property': (
+      function: 'css-var',
+      css-variable-name: focus-style,
+      class: focus,
+      values: $border-styles,
+    ),
+    'focus-offset-custom-property': (
+      function: 'css-var',
+      css-variable-name: focus-offset,
+      class: focus-offset,
+      values: $border-widths,
+    ),
+
     'border': (
       class: border,
       property: border,
       values: (
-        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
+        none: none,
+        null: var(--border-width, 1px) var(--border-type, solid)
+          var(--border-clr, var(--#{$prefix}clr-primary)),
       ),
+    ),
+    'border-width-custom-property': (
+      function: 'css-var',
+      css-variable-name: border-width,
+      class: border-width,
+      values: $border-widths,
     ),
     'border-top': (
       class: border-top,
@@ -728,10 +606,16 @@ $utilities: map.merge(
       class: border-style,
       values: solid dashed dotted groove none double inset,
     ),
+    'border-style-custom-property': (
+      function: 'css-var',
+      css-variable-name: border-style,
+      class: border,
+      values: $border-styles,
+    ),
     'border-color-rgba-custom-property-value': (
       function: 'css-var',
-      css-variable-name: border-clr-rgb,
-      class: border-clr-rgb,
+      css-variable-name: border-color,
+      class: border,
       values:
         map-loop(
           $selected-theme-rgb-colors,
@@ -741,29 +625,30 @@ $utilities: map.merge(
           $color-prefix
         ),
     ),
-    'border-colors-custom-property-value': (
-      function: 'css-var',
-      css-variable-name: border-clr,
-      class: border-clr,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
-          null
+    // 'border-colors-custom-property-value': (
+    //   function: 'css-var',
+    //   css-variable-name: border-clr,
+    //   class: border-clr,
+    //   custom-property-prefix:
+    //     if(meta.variable-exists(color-prefix), $color-prefix, null),
+    //   values:
+    //     if(
+    //       meta.variable-exists(selected-theme-hex-colors),
+    //       $selected-theme-hex-colors,
+    //       null
+    //     ),
+    // ),
+    'focus-ring':
+      (
+        function: 'property-advanced',
+        class: focus-ring,
+        state: ':focus',
+        property: (
+          outline: 0,
+          box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+            var(--focus-ring-color, var(--#{$prefix}clr-primary)),
         ),
-    ),
-    'focus-ring': (
-      function: 'property-advanced',
-      class: focus-ring,
-      state: ':focus',
-      property: (
-        outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-          var(--focus-ring-color, var(--#{$prefix}clr-primary)),
       ),
-    ),
     'focus-ring-focus-visible': (
       function: 'property-advanced',
       class: focus-ring-fv,
@@ -853,10 +738,11 @@ $utilities: map.merge(
           )
         ),
     ),
-    'max-width': (
+    'max-width-arbitary': (
+      function: 'arbitary-value',
       property: max-width,
-      class: mw,
-      values: $percentage-values,
+      class: max-w,
+      responsive: true,
     ),
     'max-width-fixed': (
       property: max-width,
@@ -916,6 +802,7 @@ $utilities: map.merge(
     ),
     'flex': (
       responsive: true,
+      class: flex,
       property: flex,
       values: (
         1: 1,
@@ -958,6 +845,7 @@ $utilities: map.merge(
       values: wrap nowrap wrap-reverse,
     ),
     'justify-content': (
+      class: justify-content,
       responsive: true,
       property: justify-content,
       values: (
@@ -1032,6 +920,7 @@ $utilities: map.merge(
     ),
     'order': (
       responsive: true,
+      class: order,
       property: order,
       values: (
         first: -1,
@@ -1063,17 +952,12 @@ $utilities: map.merge(
     'font-weight': (
       property: font-weight,
       class: fw,
-      values: (
-        thin: 100,
-        extra-light: 200,
-        light: 300,
-        regular: 400,
-        medium: 500,
-        semibold: 600,
-        bold: 700,
-        extra-bold: 800,
-        'black': 900,
-      ),
+      values: $font-weights,
+    ),
+    'font-weight-numbers': (
+      property: font-weight,
+      class: fw,
+      values: 100 200 300 400 500 600 700 800 900,
     ),
     'line-height': (
       property: line-height,
@@ -1113,17 +997,32 @@ $utilities: map.merge(
     ),
     'white-space': (
       property: white-space,
-      class: text,
+      class: white-space,
       values: (
         wrap: normal,
         nowrap: nowrap,
       ),
     ),
-    'word-wrap': (
-      property: word-wrap word-break,
-      class: text,
+    'word-break': (
+      property: word-break,
+      class: word-break,
+      values: normal break-all keep-all break-word,
+    ),
+    'word-spacing': (
+      property: word-spacing,
+      class: word-spacing,
       values: (
-        break: break-word,
+        null: var(--word-spacing-value),
+        1: 1px,
+        2: 2px,
+        3: 3px,
+        4: 4px,
+        5: 5px,
+        6: 6px,
+        7: 7px,
+        8: 8px,
+        9: 9px,
+        10: 10px,
       ),
     ),
     'alpha': (
@@ -1132,20 +1031,37 @@ $utilities: map.merge(
       css-variable-name: alpha,
       values: $decimal-percentage-values,
     ),
+    'hover:alpha': (
+      state: ':hover',
+      function: 'css-var',
+      class: hover\:alpha,
+      css-variable-name: alpha,
+      values: $decimal-percentage-values,
+    ),
     'opacity': (
+      class: opacity,
       property: opacity,
+      values: $decimal-percentage-values,
+    ),
+    'hover-opacity': (
+      state: ':hover',
+      property: opacity,
+      class: hover\:opacity,
       values: $decimal-percentage-values,
     ),
     'overflow': (
       property: overflow,
+      class: overflow,
       values: auto hidden visible scroll clip,
     ),
     'overflow-x': (
       property: overflow-x,
+      class: overflow-x,
       values: auto hidden visible scroll clip,
     ),
     'overflow-y': (
       property: overflow-y,
+      clas: overflow-y,
       values: auto hidden visible scroll clip,
     ),
     'gradient': (
@@ -1167,7 +1083,7 @@ $utilities: map.merge(
     ),
     'text-underline-offset': (
       property: text-underline-offset,
-      class: text,
+      class: text-underline-offset,
       values: (
         0: 0,
         1: 1px,
@@ -1175,12 +1091,16 @@ $utilities: map.merge(
         3: 3px,
         4: 4px,
         5: 5px,
+        6: 6px,
+        7: 7px,
+        8: 8px,
+        9: 9px,
       ),
     ),
     'text-decoration-color': (
       function: 'custom-property-value',
       property: text-decoration-color,
-      class: text-underline,
+      class: text-decoration,
       custom-property-prefix:
         if(meta.variable-exists(color-prefix), $color-prefix, null),
       values:
@@ -1190,10 +1110,10 @@ $utilities: map.merge(
           null
         ),
     ),
-    'hover-text-underline': (
+    'hover:text-underline': (
       state: ':hover',
       property: text-decoration-line,
-      class: hover-text,
+      class: hover\:text,
       values: (
         underline: underline,
         underline-dotted: underline dotted,
@@ -1206,7 +1126,7 @@ $utilities: map.merge(
     ),
     'pointer-events': (
       property: pointer-events,
-      class: pe,
+      class: pointer-events,
       values: none auto,
     ),
     'visibility': (
@@ -1214,55 +1134,19 @@ $utilities: map.merge(
       class: visibility,
       values: visible hidden,
     ),
-    'reset-spacing': (
-      function: 'nested-rules',
-      class: reset-spacing,
+    'list-reset': (
+      function: 'property-advanced',
+      class: list-reset,
       property: (
-        '*': (
-          padding: 0,
-          margin: 0,
-        ),
+        list-style: none,
+        padding-left: 0,
+        margin: 0,
       ),
     ),
     'list-none': (
       property: list-style,
       class: list,
       values: none,
-    ),
-    'list-reset-a': (
-      function: 'nested-rules',
-      class: list-reset-deep-a,
-      property: (
-        list-style: none,
-        padding-left: 0,
-        a: (
-          text-decoration: none,
-        ),
-      ),
-    ),
-    'list-none-deep': (
-      function: 'nested-rules',
-      class: list-none-deep,
-      property: (
-        list-style: none,
-        a: (
-          text-decoration: none,
-        ),
-      ),
-    ),
-    '.list-reset-deep': (
-      function: 'nested-rules',
-      class: list-reset-deep,
-      property: (
-        'ul,ol': (
-          list-style: none,
-          padding-left: 0,
-          margin-block: 0,
-        ),
-        a: (
-          text-decoration: none,
-        ),
-      ),
     ),
     'simple-and-resposive-custom-properties': (
       function: 'simple-custom-property',
@@ -1309,78 +1193,85 @@ $utilities: map.merge(
         none: none,
       ),
     ),
-    'focus-ring-main': (
-      function: 'custom-property-value',
-      state: ':focus',
-      required-property: (
-        outline: 0,
+    'box-shadow-width': (
+      function: 'css-var',
+      class: shadow-w,
+      css-variable-name: shadow-width,
+      values: $border-widths,
+    ),
+    // 'focus-ring-main': (
+    //   function: 'custom-property-value',
+    //   state: ':focus',
+    //   required-property: (
+    //     outline: 0,
+    //   ),
+    //   property: box-shadow,
+    //   class: focus-ring,
+    //   custom-property-prefix:
+    //     if(
+    //       meta.variable-exists(focus-rings),
+    //       map.get($focus-rings, custom-property-prefix),
+    //       null
+    //     ),
+    //   values:
+    //     if(
+    //       meta.variable-exists(focus-rings),
+    //       map.get($focus-rings, values),
+    //       null
+    //     ),
+    // ),
+    'transition-custom':
+      (
+        function: 'custom-property-value',
+        property: transition,
+        class: transition,
+        custom-property-prefix:
+          if(
+            meta.variable-exists(transitions),
+            map.get($transitions, custom-property-prefix),
+            null
+          ),
+        values:
+          if(
+            meta.variable-exists(transitions),
+            map.get($transitions, values),
+            null
+          ),
       ),
-      property: box-shadow,
-      class: focus-ring,
-      custom-property-prefix:
-        if(
-          meta.variable-exists(focus-rings),
-          map.get($focus-rings, custom-property-prefix),
-          null
-        ),
-      values:
-        if(
-          meta.variable-exists(focus-rings),
-          map.get($focus-rings, values),
-          null
-        ),
-    ),
-    'transition-custom': (
-      function: 'custom-property-value',
-      property: transition,
-      class: transition,
-      custom-property-prefix:
-        if(
-          meta.variable-exists(transitions),
-          map.get($transitions, custom-property-prefix),
-          null
-        ),
-      values:
-        if(
-          meta.variable-exists(transitions),
-          map.get($transitions, values),
-          null
-        ),
-    ),
     'transition': (
       property: transition,
       class: transition,
       values: (
         none: none,
-        all: all 0.3s,
-        background: background 0.3s,
-        opacity: opacity 0.3s,
-        shadow: box-shadow 0.3s,
-        height: height 0.3s,
+        all: all var(--transition-duration, 0.3s),
+        background: background var(--transition-duration, 0.3s),
+        color: color var(--transition-duration, 0.3s),
+        opacity: opacity var(--transition-duration, 0.3s),
+        shadow: box-shadow var(--transition-duration, 0.3s),
+        height: height var(--transition-duration, 0.3s),
       ),
     ),
-    'transition-duration': (
-      property: transition-duration,
-      class: duration,
-      values: (
-        100: 100ms,
-        200: 200ms,
-        300: 300ms,
-        400: 400ms,
-        500: 500ms,
-        600: 600ms,
-        700: 700ms,
-        800: 800ms,
-        900: 900ms,
-        1000: 1000ms,
-        2000: 2000ms,
-        3000: 3000ms,
+    // 'transition-duration': (
+    //   property: transition-duration,
+    //   class: transition-duration,
+    //   values: $duration-values-map,
+    // ),
+    'trans-duration':
+      (
+        function: 'css-var',
+        css-variable-name: transition-duration,
+        class: duration,
+        values: $duration-values-map,
       ),
-    ),
     'transition-timing': (
       property: transition-timing-function,
-      class: timing,
       values: linear ease-in ease-out ease-in-out,
+    ),
+    'transition-property': (
+      property: transition-property,
+      class: transition,
+      values: background-color color height width opacity box-shadow border
+        outline,
     ),
     'z-index': (
       function: 'custom-property-value',
@@ -1560,117 +1451,23 @@ $utilities: map.merge(
           null
         ),
     ),
-    'flex-center': (
-      function: 'property-advanced',
-      class: flex-center,
-      property: (
-        display: flex,
-        justify-content: center,
-        align-items: center,
-      ),
-    ),
-    'default-button-style': (
-      function: 'property-advanced',
-      class: btn-style-reset,
-      property: (
-        background-color: transparent,
-        cursor: pointer,
-        border: none,
-      ),
-    ),
-    'clear-float': (
-      function: 'property-advanced',
-      class: clear-float,
-      state: '::after',
-      property: (
-        content: '',
-        display: block,
-        clear: both,
-      ),
-    ),
-    'sr-only-focusable': (
-      function: 'property-advanced',
-      class: sr-only-focusable,
-      state: ':active' ':focus',
-      property: (
-        clip: auto,
-        -webkit-clip-path: none,
-        clip-path: none,
-        height: auto,
-        margin: auto,
-        overflow: visible,
-        width: auto,
-        white-space: normal,
-      ),
-    ),
-    'sr-only': (
-      function: 'property-advanced',
-      class: sr-only,
-      property: (
-        border: 0,
-        clip: rect(1px, 1px, 1px, 1px),
-        -webkit-clip-path: inset(50%),
-        clip-path: inset(50%),
-        height: 1px,
-        margin: -1px,
-        overflow: hidden,
-        padding: 0,
-        position: absolute,
-        width: 1px,
-        white-space: nowrap,
-      ),
-    ),
-    'sticky-top': (
-      function: 'property-advanced',
-      class: sticky-top,
-      property: (
-        position: sticky,
-        top: 0,
-        z-index: var(--#{$prefix}z-1),
-      ),
-    ),
-    'sticky-bottom': (
-      function: 'property-advanced',
-      class: sticky-bottom,
-      property: (
-        position: sticky,
-        bottom: 0,
-        z-index: var(--#{$prefix}z-1),
-      ),
-    ),
-    'fixed-top': (
-      function: 'property-advanced',
-      class: fixed-top,
-      property: (
-        position: fixed,
-        top: 0,
-        right: 0,
-        left: 0,
-        z-index: var(--#{$prefix}z-1),
-      ),
-    ),
-    'fixed-bottom': (
-      function: 'property-advanced',
-      class: fixed-bottom,
-      property: (
-        position: fixed,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        z-index: var(--#{$prefix}z-1, 999),
-      ),
-    ),
-    'position': (
+    'position-classless': (
       property: position,
-      class: position,
       values: static relative absolute fixed sticky,
     ),
     'top': (
       property: top,
       class: top,
+      values: (
+        null: var(--position-top-value),
+      ),
+    ),
+    'top-percentage': (
+      property: top,
+      class: top-p,
       values: $percentage-values,
     ),
-    'to-fix': (
+    'top-fixed': (
       property: top,
       class: top-f,
       values: $fixed-values,
@@ -1696,8 +1493,15 @@ $utilities: map.merge(
       values: $fixed-values,
     ),
     'bottom': (
-      property: bottom,
+      property: top,
       class: bottom,
+      values: (
+        null: var(--position-bottom-value),
+      ),
+    ),
+    'bottom-percentage': (
+      property: bottom,
+      class: bottom-p,
       values: $percentage-values,
     ),
     'bottom-fixed': (
@@ -1725,9 +1529,23 @@ $utilities: map.merge(
       class: bottom-left-f,
       values: $fixed-values,
     ),
+    'left': (
+      property: left,
+      class: left,
+      values: (
+        null: var(--position-left-value),
+      ),
+    ),
     'start': (
       property: left,
       class: start,
+      values: (
+        null: var(--position-start-value),
+      ),
+    ),
+    'start-percentage': (
+      property: left,
+      class: start-p,
       values: $percentage-values,
     ),
     'start-fixed': (
@@ -1735,9 +1553,23 @@ $utilities: map.merge(
       class: start-f,
       values: $fixed-values,
     ),
+    'right': (
+      property: right,
+      class: right,
+      values: (
+        null: var(--position-right-value),
+      ),
+    ),
     'end': (
       property: right,
       class: end,
+      values: (
+        null: var(--position-end-value),
+      ),
+    ),
+    'end-percentage': (
+      property: right,
+      class: end-p,
       values: $percentage-values,
     ),
     'end-fixed': (
@@ -1813,16 +1645,10 @@ $utilities: map.merge(
       class: end,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
-    'hover-opacity': (
-      state: ':hover',
-      property: opacity,
-      class: hover-opacity,
-      values: $decimal-percentage-values,
-    ),
     'hover-scale': (
       state: ':hover',
       property: scale,
-      class: hover-scale,
+      class: hover\:scale,
       values:
         map.merge(
           (
@@ -1844,53 +1670,9 @@ $utilities: map.merge(
           null
         ),
     ),
-    'background-colors-rgba-hover': (
-      state: ':hover',
+    'background-colors': (
       property: background-color,
-      class: hover-bga,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          $enable-rgb-colors,
-          map-loop(
-            $selected-theme-rgb-colors,
-            rgba-css-var-advanced,
-            '$key',
-            null,
-            $hover-prefix
-          ),
-          null
-        ),
-    ),
-    'background-colors-hex-custom-property-hover': (
-      state: ':hover',
-      function: 'custom-property-value',
-      property: background-color,
-      class: hover-bg,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
-          null
-        ),
-    ),
-    'hover-background-colors-hex': (
-      property: background-color,
-      class: hover-bg,
-      state: ':hover',
-      values:
-        if(
-          map.has-key($color-theme, $selected-theme, hover),
-          map.get($color-theme, $selected-theme, hover),
-          null
-        ),
-    ),
-    'background-colors-alpha': (
-      property: background-color,
-      class: bga,
+      class: bg,
       values:
         if(
           enable-rgb-colors,
@@ -1904,26 +1686,37 @@ $utilities: map.merge(
           null
         ),
     ),
-    'background-colors-hex-custom-property': (
-      function: 'custom-property-value',
+    'hover:background-selected-theme-color': (
+      state: ':hover',
       property: background-color,
-      class: bg,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
+      class: hover\:bg,
       values:
         if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
+          enable-rgb-colors,
+          map-loop(
+            $selected-theme-rgb-colors,
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $color-prefix
+          ),
           null
         ),
     ),
-    'background-colors-hex': (
+    'hover:background-selected-theme-hover-color': (
+      state: ':hover',
       property: background-color,
-      class: bg-h,
+      class: hover\:bg,
       values:
         if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
+          enable-rgb-colors,
+          map-loop(
+            $selected-theme-hover-colors,
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $hover-prefix
+          ),
           null
         ),
     ),
@@ -1941,7 +1734,7 @@ $utilities: map.merge(
     ),
     'text-color-alpha': (
       property: color,
-      class: texta,
+      class: text,
       // custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
       values:
         if(
@@ -1959,7 +1752,7 @@ $utilities: map.merge(
     'text-color-hex-custom-properties': (
       function: 'custom-property-value',
       property: color,
-      class: text,
+      class: color,
       custom-property-prefix:
         if(meta.variable-exists(color-prefix), $color-prefix, null),
       values:
@@ -1969,9 +1762,13 @@ $utilities: map.merge(
           null
         ),
     ),
-    'text-color-hex': (
+    'hover:text-color-hex-custom-properties': (
+      state: ':hover',
+      function: 'custom-property-value',
       property: color,
-      class: text-hex,
+      class: hover\:color,
+      custom-property-prefix:
+        if(meta.variable-exists(color-prefix), $color-prefix, null),
       values:
         if(
           meta.variable-exists(selected-theme-hex-colors),
@@ -1979,26 +1776,46 @@ $utilities: map.merge(
           null
         ),
     ),
-    'text-color-hex-hover': (
-      property: color,
+    'hover:text-color-hex-hover-custom-properties': (
       state: ':hover',
-      class: text-hover#{'-' + remove-substring($color-prefix, '-')},
+      function: 'custom-property-value',
+      property: color,
+      class: hover\:color,
+      custom-property-prefix:
+        if(meta.variable-exists(hover-prefix), $hover-prefix, null),
       values:
         if(
-          map.has-key($color-theme, $selected-theme, hover),
-          map.get($color-theme, $selected-theme, hover),
+          meta.variable-exists(selected-theme-hover-hex-colors),
+          $selected-theme-hover-hex-colors,
           null
         ),
     ),
-    'text-color-rgba-hover': (
-      property: color,
-      class: text-hover,
+    'hover:text-selected-theme-color': (
       state: ':hover',
+      property: color,
+      class: hover\:text,
       values:
         if(
-          map.has-key($color-theme, $selected-theme, hover),
+          enable-rgb-colors,
           map-loop(
-            map.get($color-theme, $selected-theme, hover),
+            $selected-theme-rgb-colors,
+            rgba-css-var-advanced,
+            '$key',
+            null,
+            $color-prefix
+          ),
+          null
+        ),
+    ),
+    'hover:text-selected-theme-hover-color': (
+      state: ':hover',
+      property: color,
+      class: hover\:text,
+      values:
+        if(
+          enable-rgb-colors,
+          map-loop(
+            $selected-theme-hover-colors,
             rgba-css-var-advanced,
             '$key',
             null,

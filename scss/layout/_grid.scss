@@ -76,7 +76,8 @@ $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
 }
 
 /* == grid advanced == */
-.grid {
+.grid,
+.inline-grid {
   --gap: 16px;
   --column-temp: none;
   --row-temp: none;

@@ -93,7 +93,7 @@
 https://picsum.photos/id/237/200/300
 
 // am überlegen
-custom media query für utilitie
+custom media query für utilities
 translate fluid
 remove Utils class
 radius mit fixed values
@@ -101,6 +101,7 @@ accordion input fixed, sodass mein auch mehrere dom objkect üvergeben kann anst
 accordion öffnen lassen beim start
 self-flow
 hover background
+transition überbearbeiten
 
 not mandatory:
 sticky table
@@ -109,3 +110,9 @@ mdn sticky scrollable sidebar
 
 flex-children klassen
 flex 1
+
+children-text-color
+arbirtery value
+
+focus-within utility class mit colors - full setting halt
+outline utility class mit colors - full setting halt
