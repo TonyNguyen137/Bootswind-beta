@@ -14,13 +14,13 @@ Modifications may have been made to the original code.
 /* ****************************************************** */
 
 $prefix: '';
-$prefix-class: $prefix;
+$class-namespace: $prefix;
 $enable-transitions: true;
 $enable-reduced-motion: true;
-$enable-css-grid-system: true;
+$enable-css-grid-item-system: true;
 
 /* ****************************************************** */
-/* Bootstrap grid system  & container 
+/* Bootstrap grid system, container 
 /* ****************************************************** */
 
 $bs-prefix: bs-;
@@ -50,6 +50,8 @@ $grid-breakpoints: (
   3xl: 1600px,
 );
 
+$grid-breakpoints-up: map.remove($grid-breakpoints, xs);
+
 // rem values
 // $grid-breakpoints: (
 //   xs: 0,
@@ -76,6 +78,14 @@ $container-max-widths: (
 // @debug map.get($container-max-widths, sm);
 // @debug map.get($container-max-widths, 3xl);
 // @debug map.get($grid-breakpoints, 3xl);
+
+/* ****************************************************** */
+/* Container queries width
+/* ****************************************************** */
+
+$container-query-sizes: (
+  'card': 470px,
+);
 
 /* ****************************************************** */
 /* Color theme
@@ -120,7 +130,7 @@ $color-theme: (
       // 'light': $light,
       // 'dark': $dark,
       // 'zero': #000,
-      // 'quindecenary': #fff,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+       // 'quindecenary': #fff,
     ),
   ),
 );
@@ -151,27 +161,23 @@ $enable-color-themes: false;
 /* Clamp() values
 /* ************************************************************* */
 
-// $size-prefix: fs-fluid;
-
-$size-clamp: (
-  fs-fluid-heading-primary: (
+$font-size-clamp: (
+  fluid-heading-1: (
     // default true
     create-custom-property: true,
     threshold: (
       sm: 32,
-      1800: 80,
+      1800: 60,
     ),
     // default rem
     threshold-unit: 'rem',
-    // default rem
-    preferred-unit: 'rem',
     // default viewport
     relative-to: 'viewport',
   ),
 );
 
 $spacing-clamp: (
-  'fluid-15-30': (
+  'fluid-sp-32-150': (
     // default true
     create-custom-property: true,
     threshold: (
@@ -180,10 +186,23 @@ $spacing-clamp: (
     ),
     // default px
     threshold-unit: 'px',
-    // default rem
-    preferred-unit: 'rem',
     // default viewport
     relative-to: 'viewport',
+  ),
+);
+
+$container-clamp: (
+  'fluid-ct-16-48': (
+    // default true
+    create-custom-property: true,
+    threshold: (
+      576px: 16,
+      992px: 48,
+    ),
+    // default px
+    threshold-unit: 'rem',
+    // default container
+    relative-to: 'container',
   ),
 );
 
@@ -192,7 +211,7 @@ $spacing-clamp: (
 /* ************************************************************* */
 
 $simple-custom-properties: (
-  'container-padding-x': (
+  'container-padding': (
     value: $container-padding,
   ),
   'example-custom-property': (
@@ -203,7 +222,7 @@ $simple-custom-properties: (
 );
 
 /* ****************************************************** */
-/* Responsive custom Properties - xs is default
+/* Responsive custom Properties 
 /* ****************************************************** */
 
 $responsive-custom-properties-prefix: '';
@@ -212,6 +231,8 @@ $responsive-custom-properties: (
   xs: (
     'heading-1': (
       value: 24px,
+
+      // optional utility class
       property: font-size,
       class: res-heading-1,
     ),
@@ -231,9 +252,6 @@ $responsive-custom-properties: (
   ),
   xxl: (
     container: map.get($container-max-widths, xxl),
-  ),
-  3xl: (
-    container: map.get($container-max-widths, 3xl),
   ),
 );
 
@@ -351,18 +369,6 @@ $transitions: (
   ),
 );
 
-// /* ****************************************************** */
-// /* Focus rings
-// /* ****************************************************** */
-
-// $focus-rings: (
-//   custom-property-prefix: 'focus-ring',
-//   values: (
-//     main: 0 0 0 var(--focus-ring-width, 0.25rem)
-//       rgba(var(--clr-primary-rgb), 0.75),
-//   ),
-// );
-
 /* ****************************************************** */
 /* Font family
 /* ****************************************************** */
@@ -453,55 +459,6 @@ $viewport-width-values: (
   50: 50vw,
   75: 75vw,
   100: 100vw,
-);
-
-// for width, height, and positions top-right-bottom-left utility classes:
-$fixed-values: (
-  n100: -100px,
-  n150: -150px,
-  n200: -200px,
-  n250: -250px,
-  n300: -300px,
-  n16: -16px,
-  n24: -24px,
-  n25: -25px,
-  n50: -50px,
-  n75: -75px,
-  0: 0,
-  16: 16px,
-  24: 24px,
-  25: 25px,
-  50: 50px,
-  75: 75px,
-  100: 100px,
-  150: 150px,
-  200: 200px,
-  250: 250px,
-  300: 300px,
-  350: 350px,
-  400: 400px,
-  450: 450px,
-  500: 500px,
-  550: 550px,
-  600: 600px,
-  650: 650px,
-  700: 700px,
-  750: 750px,
-  800: 800px,
-  850: 850px,
-  900: 900px,
-  950: 950px,
-  1000: 1000px,
-  1050: 1050px,
-  1100: 1100px,
-  1200: 1200px,
-  1300: 1300px,
-  1400: 1400px,
-  1500: 1500px,
-  1600: 1600px,
-  1700: 1700px,
-  1800: 1800px,
-  1920: 1920px,
 );
 
 $border-widths: (

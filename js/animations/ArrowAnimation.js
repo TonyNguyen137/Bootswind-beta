@@ -5,11 +5,7 @@ const ANIMATION_CLASS_NAME = 'moveArrowBody';
 
 export class ArrowAnimation {
   constructor(selector = '.arrow-animation') {
-    console.log('here');
-
     this._rootEls = typeof selector === 'string' ? Utils.toArray(selector) : null;
-
-    console.log(this._rootEls);
 
     const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine) ').matches;
 

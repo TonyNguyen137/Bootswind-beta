@@ -9,7 +9,7 @@
   row-gap: var(--row-gap, 1rem);
 
   > *:not(img) {
-    padding-inline: var(--container-padding-x);
+    padding-inline: var(--container-padding);
     background-color: var(--_bg);
     max-width: var(--container);
     margin-inline: auto;

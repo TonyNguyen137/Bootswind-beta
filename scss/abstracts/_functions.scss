@@ -81,16 +81,8 @@ Modifications may have been made to the original functions.
     @error 'Invalid value for $relative-to. Expected "viewport" or "container".';
   }
 
-  $min-size: if(
-    $threshold-unit == 'rem',
-    px-to-rem($min-size),
-    $min-size * 1px
-  );
-  $max-size: if(
-    $threshold-unit == 'rem',
-    px-to-rem($max-size),
-    $max-size * 1px
-  );
+  $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
+  $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
 
   $should-swap: $min-size > $max-size;
 
@@ -100,28 +92,13 @@ Modifications may have been made to the original functions.
     $max-size: $temp;
   }
 
-  $preferred-value: calc(
-    #{$preferred} #{if($should-swap, '-', '+')} #{$rate-of-change}
-  );
+  $preferred-value: calc(#{$preferred} #{if($should-swap, '-', '+')} #{$rate-of-change});
 
   @return clamp(#{$min-size}, #{$preferred-value}, #{$max-size});
 }
 
-@function fluid-px(
-  $min-size,
-  $max-size,
-  $min-viewport,
-  $max-viewport,
-  $relative-to: 'viewport'
-) {
-  @return fluid(
-    $min-size,
-    $max-size,
-    $min-viewport,
-    $max-viewport,
-    'px',
-    'rem' $relative-to
-  );
+@function fluid-px($min-size, $max-size, $min-viewport, $max-viewport, $relative-to: 'viewport') {
+  @return fluid($min-size, $max-size, $min-viewport, $max-viewport, 'px', 'rem' $relative-to);
 }
 
 @function normalize-breakpoint($value, $name) {
@@ -209,6 +186,14 @@ Modifications may have been made to the original functions.
 }
 @function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
   @return if(breakpoint-min($name, $breakpoints) == null, '', '-#{$name}');
+}
+
+@function breakpoint-key($name, $breakpoints: $grid-breakpoints) {
+  @if (breakpoint-min($name, $breakpoints) == null) {
+    @return '';
+  }
+
+  @return '#{$name}';
 }
 
 @function starts-with-digit($value) {
@@ -400,43 +385,36 @@ Modifications may have been made to the original functions.
 // stylelint-disable scss/dollar-variable-pattern
 @function rgba-css-var($identifier, $target) {
   @if $identifier == 'body' and $target == 'bg' {
-    @return rgba(
-      var(--#{$prefix}#{$identifier}-bg-rgb),
-      var(--#{$prefix}#{$target}-opacity)
-    );
+    @return rgba(var(--#{$prefix}#{$identifier}-bg-rgb), var(--#{$prefix}#{$target}-opacity));
   }
   @if $identifier == 'body' and $target == 'text' {
-    @return rgba(
-      var(--#{$prefix}#{$identifier}-color-rgb),
-      var(--#{$prefix}#{$target}-opacity)
-    );
+    @return rgba(var(--#{$prefix}#{$identifier}-color-rgb), var(--#{$prefix}#{$target}-opacity));
   } @else {
-    @return rgba(
-      var(--#{$prefix}#{$identifier}-rgb),
-      var(--#{$prefix}#{$target}-opacity)
-    );
+    @return rgba(var(--#{$prefix}#{$identifier}-rgb), var(--#{$prefix}#{$target}-opacity));
   }
 }
 
-@function rgba-css-var-advanced($identifier, $target, $local-prefix: '') {
-  // @debug advanced identifier $identifier;
-  // @debug advanced target $target;
-
+@function rgba-css-var-advanced(
+  $identifier,
+  $target,
+  $local-prefix: '',
+  $opacity-variable-name: alpha
+) {
   @if $identifier == 'body' and $target == 'bg' {
     @return rgba(
       var(--#{$prefix}#{$identifier}-bg-rgb),
-      var(--#{$prefix}alpha, 1)
+      var(--#{$prefix}#{$opacity-variable-name}, 1)
     );
   }
   @if $identifier == 'body' and $target == 'text' {
     @return rgba(
       var(--#{$prefix}#{$identifier}-color-rgb),
-      var(--#{$prefix}alpha, 1)
+      var(--#{$prefix}#{$opacity-variable-name}, 1)
     );
   } @else {
     @return rgba(
       var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb),
-      var(--#{$prefix}alpha, 1)
+      var(--#{$prefix}#{$opacity-variable-name}, 1)
     );
   }
 }

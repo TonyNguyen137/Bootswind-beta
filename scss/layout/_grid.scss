@@ -1,42 +1,25 @@
 @use '../abstracts' as *;
 @use 'sass:map';
 
-$grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
+$_breakpoint-xsm: (
+  xsm: 375px,
+);
+
+$_updated-grid-breakpoints: map.merge($grid-breakpoints, $_breakpoint-xsm);
 
 /* == responsive grid without media queries == */
-.grid-cols {
+.grid-res {
   --min-col-size: 275px;
   --auto-mode: auto-fill;
 
   padding: 12px;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(
-    var(--auto-mode),
-    minmax(min(var(--min-col-size), 100%), 1fr)
-  );
+  grid-template-columns: repeat(var(--auto-mode), minmax(min(var(--min-col-size), 100%), 1fr));
 
   /* modifiers */
   &--auto-fit {
     --auto-mode: auto-fit;
-  }
-}
-
-/* == grid with even columns == */
-.grid-even {
-  --col: 1;
-  --gap: 16px;
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: repeat(var(--col), 1fr);
-
-  @each $bp in map.keys($grid-breakpoints-without-xs) {
-    @include mq($bp) {
-      &--#{$bp} {
-        grid-template-columns: repeat(var(--col-#{$bp}, var(--col)), 1fr);
-        gap: var(--gap-#{$bp}, var(--gap));
-      }
-    }
   }
 }
 
@@ -60,67 +43,49 @@ $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
     /* Prevents scrolling past more than one child */
     scroll-snap-stop: var(--snap-stop);
   }
+}
 
-  @each $bp in map.keys($grid-breakpoints-without-xs) {
-    @include mq($bp) {
-      &--revert-#{$bp} {
-        --flow: row;
-        --overflow-x: none;
-        --snap-type: none;
-        --col-snap-width: auto;
-        --snap-align: none;
-        --snap-stop: normal;
-      }
+@each $bp in map.keys($_updated-grid-breakpoints) {
+  $bp-prefix: breakpoint-prefix($bp, $_updated-grid-breakpoints);
+
+  @include mq(
+    $bp,
+    (
+      grid-breakpoints: $_updated-grid-breakpoints,
+    )
+  ) {
+    .#{$bp-prefix}grid-snap-revert {
+      --flow: row;
+      --overflow-x: none;
+      --snap-type: none;
+      --col-snap-width: auto;
+      --snap-align: none;
+      --snap-stop: normal;
     }
   }
 }
 
-/* == grid advanced == */
-.grid,
-.inline-grid {
-  --gap: 16px;
-  --column-temp: none;
-  --row-temp: none;
-
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: var(--column-temp);
-  grid-template-rows: var(--row-temp);
-
-  $grid-breakpoints-without-xs: map.remove($grid-breakpoints, 'xs');
-
-  @each $bp in map.keys($grid-breakpoints-without-xs) {
-    @include mq($bp) {
-      &--#{$bp} {
-        grid-template-columns: var(--col-#{$bp}-temp, var(--column-temp));
-        grid-template-rows: var(--row-#{$bp}-temp, var(--row-temp));
-        gap: var(--gap-#{$bp}, var(--gap));
-      }
-    }
-  }
-}
-
-/* == grid-system == */
-@if $enable-css-grid-system {
+/* == grid-item-system == */
+@if $enable-css-grid-item-system {
   @each $breakpoint in map.keys($grid-breakpoints) {
     @include media-breakpoint-up($breakpoint) {
-      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+      $bp: breakpoint-prefix($breakpoint);
 
       @for $start from 1 through $grid-columns {
         @for $end from ($start + 1) through ($grid-columns + 1) {
-          .#{$prefix-class}grid-column#{$infix}-#{$start}-#{$end} {
+          .#{$bp}#{$class-namespace}grid-column-#{$start}-#{$end} {
             grid-column: #{$start} / #{$end};
           }
 
-          .#{$prefix-class}grid-row#{$infix}-#{$start}-#{$end} {
+          .#{$bp}#{$class-namespace}grid-row-#{$start}-#{$end} {
             grid-row: #{$start} / #{$end};
           }
         }
-        .#{$prefix-class}grid-column#{$infix}-#{$start}-end {
+        .#{$bp}#{$class-namespace}grid-column-#{$start}-end {
           grid-column: #{$start} / -1;
         }
 
-        .#{$prefix-class}grid-row#{$infix}-#{$start}-end {
+        .#{$bp}#{$class-namespace}grid-row-#{$start}-end {
           grid-row: #{$start} / -1;
         }
       }

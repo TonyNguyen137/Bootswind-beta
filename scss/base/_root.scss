@@ -5,49 +5,30 @@
 @use 'sass:math';
 
 :root {
-  @include generate-custom-properties(
-    if(meta.variable-exists(grid-breakpoints), $grid-breakpoints, null),
-    'bp-'
-  );
+  @include export-breakpoints-json($grid-breakpoints);
+  // @include generate-custom-properties(
+  //   if(meta.variable-exists(grid-breakpoints), $grid-breakpoints, null),
+  //   'bp-'
+  // );
   @include generate-custom-properties(
     if(meta.variable-exists(font-families), $font-families, null)
   );
-  @include generate-custom-properties(
-    if(meta.variable-exists(box-shadows), $box-shadows, null)
-  );
-  @include generate-custom-properties(
-    if(meta.variable-exists(z-indeces), $z-indeces, null)
-  );
-  @include generate-custom-properties(
-    if(meta.variable-exists(transitions), $transitions, null)
-  );
-  @include generate-custom-properties(
-    if(meta.variable-exists(borders), $borders, null)
-  );
+  @include generate-custom-properties(if(meta.variable-exists(box-shadows), $box-shadows, null));
+  @include generate-custom-properties(if(meta.variable-exists(z-indeces), $z-indeces, null));
+  @include generate-custom-properties(if(meta.variable-exists(transitions), $transitions, null));
+  @include generate-custom-properties(if(meta.variable-exists(borders), $borders, null));
   @include generate-custom-properties(
     if(meta.variable-exists(border-radius), $border-radius, null)
   );
-  @include generate-custom-properties(
-    if(meta.variable-exists(focus-rings), $focus-rings, null)
-  );
+  @include generate-custom-properties(if(meta.variable-exists(focus-rings), $focus-rings, null));
   @include generate-simple-custom-properties(
-    if(
-      meta.variable-exists(simple-custom-properties),
-      $simple-custom-properties,
-      null
-    )
+    if(meta.variable-exists(simple-custom-properties), $simple-custom-properties, null)
   );
 
   // Custom properties for default color theme
-  @include generate-color-custom-properties(
-    $selected-theme-hex-colors,
-    $color-prefix
-  );
+  @include generate-color-custom-properties($selected-theme-hex-colors, $color-prefix);
 
-  @include generate-color-custom-properties-rgb(
-    $selected-theme-rgb-colors,
-    $color-prefix
-  );
+  @include generate-color-custom-properties-rgb($selected-theme-rgb-colors, $color-prefix);
 
   // @include generate-color-custom-properties-rgb(
   //   if(meta.variable-exists(selected-theme-rgb), map-loop($selected-theme-rgb, to-rgb, '$value'), ()),
@@ -73,11 +54,20 @@
     if(meta.variable-exists(hover-prefix), $hover-prefix, '')
   );
 
-  // Generates CSS custom properties for sizes using clamp() values.
-  @include generate-clamp-custom-properties($size-clamp);
+  @include generate-clamp-custom-properties(
+    if(meta.variable-exists(font-size-clamp), $font-size-clamp, null)
+  );
 
-  // Generates CSS custom properties for spacing using clamp() values.
-  @include generate-clamp-custom-properties($spacing-clamp, 'px');
+  @include generate-clamp-custom-properties(
+    if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    'px'
+  );
+
+  @include generate-clamp-custom-properties(
+    if(meta.variable-exists(container-clamp), $container-clamp, null),
+    'rem',
+    'container'
+  );
 
   // Generates responsive custom properties
   @include generate-responsive-custom-properties(

@@ -12,16 +12,8 @@ Modifications may have been made to the original code.
 @use 'functions' as *;
 @use 'variables' as *;
 
-$negative-spacers: if(
-  $enable-negative-margins,
-  negativify-map($sizes-regular),
-  ()
-);
-$negative-spacers-irregular: if(
-  $enable-negative-margins,
-  negativify-map($sizes-irregular),
-  ()
-);
+$negative-spacers: if($enable-negative-margins, negativify-map($sizes-regular), ());
+$negative-spacers-irregular: if($enable-negative-margins, negativify-map($sizes-irregular), ());
 $selected-theme-rgb-colors: if(
   $enable-rgb-colors,
   map-loop($selected-theme-hex-colors, to-rgb, '$value'),
@@ -45,11 +37,7 @@ $selected-theme-hover-colors: if(
 // @debug selected-theme $selected-theme-rgb-colors;
 
 $simple-custom-properties-merged: map.merge(
-  if(
-    meta.variable-exists(simple-custom-properties),
-    $simple-custom-properties,
-    ()
-  ),
+  if(meta.variable-exists(simple-custom-properties), $simple-custom-properties, ()),
   if(
     meta.variable-exists(responsive-custom-properties),
     map.get($responsive-custom-properties, xs),
@@ -61,27 +49,31 @@ $utilities: ();
 $utilities: map.merge(
   (
     'container-type': (
-      class: container-type,
-      property: container,
+      class: container,
+      property: container-type,
       values: inline-size size normal revert,
     ),
     'hyphen': (
       class: hyphens,
       property: hyphens,
-      values: auto none manual,
+      values: (
+        null: auto,
+        none: none,
+        manual: manual,
+      ),
     ),
     'linear-gradient': (
-      class: linear-gradient,
-      property: background,
+      class: gradient,
+      property: background-image,
       values: (
-        null:
-          linear-gradient(
-            var(--gradient-direction, to top),
+        null: linear-gradient(
+            var(--gradient-direction, to bottom),
             var(--gradient-first-color) var(--gradient-first-stop),
             var(--gradient-second-color) var(--gradient-second-stop)
           ),
       ),
     ),
+
     'backdrop-blur': (
       class: backdrop-blur,
       property: backdrop-filter,
@@ -97,27 +89,6 @@ $utilities: map.merge(
         8: blur(8px),
         9: blur(9px),
         10: blur(10px),
-      ),
-    ),
-    'scrollbar-webkit-custom': (
-      state: '::-webkit-scrollbar',
-      class: custom-scrollbar,
-      required-property: (
-        '-webkit-appearance': none,
-      ),
-      property: width height,
-      values: (
-        null: 14px,
-      ),
-    ),
-    'scrollthumb-webkit-custom': (
-      function: 'property-advanced',
-      state: '::-webkit-scrollbar-thumb',
-      class: custom-scrollthumb,
-      property: (
-        border-radius: 8px,
-        border: 3px solid #fff,
-        background-color: rgba(0, 0, 0, 0.3),
       ),
     ),
 
@@ -136,7 +107,6 @@ $utilities: map.merge(
       class: aspect-ratio,
       property: aspect-ratio,
       values: (
-        null: var(--aspect-ratio),
         square: string.unquote('1 / 1'),
         video: string.unquote('16 / 9'),
         classic: string.unquote('4 / 3'),
@@ -145,12 +115,19 @@ $utilities: map.merge(
         ultrawide: string.unquote('21 / 9'),
       ),
     ),
+
+    'aspect-ratio-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: aspect-ratio,
+      responsive-custom-property-value: aspect-ratio,
+      class: aspect-ratio,
+      responsive: true,
+    ),
     'border-custom-properties': (
       function: 'custom-property-value',
       property: border,
       class: border,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -161,8 +138,7 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border-top,
       class: border-top,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -173,8 +149,7 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border-bottom,
       class: border-bottom,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -185,8 +160,7 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border-left,
       class: border-start,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -197,8 +171,7 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border-right,
       class: border-end,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -209,8 +182,7 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border-block,
       class: border-y,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -221,8 +193,7 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: border-inline,
       class: border-x,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(borders),
           map.get($borders, custom-property-prefix),
           null
@@ -275,6 +246,7 @@ $utilities: map.merge(
     'float': (
       responsive: true,
       property: float,
+      class: float,
       values: (
         start: left,
         end: right,
@@ -303,51 +275,162 @@ $utilities: map.merge(
       responsive: true,
       property: display,
       class: d,
-      values: inline inline-block block grid inline-grid table table-row
-        table-cell flex inline-flex none,
+      values: inline inline-block block grid inline-grid table table-row table-cell flex inline-flex
+        none,
+    ),
+    'display-none-hidden': (
+      responsive: true,
+      property: display,
+      class: hidden,
+      values: (
+        null: none,
+      ),
     ),
     'display-classless': (
       responsive: true,
       property: display,
-      values: inline inline-block block table table-row table-cell flex
-        inline-flex none,
+      values: inline inline-block grid inline-grid block table table-row table-cell flex inline-flex,
     ),
     'grid-template-rows': (
       property: grid-template-rows,
       class: grid-template-rows,
       values: subgrid,
     ),
+    'grid-template-rows-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-template-rows,
+      responsive-custom-property-value: row-temp,
+      class: grid-rows,
+      responsive: true,
+    ),
     'grid-template-columns': (
       property: grid-template-columns,
       class: grid-template-columns,
       values: subgrid,
     ),
-    'grid-span': (
+    'grid-template-columns-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-template-columns,
+      responsive-custom-property-value: col-temp,
+      class: grid-cols,
+      responsive: true,
+    ),
+
+    'grid-row-span': (
       property: grid-row,
-      class: span,
+      class: row-span,
       values: (
+        full: string.unquote('1 / -1'),
         1: span 1,
         2: span 2,
         3: span 3,
         4: span 4,
         5: span 5,
+        6: span 6,
+        7: span 7,
+        8: span 8,
+        9: span 9,
+        10: span 10,
+        11: span 11,
+        12: span 12,
       ),
     ),
-    'translate-fixed': (
-      property: transform,
-      class: translate-f,
-      values: map-loop($fixed-values, value-to-css-translate, '$value'),
+    'grid-row-start': (
+      property: grid-row-start,
+      class: row-start,
+      values: 1 2 3 4 5 6 7 8 9 10 11 12 auto,
+      responsive: true,
     ),
-    'translate-x-fixed': (
-      property: transform,
-      class: translate-y-f,
-      values: map-loop($fixed-values, value-to-css-translate, '$value', x),
+    'grid-row-start-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-row-start,
+      class: row-start,
+      responsive-custom-property-value: row-start,
+      responsive: true,
     ),
-    'translate-y-fixed': (
-      property: transform,
-      class: translate-x-f,
-      values: map-loop($fixed-values, value-to-css-translate, '$value', y),
+
+    'grid-row-end': (
+      property: grid-row-end,
+      class: row-end,
+      values: 1 2 3 4 5 6 7 8 9 10 11 12 auto,
+      responsive: true,
     ),
+    'grid-row-end-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-row-end,
+      class: row-end,
+      responsive-custom-property-value: row-end,
+      responsive: true,
+    ),
+
+    'grid-column-span': (
+      property: grid-column,
+      class: col-span,
+      values: (
+        full: string.unquote('1 / -1'),
+        1: span 1,
+        2: span 2,
+        3: span 3,
+        4: span 4,
+        5: span 5,
+        6: span 6,
+        7: span 7,
+        8: span 8,
+        9: span 9,
+        10: span 10,
+        11: span 11,
+        12: span 12,
+      ),
+    ),
+
+    'grid-column-start': (
+      property: grid-column-start,
+      class: col-start,
+      values: 1 2 3 4 5 6 7 8 9 10 11 12 auto,
+      responsive: true,
+    ),
+    'grid-column-start-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-column-start,
+      class: col-start,
+      responsive-custom-property-value: col-start,
+      responsive: true,
+    ),
+
+    'grid-column-end': (
+      property: grid-column-end,
+      class: col-end,
+      values: 1 2 3 4 5 6 7 8 9 10 11 12 auto,
+      responsive: true,
+    ),
+    'grid-column-end-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-column-end,
+      class: column-end,
+      responsive-custom-property-value: column-end,
+      responsive: true,
+    ),
+
+    'grid-columns-repeat': (
+      property: grid-template-columns,
+      class: grid-col,
+      responsive: true,
+      values: (
+        1: repeat(1, 1fr),
+        2: repeat(2, 1fr),
+        3: repeat(3, 1fr),
+        4: repeat(4, 1fr),
+        5: repeat(5, 1fr),
+        6: repeat(6, 1fr),
+        7: repeat(7, 1fr),
+        8: repeat(8, 1fr),
+        9: repeat(9, 1fr),
+        10: repeat(10, 1fr),
+        11: repeat(11, 1fr),
+        12: repeat(12, 1fr),
+      ),
+    ),
+
     'translate-quarter': (
       property: transform,
       class: translate-quarter,
@@ -416,8 +499,6 @@ $utilities: map.merge(
       property: outline,
       values: (
         none: none,
-        null: var(--border-width, 1px) var(--border-type, solid)
-          var(--border-clr, var(--#{$prefix}clr-primary)),
       ),
     ),
     'outline': (
@@ -438,8 +519,7 @@ $utilities: map.merge(
       function: 'css-var',
       css-variable-name: outline-color,
       class: outline,
-      values:
-        map-loop(
+      values: map-loop(
           $selected-theme-rgb-colors,
           rgba-css-var-advanced,
           '$key',
@@ -471,8 +551,7 @@ $utilities: map.merge(
       function: 'css-var',
       css-variable-name: focus-color,
       class: focus,
-      values:
-        map-loop(
+      values: map-loop(
           $selected-theme-rgb-colors,
           rgba-css-var-advanced,
           '$key',
@@ -506,8 +585,50 @@ $utilities: map.merge(
       property: border,
       values: (
         none: none,
-        null: var(--border-width, 1px) var(--border-type, solid)
-          var(--border-clr, var(--#{$prefix}clr-primary)),
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+      responsive: true,
+    ),
+    'border-y': (
+      class: border-y,
+      property: border-block,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-x': (
+      class: border-x,
+      property: border-inline,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-left': (
+      class: border-start,
+      property: border-left,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-right': (
+      class: border-end,
+      property: border-right,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-top': (
+      class: border-top,
+      property: border-top,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-bottom': (
+      class: border-bottom,
+      property: border-bottom,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
       ),
     ),
     'border-width-custom-property': (
@@ -516,42 +637,7 @@ $utilities: map.merge(
       class: border-width,
       values: $border-widths,
     ),
-    'border-top': (
-      class: border-top,
-      property: border-top,
-      values: (
-        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
-      ),
-    ),
-    'border-bottom': (
-      class: border-bottom,
-      property: border-bottom,
-      values: (
-        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
-      ),
-    ),
-    'border-left': (
-      class: border-start,
-      property: border-left,
-      values: (
-        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
-      ),
-    ),
-    'border-right': (
-      class: border-end,
-      property: border-right,
-      values: (
-        null: 1px solid var(--border-clr, var(--#{$prefix}clr-primary)),
-      ),
-    ),
-    'border-rgba': (
-      class: border-rgba,
-      property: border,
-      values: (
-        null: 1px solid
-          var(--border-clr-rgb, rgba(var(--#{$prefix}clr-primary-rgb), 1)),
-      ),
-    ),
+
     'border-width': (
       property: border-width,
       class: border,
@@ -616,13 +702,13 @@ $utilities: map.merge(
       function: 'css-var',
       css-variable-name: border-color,
       class: border,
-      values:
-        map-loop(
+      values: map-loop(
           $selected-theme-rgb-colors,
           rgba-css-var-advanced,
           '$key',
           null,
-          $color-prefix
+          $color-prefix,
+          border-alpha
         ),
     ),
     // 'border-colors-custom-property-value': (
@@ -638,62 +724,55 @@ $utilities: map.merge(
     //       null
     //     ),
     // ),
-    'focus-ring':
-      (
-        function: 'property-advanced',
-        class: focus-ring,
-        state: ':focus',
-        property: (
-          outline: 0,
-          box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-            var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-        ),
-      ),
-    'focus-ring-focus-visible': (
-      function: 'property-advanced',
-      class: focus-ring-fv,
-      state: ':focus-visible',
-      property: (
-        outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-          var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-      ),
-    ),
-    'focus-ring-focus-focus-visible': (
-      function: 'property-advanced',
-      class: focus-ring-ffv,
-      state: ':focus' ':focus-visible',
-      property: (
-        outline: 0,
-        box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-          var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-      ),
-    ),
+    // 'focus-ring':
+    //   (
+    //     function: 'property-advanced',
+    //     class: focus-ring,
+    //     state: ':focus',
+    //     properties: (
+    //       outline: 0,
+    //       box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+    //         var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+    //     ),
+    //   ),
+    // 'focus-ring-focus-visible': (
+    //   function: 'property-advanced',
+    //   class: focus-ring-fv,
+    //   state: ':focus-visible',
+    //   properties: (
+    //     outline: 0,
+    //     box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+    //       var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+    //   ),
+    // ),
+    // 'focus-ring-focus-focus-visible': (
+    //   function: 'property-advanced',
+    //   class: focus-ring-ffv,
+    //   state: ':focus' ':focus-visible',
+    //   properties: (
+    //     outline: 0,
+    //     box-shadow: 0 0 0 var(--focus-ring-width, 4px)
+    //       var(--focus-ring-color, var(--#{$prefix}clr-primary)),
+    //   ),
+    // ),
     'focus-ring-rgba-colors-cp': (
-      function: 'css-var',
-      css-variable-name: focus-ring-color,
-      class: focus-ring-clr-rgb,
-      values:
-        map-loop(
-          $selected-theme-rgb-colors,
-          rgba-css-var-advanced,
-          '$key',
-          'focus-ring',
-          $color-prefix
-        ),
-    ),
+        function: 'css-var',
+        css-variable-name: focus-ring-color,
+        class: focus-ring-clr-rgb,
+        values: map-loop(
+            $selected-theme-rgb-colors,
+            rgba-css-var-advanced,
+            '$key',
+            'focus-ring',
+            $color-prefix
+          ),
+      ),
     'focus-ring-hex-colors-cp': (
       function: 'css-var',
       css-variable-name: focus-ring-color,
       class: focus-ring-clr,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
-          null
-        ),
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
     ),
     'focus-ring-width': (
       function: 'css-var',
@@ -713,22 +792,51 @@ $utilities: map.merge(
         10: 10px,
       ),
     ),
-    'width-fixed': (
-      property: width,
-      class: w-f,
-      values: $fixed-values,
-      responsive: true,
+    'before-content': (
+      class: before-content,
+      state: '::before',
+      property: content,
+      values: (
+        null: var(--content),
+      ),
     ),
+    'before-none': (
+      class: before,
+      state: '::before',
+      property: display,
+      responsive: true,
+      values: (
+        none: none,
+      ),
+    ),
+    'scrollbar-webkit-custom': (
+      state: '::-webkit-scrollbar',
+      class: custom-scrollbar,
+      required-property: (
+        '-webkit-appearance': none,
+      ),
+      property: width height,
+      values: (
+        null: 14px,
+      ),
+    ),
+
     'width-height': (
       class: wh,
       property: width height,
       values: $percentage-values,
     ),
+    'width-height-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: width height,
+      class: wh,
+      responsive-custom-property-value: size,
+      responsive: true,
+    ),
     'width': (
       property: width,
       class: w,
-      values:
-        map.merge(
+      values: map.merge(
           $percentage-values,
           (
             auto: auto,
@@ -738,53 +846,66 @@ $utilities: map.merge(
           )
         ),
     ),
-    'max-width-arbitary': (
-      function: 'arbitary-value',
-      property: max-width,
-      class: max-w,
+
+    'width-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: width,
+      class: w,
+      responsive-custom-property-value: width,
       responsive: true,
     ),
-    'max-width-fixed': (
+
+    'max-width-responsive-custom-property': (
+      function: 'responsive-custom-property',
       property: max-width,
-      class: max-w-f,
-      values: $fixed-values,
+      class: max-w,
+      responsive-custom-property-value: max-w,
+      responsive: true,
     ),
+
     'viewport-width': (
       property: width,
       class: vw,
       values: $viewport-width-values,
     ),
-    'min-width': (
+
+    'min-width-responsive-custom-property': (
+      function: 'responsive-custom-property',
       property: min-width,
-      class: min-w-f,
-      values: $fixed-values,
+      class: min-w,
+      responsive-custom-property-value: min-w,
+      responsive: true,
+    ),
+    'min-width-0': (
+      property: min-width,
+      class: min-w,
+      values: 0,
     ),
     'min-viewport-width': (
       property: min-width,
       class: min-vw,
       values: $viewport-width-values,
     ),
-    'fixed-height': (
-      property: height,
-      class: h-f,
-      values: $fixed-values,
-    ),
+
     'height': (
       property: height,
       class: h,
-      values:
-        map.merge(
+      values: map.merge(
           $percentage-values,
           (
             auto: auto,
           )
         ),
     ),
-    'fixed-width-height': (
-      property: height width,
-      class: wh-f,
-      values: $fixed-values,
+
+    'height-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: height,
+      class: h,
+      responsive-custom-property-value: height,
+      responsive: true,
     ),
+
     'max-height': (
       property: max-height,
       class: mh,
@@ -827,15 +948,37 @@ $utilities: map.merge(
         grow-2: 2,
       ),
     ),
+    'grow': (
+      responsive: true,
+      property: flex-grow,
+      class: grow,
+      values: (
+        0: 0,
+        1: 1,
+        1-5: 1.5,
+        2: 2,
+      ),
+    ),
     'flex-shrink': (
       responsive: true,
       property: flex-shrink,
       class: flex,
       values: (
-        shrink-0: 0,
-        shrink-1: 1,
-        shrink-1-5: 1.5,
-        shrink-2: 2,
+        0: 0,
+        1: 1,
+        1-5: 1.5,
+        2: 2,
+      ),
+    ),
+    'shrink': (
+      responsive: true,
+      property: flex-shrink,
+      class: shrink,
+      values: (
+        0: 0,
+        1: 1,
+        1-5: 1.5,
+        2: 2,
       ),
     ),
     'flex-wrap': (
@@ -843,6 +986,19 @@ $utilities: map.merge(
       property: flex-wrap,
       class: flex,
       values: wrap nowrap wrap-reverse,
+    ),
+    'justify-content-tailwind': (
+      class: justify,
+      responsive: true,
+      property: justify-content,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        evenly: space-evenly,
+      ),
     ),
     'justify-content': (
       class: justify-content,
@@ -858,6 +1014,19 @@ $utilities: map.merge(
       ),
     ),
     'align-items': (
+      class: items,
+      responsive: true,
+      property: align-items,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      ),
+    ),
+    'items': (
+      class: align-items,
       responsive: true,
       property: align-items,
       values: (
@@ -883,6 +1052,7 @@ $utilities: map.merge(
     'align-self': (
       responsive: true,
       property: align-self,
+      class: align-self,
       values: (
         auto: auto,
         start: start,
@@ -937,12 +1107,15 @@ $utilities: map.merge(
       responsive: true,
       property: font-size,
       class: fs,
-      values:
-        map-loop(
-          map.merge($sizes-regular, ($sizes-irregular)),
-          to-rem,
-          '$value'
-        ),
+      values: map-loop(map.merge($sizes-regular, ($sizes-irregular)), to-rem, '$value'),
+    ),
+
+    'font-size-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: font-size,
+      class: fs,
+      responsive-custom-property-value: fs,
+      responsive: true,
     ),
     'font-style': (
       property: font-style,
@@ -958,6 +1131,14 @@ $utilities: map.merge(
       property: font-weight,
       class: fw,
       values: 100 200 300 400 500 600 700 800 900,
+    ),
+
+    'line-height-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: line-height,
+      class: lh,
+      responsive-custom-property-value: line-height,
+      responsive: true,
     ),
     'line-height': (
       property: line-height,
@@ -980,6 +1161,7 @@ $utilities: map.merge(
         lg: 2,
       ),
     ),
+
     'text-align': (
       responsive: true,
       property: text-align,
@@ -995,6 +1177,7 @@ $utilities: map.merge(
       class: text,
       values: lowercase uppercase capitalize,
     ),
+
     'white-space': (
       property: white-space,
       class: white-space,
@@ -1005,7 +1188,8 @@ $utilities: map.merge(
     ),
     'word-break': (
       property: word-break,
-      class: word-break,
+      class: text,
+      responsive: true,
       values: normal break-all keep-all break-word,
     ),
     'word-spacing': (
@@ -1029,6 +1213,12 @@ $utilities: map.merge(
       function: 'css-var',
       class: alpha,
       css-variable-name: alpha,
+      values: $decimal-percentage-values,
+    ),
+    'border-alpha': (
+      function: 'css-var',
+      class: border-alpha,
+      css-variable-name: border-alpha,
       values: $decimal-percentage-values,
     ),
     'hover:alpha': (
@@ -1101,14 +1291,8 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: text-decoration-color,
       class: text-decoration,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
-          null
-        ),
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
     ),
     'hover:text-underline': (
       state: ':hover',
@@ -1134,15 +1318,7 @@ $utilities: map.merge(
       class: visibility,
       values: visible hidden,
     ),
-    'list-reset': (
-      function: 'property-advanced',
-      class: list-reset,
-      property: (
-        list-style: none,
-        padding-left: 0,
-        margin: 0,
-      ),
-    ),
+
     'list-none': (
       property: list-style,
       class: list,
@@ -1156,35 +1332,23 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: font-family,
       class: ff,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(font-families),
           map.get($font-families, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(font-families),
-          map.get($font-families, values),
-          null
-        ),
+      values: if(meta.variable-exists(font-families), map.get($font-families, values), null),
     ),
     'box-shadow-custom': (
       function: 'custom-property-value',
       property: box-shadow,
       class: box-shadow,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(box-shadows),
           map.get($box-shadows, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(box-shadows),
-          map.get($box-shadows, values),
-          null
-        ),
+      values: if(meta.variable-exists(box-shadows), map.get($box-shadows, values), null),
     ),
     'box-shadow': (
       property: box-shadow,
@@ -1220,23 +1384,16 @@ $utilities: map.merge(
     //       null
     //     ),
     // ),
-    'transition-custom':
-      (
+    'transition-custom': (
         function: 'custom-property-value',
         property: transition,
         class: transition,
-        custom-property-prefix:
-          if(
+        custom-property-prefix: if(
             meta.variable-exists(transitions),
             map.get($transitions, custom-property-prefix),
             null
           ),
-        values:
-          if(
-            meta.variable-exists(transitions),
-            map.get($transitions, values),
-            null
-          ),
+        values: if(meta.variable-exists(transitions), map.get($transitions, values), null),
       ),
     'transition': (
       property: transition,
@@ -1251,18 +1408,13 @@ $utilities: map.merge(
         height: height var(--transition-duration, 0.3s),
       ),
     ),
-    // 'transition-duration': (
-    //   property: transition-duration,
-    //   class: transition-duration,
-    //   values: $duration-values-map,
-    // ),
-    'trans-duration':
-      (
-        function: 'css-var',
-        css-variable-name: transition-duration,
-        class: duration,
-        values: $duration-values-map,
-      ),
+
+    'trans-duration': (
+      function: 'css-var',
+      css-variable-name: transition-duration,
+      class: duration,
+      values: $duration-values-map,
+    ),
     'transition-timing': (
       property: transition-timing-function,
       values: linear ease-in ease-out ease-in-out,
@@ -1270,337 +1422,531 @@ $utilities: map.merge(
     'transition-property': (
       property: transition-property,
       class: transition,
-      values: background-color color height width opacity box-shadow border
-        outline,
+      values: background-color color height width opacity box-shadow border outline,
     ),
     'z-index': (
       function: 'custom-property-value',
       property: z-index,
       class: z,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(z-indeces),
           map.get($z-indeces, custom-property-prefix),
           null
         ),
-      values:
-        if(meta.variable-exists(z-indeces), map.get($z-indeces, values), null),
+      values: if(meta.variable-exists(z-indeces), map.get($z-indeces, values), null),
     ),
+
+    'border-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-radius,
+      responsive-custom-property-value: rounded,
+      class: rounded,
+      responsive: true,
+    ),
+
+    'border-top-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-top-left-radius border-bottom-right-radius,
+      responsive-custom-property-value: rounded-t,
+      class: rounded-t,
+      responsive: true,
+    ),
+
+    'border-end-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-start-end-radius border-end-end-radius,
+      responsive-custom-property-value: rounded-e,
+      class: rounded-e,
+      responsive: true,
+    ),
+    'border-right-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-top-right-radius border-bottom-right-radius,
+      responsive-custom-property-value: rounded-r,
+      class: rounded-r,
+      responsive: true,
+    ),
+
+    'border-bottom-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-bottom-left-radius border-bottom-right-radius,
+      responsive-custom-property-value: rounded-b,
+      class: rounded-b,
+      responsive: true,
+    ),
+
+    'border-start-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-start-start-radius border-end-start-radius,
+      responsive-custom-property-value: rounded-s,
+      class: rounded-s,
+      responsive: true,
+    ),
+
+    'border-left-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-top-left-radius border-bottom-left-radius,
+      responsive-custom-property-value: rounded-l,
+      class: rounded-l,
+      responsive: true,
+    ),
+
+    'border-top-left-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-top-left-radius,
+      responsive-custom-property-value: rounded-tl,
+      class: rounded-tl,
+      responsive: true,
+    ),
+
+    'border-start-start-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-start-start-radius,
+      responsive-custom-property-value: rounded-ss,
+      class: rounded-ss,
+      responsive: true,
+    ),
+
+    'border-top-right-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-top-right-radius,
+      responsive-custom-property-value: rounded-tr,
+      class: rounded-tr,
+      responsive: true,
+    ),
+
+    'border-start-end-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-start-end-radius,
+      responsive-custom-property-value: rounded-se,
+      class: rounded-se,
+      responsive: true,
+    ),
+
+    'border-bottom-right-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-bottom-right-radius,
+      responsive-custom-property-value: rounded-br,
+      class: rounded-br,
+      responsive: true,
+    ),
+    'border-end-end-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-end-end-radius,
+      responsive-custom-property-value: rounded-ee,
+      class: rounded-ee,
+      responsive: true,
+    ),
+    'border-bottom-left-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-bottom-left-radius,
+      responsive-custom-property-value: rounded-bl,
+      class: rounded-bl,
+      responsive: true,
+    ),
+
+    'border-end-start-radius-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: border-end-start-radius,
+      responsive-custom-property-value: rounded-es,
+      class: rounded-es,
+      responsive: true,
+    ),
+
     'border-radius-merged': (
       property: border-radius,
-      class: radius,
-      values:
-        map.merge(
-          $fixed-values,
+      class: rounded,
+      values: map.merge(
+          $border-widths,
           (
             circle: 50%,
             round: 100%,
           )
         ),
     ),
-    'border-radius': (
+    'border-top-radius-merged': (
+      property: border-start-start-radius border-start-end-radius,
+      class: rounded-t,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-right-radius-merged': (
+      property: border-top-right-radius border-bottom-right-radius,
+      class: rounded-r,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-end-radius-merged': (
+      property: border-start-end-radius border-end-end-radius,
+      class: rounded-e,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-bottom-radius-merged': (
+      property: border-bottom-right-radius border-bottom-left-radius,
+      class: rounded-b,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-left-radius-merged': (
+      property: border-top-left-radius border-bottom-left-radius,
+      class: rounded-l,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-start-radius-merged': (
+      property: border-start-end-radius border-end-start-radius,
+      class: rounded-s,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-start-start-radius-merged': (
+      property: border-start-start-radius,
+      class: rounded-ss,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-top-left-radius-merged': (
+      property: border-top-left-radius,
+      class: rounded-tl,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-start-end-radius-merged': (
+      property: border-start-end-radius,
+      class: rounded-se,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+    'border-top-right-radius-merged': (
+      property: border-top-right-radius,
+      class: rounded-tr,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-end-end-radius-merged': (
+      property: border-end-end-radius,
+      class: rounded-ee,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-bottom-right-radius-merged': (
+      property: border-bottom-right-radius,
+      class: rounded-br,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-end-start-radius-merged': (
+      property: border-end-start-radius,
+      class: rounded-es,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-bottom-left-radius-merged': (
+      property: border-bottom-left-radius,
+      class: rounded-bl,
+      values: map.merge(
+          $border-widths,
+          (
+            circle: 50%,
+            round: 100%,
+          )
+        ),
+    ),
+
+    'border-radius-sync': (
       function: 'custom-property-value',
       property: border-radius,
       class: radius,
-      custom-property-prefix:
-        if(
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-radius-start': (
+
+    'border-radius-variable-left': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-top-left-radius,
-      class: radius-start,
-      custom-property-prefix:
-        if(
+      class: radius-l,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-radius-end': (
+    'border-radius-variable-right': (
       function: 'custom-property-value',
-      property: border-bottom-left-radius border-top-right-radius,
-      class: radius-end,
-      custom-property-prefix:
-        if(
+      property: border-bottom-right-radius border-top-right-radius,
+      class: radius-r,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-radius-top': (
+    'border-radius-variable-top': (
       function: 'custom-property-value',
       property: border-top-left-radius border-top-right-radius,
-      class: radius-top,
-      custom-property-prefix:
-        if(
+      class: radius-t,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-bottom-radius': (
+    'border-radius-variable-bottom': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-bottom-right-radius,
-      class: radius-bottom,
-      custom-property-prefix:
-        if(
+      class: radius-b,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-top-left-radius': (
+    'border-radius-variable-top-left': (
       function: 'custom-property-value',
       property: border-top-left-radius,
-      class: radius-top-start,
-      custom-property-prefix:
-        if(
+      class: radius-tl,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-top-right-radius': (
+    'border-radius-variable-top-right': (
       function: 'custom-property-value',
       property: border-top-right-radius,
-      class: radius-top-end,
-      custom-property-prefix:
-        if(
+      class: radius-tr,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-bottom-left-radius': (
+    'border-radius-variable-bottom-left': (
       function: 'custom-property-value',
       property: border-bottom-left-radius,
-      class: radius-bottom-start,
-      custom-property-prefix:
-        if(
+      class: radius-bl,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
-    'border-bottom-right-radius': (
+    'border-radius-variable-bottom-right': (
       function: 'custom-property-value',
       property: border-bottom-right-radius,
-      class: radius-bottom-end,
-      custom-property-prefix:
-        if(
+      class: radius-br,
+      custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
           null
         ),
-      values:
-        if(
-          meta.variable-exists(border-radius),
-          map.get($border-radius, values),
-          null
-        ),
+      values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
+    'position': (
+      class: position,
+      property: position,
+      values: static relative absolute fixed sticky,
+    ),
+
     'position-classless': (
       property: position,
       values: static relative absolute fixed sticky,
     ),
-    'top': (
+
+    'top-arbitrary': (
+      function: 'arbitrary-value',
       property: top,
       class: top,
-      values: (
-        null: var(--position-top-value),
-      ),
+      responsive: true,
     ),
     'top-percentage': (
       property: top,
-      class: top-p,
+      class: top,
       values: $percentage-values,
     ),
-    'top-fixed': (
-      property: top,
-      class: top-f,
-      values: $fixed-values,
-    ),
+
     'top-right': (
       property: top right,
       class: top-right,
       values: $percentage-values,
     ),
-    'top-right-fixed': (
-      property: top right,
-      class: top-right-f,
-      values: $fixed-values,
-    ),
+
     'top-left': (
       property: top left,
       class: top-left,
       values: $percentage-values,
     ),
-    'top-left-fixed': (
-      property: top left,
-      class: top-left-f,
-      values: $fixed-values,
+
+    'top-bottom': (
+      property: top bottom,
+      class: top-bottom,
+      values: $percentage-values,
     ),
-    'bottom': (
-      property: top,
+    'bottom-arbitrary': (
+      function: 'arbitrary-value',
+      property: bottom,
       class: bottom,
-      values: (
-        null: var(--position-bottom-value),
-      ),
+      responsive: true,
     ),
     'bottom-percentage': (
       property: bottom,
-      class: bottom-p,
+      class: bottom,
       values: $percentage-values,
     ),
-    'bottom-fixed': (
-      property: bottom-f,
-      class: bottom-f,
-      values: $fixed-values,
-    ),
+
     'bottom-right': (
       property: bottom right,
       class: bottom-right,
       values: $percentage-values,
     ),
-    'bottom-right-fixed': (
-      property: bottom right,
-      class: bottom-right-f,
-      values: $fixed-values,
-    ),
+
     'bottom-left': (
       property: bottom left,
       class: bottom-left,
       values: $percentage-values,
     ),
-    'bottom-left-fixed': (
-      property: bottom left,
-      class: bottom-left-f,
-      values: $fixed-values,
-    ),
-    'left': (
+    'left-percentage': (
       property: left,
       class: left,
-      values: (
-        null: var(--position-left-value),
-      ),
+      values: $percentage-values,
     ),
-    'start': (
+
+    'left-arbitrary': (
+      function: 'arbitrary-value',
+      property: left,
+      class: left,
+      responsive: true,
+    ),
+
+    'left-right': (
+      property: left right,
+      class: left-right,
+      values: $percentage-values,
+    ),
+
+    'start-arbitrary': (
+      function: 'arbitrary-value',
       property: left,
       class: start,
-      values: (
-        null: var(--position-start-value),
-      ),
+      responsive: true,
     ),
     'start-percentage': (
       property: left,
-      class: start-p,
-      values: $percentage-values,
-    ),
-    'start-fixed': (
-      property: left,
-      class: start-f,
-      values: $fixed-values,
-    ),
-    'right': (
-      property: right,
-      class: right,
-      values: (
-        null: var(--position-right-value),
-      ),
-    ),
-    'end': (
-      property: right,
-      class: end,
-      values: (
-        null: var(--position-end-value),
-      ),
-    ),
-    'end-percentage': (
-      property: right,
-      class: end-p,
-      values: $percentage-values,
-    ),
-    'end-fixed': (
-      property: right,
-      class: end,
-      values: $fixed-values,
-    ),
-    'position-bot': (
-      property: bottom,
-      class: bot,
-      values: $percentage-values,
-    ),
-    'position-top': (
-      property: top,
-      class: top,
-      values: $percentage-values,
-    ),
-    'position-start': (
-      property: left,
       class: start,
       values: $percentage-values,
     ),
-    'position-end': (
+
+    'right-arbitrary': (
+      function: 'arbitrary-value',
+      property: right,
+      class: right,
+      responsive: true,
+    ),
+    'right-percentage': (
+      property: right,
+      class: right,
+      values: $percentage-values,
+    ),
+
+    'end-arbitrary': (
+      function: 'arbitrary-value',
+      property: right,
+      class: end,
+      responsive: true,
+    ),
+    'end-percentage': (
       property: right,
       class: end,
       values: $percentage-values,
     ),
+
     'position-bot-fluid': (
       function: 'fluid',
       property: bottom,
-      class: bot,
+      class: bottom,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
     'position-bot-left-fluid': (
@@ -1633,24 +1979,48 @@ $utilities: map.merge(
       class: top-end,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
+    'position-top-bottom-fluid': (
+      function: 'fluid',
+      property: top bottom,
+      class: top-bottom,
+      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    ),
     'position-start-fluid': (
       function: 'fluid',
       property: left,
       class: start,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
+    'position-left-fluid': (
+      function: 'fluid',
+      property: left,
+      class: left,
+      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    ),
+
     'position-end-fluid': (
       function: 'fluid',
       property: right,
       class: end,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
+    'position-right-fluid': (
+      function: 'fluid',
+      property: right,
+      class: right,
+      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    ),
+    'position-right-left-fluid': (
+      function: 'fluid',
+      property: right left,
+      class: right-left,
+      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    ),
     'hover-scale': (
       state: ':hover',
       property: scale,
       class: hover\:scale,
-      values:
-        map.merge(
+      values: map.merge(
           (
             none: var(--scale-value),
           ),
@@ -1661,45 +2031,37 @@ $utilities: map.merge(
       function: 'custom-property-value',
       property: fill,
       class: fill,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    ),
+    'background-colors-alpha': (
+      property: background-color,
+      class: bga,
+      values: if(
+          enable-rgb-colors,
+          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
           null
         ),
     ),
-    'background-colors': (
+    'background-colors-hex': (
       property: background-color,
       class: bg,
-      values:
-        if(
-          enable-rgb-colors,
-          map-loop(
-            $selected-theme-rgb-colors,
-            rgba-css-var-advanced,
-            '$key',
-            null,
-            $color-prefix
-          ),
-          null
+      responsive: true,
+      values: map.merge(
+          if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+          (
+            transparent: transparent,
+          )
         ),
     ),
+
     'hover:background-selected-theme-color': (
       state: ':hover',
       property: background-color,
-      class: hover\:bg,
-      values:
-        if(
+      class: hover\:bga,
+      values: if(
           enable-rgb-colors,
-          map-loop(
-            $selected-theme-rgb-colors,
-            rgba-css-var-advanced,
-            '$key',
-            null,
-            $color-prefix
-          ),
+          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
           null
         ),
     ),
@@ -1707,8 +2069,7 @@ $utilities: map.merge(
       state: ':hover',
       property: background-color,
       class: hover\:bg,
-      values:
-        if(
+      values: if(
           enable-rgb-colors,
           map-loop(
             $selected-theme-hover-colors,
@@ -1720,11 +2081,7 @@ $utilities: map.merge(
           null
         ),
     ),
-    'background-transparent': (
-      property: background-color,
-      class: bg,
-      values: transparent,
-    ),
+
     'text-transparent': (
       property: color,
       class: text,
@@ -1734,57 +2091,36 @@ $utilities: map.merge(
     ),
     'text-color-alpha': (
       property: color,
-      class: text,
+      class: color,
       // custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
+      values: if(
           $enable-rgb-colors,
-          map-loop(
-            $selected-theme-rgb-colors,
-            rgba-css-var-advanced,
-            '$key',
-            null,
-            $color-prefix
-          ),
+          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
           null
         ),
     ),
     'text-color-hex-custom-properties': (
       function: 'custom-property-value',
       property: color,
-      class: color,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
-          null
-        ),
+      class: text,
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
     ),
     'hover:text-color-hex-custom-properties': (
       state: ':hover',
       function: 'custom-property-value',
       property: color,
       class: hover\:color,
-      custom-property-prefix:
-        if(meta.variable-exists(color-prefix), $color-prefix, null),
-      values:
-        if(
-          meta.variable-exists(selected-theme-hex-colors),
-          $selected-theme-hex-colors,
-          null
-        ),
+      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
     ),
     'hover:text-color-hex-hover-custom-properties': (
       state: ':hover',
       function: 'custom-property-value',
       property: color,
       class: hover\:color,
-      custom-property-prefix:
-        if(meta.variable-exists(hover-prefix), $hover-prefix, null),
-      values:
-        if(
+      custom-property-prefix: if(meta.variable-exists(hover-prefix), $hover-prefix, null),
+      values: if(
           meta.variable-exists(selected-theme-hover-hex-colors),
           $selected-theme-hover-hex-colors,
           null
@@ -1794,16 +2130,9 @@ $utilities: map.merge(
       state: ':hover',
       property: color,
       class: hover\:text,
-      values:
-        if(
+      values: if(
           enable-rgb-colors,
-          map-loop(
-            $selected-theme-rgb-colors,
-            rgba-css-var-advanced,
-            '$key',
-            null,
-            $color-prefix
-          ),
+          map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
           null
         ),
     ),
@@ -1811,8 +2140,7 @@ $utilities: map.merge(
       state: ':hover',
       property: color,
       class: hover\:text,
-      values:
-        if(
+      values: if(
           enable-rgb-colors,
           map-loop(
             $selected-theme-hover-colors,
@@ -1828,7 +2156,14 @@ $utilities: map.merge(
       function: 'fluid',
       class: fs,
       property: font-size,
-      values: if(meta.variable-exists(size-clamp), $size-clamp, null),
+      values: if(meta.variable-exists(font-size-clamp), $font-size-clamp, null),
+      responsive: true,
+    ),
+    'font-size-fluid-container': (
+      function: 'fluid',
+      class: fs,
+      property: font-size,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
       responsive: true,
     ),
     'margin-fluid': (
@@ -1837,6 +2172,15 @@ $utilities: map.merge(
       property: margin,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'margin-fluid-container': (
+      function: 'fluid',
+      class: m,
+      property: margin,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'margin-top-fluid': (
       function: 'fluid',
@@ -1844,6 +2188,15 @@ $utilities: map.merge(
       property: margin-top,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'margin-top-fluid-container': (
+      function: 'fluid',
+      class: mt,
+      property: margin-top,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'margin-bottom-fluid': (
       function: 'fluid',
@@ -1851,6 +2204,15 @@ $utilities: map.merge(
       property: margin-bottom,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'margin-bottom-fluid-container': (
+      function: 'fluid',
+      class: mb,
+      property: margin-bottom,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'margin-left-fluid': (
       function: 'fluid',
@@ -1858,6 +2220,15 @@ $utilities: map.merge(
       property: margin-left,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'margin-left-fluid-container': (
+      function: 'fluid',
+      class: ms,
+      property: margin-left,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'margin-right-fluid': (
       function: 'fluid',
@@ -1865,6 +2236,15 @@ $utilities: map.merge(
       property: margin-right,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'margin-right-fluid-container': (
+      function: 'fluid',
+      class: me,
+      property: margin-right,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'margin-block-fluid': (
       function: 'fluid',
@@ -1872,6 +2252,15 @@ $utilities: map.merge(
       property: margin-block,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'margin-block-fluid-container': (
+      function: 'fluid',
+      class: my,
+      property: margin-block,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'margin-inline-fluid': (
       function: 'fluid',
@@ -1879,13 +2268,32 @@ $utilities: map.merge(
       property: margin-inline,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
     ),
+    'margin-inline-fluid-container': (
+      function: 'fluid',
+      class: mx,
+      property: margin-inline,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
+    ),
+
     'padding-fluid': (
       function: 'fluid',
       class: p,
       property: padding,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-fluid-container': (
+      function: 'fluid',
+      class: p,
+      property: padding,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'padding-top-fluid': (
       function: 'fluid',
@@ -1893,6 +2301,15 @@ $utilities: map.merge(
       property: padding-top,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-top-fluid-container': (
+      function: 'fluid',
+      class: pt,
+      property: padding-top,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'padding-bottom-fluid': (
       function: 'fluid',
@@ -1900,6 +2317,15 @@ $utilities: map.merge(
       property: padding-bottom,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-bottom-fluid-container': (
+      function: 'fluid',
+      class: pb,
+      property: padding-bottom,
+      values: if(meta.variable-exists(contaienr-clamp), $contaienr-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'padding-left-fluid': (
       function: 'fluid',
@@ -1907,6 +2333,15 @@ $utilities: map.merge(
       property: padding-left,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-left-fluid-container': (
+      function: 'fluid',
+      class: ps,
+      property: padding-left,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'padding-right-fluid': (
       function: 'fluid',
@@ -1914,6 +2349,15 @@ $utilities: map.merge(
       property: padding-right,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-right-fluid-container': (
+      function: 'fluid',
+      class: pe,
+      property: padding-right,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'padding-block-fluid': (
       function: 'fluid',
@@ -1921,6 +2365,15 @@ $utilities: map.merge(
       property: padding-block,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-block-fluid-container': (
+      function: 'fluid',
+      class: py,
+      property: padding-block,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'padding-inline-fluid': (
       function: 'fluid',
@@ -1928,6 +2381,15 @@ $utilities: map.merge(
       property: padding-inline,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
       responsive: true,
+      important: true,
+    ),
+    'padding-inline-fluid-container': (
+      function: 'fluid',
+      class: px,
+      property: padding-inline,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+      responsive: true,
+      important: true,
     ),
     'gap-fluid': (
       function: 'fluid',
@@ -1936,12 +2398,26 @@ $utilities: map.merge(
       class: gap,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
+    'gap-fluid-container': (
+      function: 'fluid',
+      responsive: true,
+      property: gap,
+      class: gap,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+    ),
     'row-gap-fluid': (
       function: 'fluid',
       responsive: true,
       property: row-gap,
       class: row-gap,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
+    ),
+    'row-gap-fluid-container': (
+      function: 'fluid',
+      responsive: true,
+      property: row-gap,
+      class: row-gap,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
     ),
     'column-gap-fluid': (
       function: 'fluid',
@@ -1950,11 +2426,23 @@ $utilities: map.merge(
       class: column-gap,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
+    'column-gap-fluid-container': (
+      function: 'fluid',
+      responsive: true,
+      property: column-gap,
+      class: column-gap,
+      values: if(meta.variable-exists(container-clamp), $container-clamp, null),
+    ),
     'gap': (
       responsive: true,
       property: gap,
       class: gap,
       values: map.merge($sizes-regular, $sizes-irregular),
+    ),
+    'gap-arbitrary': (
+      function: 'arbitrary-value',
+      property: gap,
+      class: gap,
     ),
     'row-gap': (
       responsive: true,
@@ -1962,200 +2450,258 @@ $utilities: map.merge(
       class: row-gap,
       values: map.merge($sizes-regular, $sizes-irregular),
     ),
+    'row-gap-arbitrary': (
+      function: 'arbitrary-value',
+      property: row-gap,
+      class: row-gap,
+    ),
     'column-gap': (
       responsive: true,
       property: column-gap,
       class: column-gap,
       values: map.merge($sizes-regular, $sizes-irregular),
     ),
+    'column-gap-arbitrary': (
+      function: 'arbitrary-value',
+      property: column-gap,
+      class: column-gap,
+    ),
+    'margin-arbitrary': (
+      function: 'arbitrary-value',
+      property: margin,
+      class: m,
+      responsive: true,
+      important: true,
+    ),
     'margin': (
       responsive: true,
       property: margin,
       class: m,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
           )
         ),
+      important: true,
     ),
     'margin-x': (
       responsive: true,
       property: margin-right margin-left,
       class: mx,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
+            container: var(--container-padding),
           )
         ),
+      important: true,
     ),
     'margin-y': (
       responsive: true,
       property: margin-top margin-bottom,
       class: my,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
           )
         ),
+      important: true,
     ),
     'margin-top': (
       responsive: true,
       property: margin-top,
       class: mt,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
           )
         ),
+      important: true,
     ),
     'margin-end': (
       responsive: true,
       property: margin-right,
       class: me,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
+            container: var(--container-padding),
           )
         ),
+      important: true,
     ),
     'margin-bottom': (
       responsive: true,
       property: margin-bottom,
       class: mb,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
           )
         ),
+      important: true,
     ),
     'margin-start': (
       responsive: true,
       property: margin-left,
       class: ms,
-      values:
-        map.merge(
+      values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
             auto: auto,
+            container: var(--container-padding),
           )
         ),
+      important: true,
     ),
     'negative-margin': (
       responsive: true,
       property: margin,
       class: m,
+      important: true,
+
       values: map.merge($negative-spacers, $negative-spacers-irregular),
     ),
     'negative-margin-x': (
       responsive: true,
       property: margin-right margin-left,
       class: mx,
-      values: map.merge($negative-spacers, $negative-spacers-irregular),
+      values: map.merge(
+          map.merge($negative-spacers, $negative-spacers-irregular),
+          (
+            n-container: calc(-1 * var(--container-padding)),
+          )
+        ),
+      important: true,
     ),
     'negative-margin-y': (
       responsive: true,
       property: margin-top margin-bottom,
       class: my,
       values: map.merge($negative-spacers, $negative-spacers-irregular),
+      important: true,
     ),
     'negative-margin-top': (
       responsive: true,
       property: margin-top,
       class: mt,
       values: map.merge($negative-spacers, $negative-spacers-irregular),
+      important: true,
     ),
     'negative-margin-end': (
       responsive: true,
       property: margin-right,
       class: me,
-      values: map.merge($negative-spacers, $negative-spacers-irregular),
+      values: map.merge(
+          map.merge($negative-spacers, $negative-spacers-irregular),
+          (
+            n-container: calc(-1 * var(--container-padding)),
+          )
+        ),
+      important: true,
     ),
     'negative-margin-bottom': (
       responsive: true,
       property: margin-bottom,
       class: mb,
       values: map.merge($negative-spacers, $negative-spacers-irregular),
+      important: true,
     ),
     'negative-margin-start': (
       responsive: true,
       property: margin-left,
       class: ms,
-      values: map.merge($negative-spacers, $negative-spacers-irregular),
+      values: map.merge(
+          map.merge($negative-spacers, $negative-spacers-irregular),
+          (
+            n-container: calc(-1 * var(--container-padding)),
+          )
+        ),
+      important: true,
+    ),
+    'padding-arbitrary': (
+      function: 'arbitrary-value',
+      property: padding,
+      class: p,
+      responsive: true,
+      important: true,
     ),
     'padding': (
       responsive: true,
       property: padding,
       class: p,
       values: map.merge($sizes-regular, $sizes-irregular),
+      important: true,
     ),
-    'padding-x-container': (
-      responsive: true,
-      property: padding-right padding-left,
-      class: px,
-      values: (
-        container: var(--container-padding),
-      ),
-    ),
+
     'padding-x': (
       responsive: true,
       property: padding-right padding-left,
       class: px,
-      values:
-        map.merge(
+      values: map.merge(
           $sizes-regular,
           map.merge(
             $sizes-irregular,
             (
-              container-gutter:
-                calc(
-                  (100vw - var(--container, 100vw)) / 2 +
-                    var(--container-padding)
+              container-gutter: calc(
+                  (100vw - var(--container, 100vw)) / 2 + var(--container-padding)
                 ),
+              container: var(--container-padding),
             )
           )
         ),
+      important: true,
     ),
     'padding-y': (
       responsive: true,
       property: padding-top padding-bottom,
       class: py,
       values: map.merge($sizes-regular, $sizes-irregular),
+      important: true,
     ),
     'padding-top': (
       responsive: true,
       property: padding-top,
       class: pt,
       values: map.merge($sizes-regular, $sizes-irregular),
+      important: true,
     ),
     'padding-end': (
       responsive: true,
       property: padding-right,
       class: pe,
-      values: map.merge($sizes-regular, $sizes-irregular),
+      values: map.merge(
+          map.merge($sizes-regular, $sizes-irregular),
+          (
+            container: var(--container-padding),
+          )
+        ),
+      important: true,
     ),
     'padding-bottom': (
       responsive: true,
       property: padding-bottom,
       class: pb,
       values: map.merge($sizes-regular, $sizes-irregular),
+      important: true,
     ),
     'padding-start': (
       responsive: true,
       property: padding-left,
       class: ps,
-      values: map.merge($sizes-regular, $sizes-irregular),
+      values: map.merge(
+          map.merge($sizes-regular, $sizes-irregular),
+          (
+            container: var(--container-padding),
+          )
+        ),
+      important: true,
     ),
   ),
   $utilities

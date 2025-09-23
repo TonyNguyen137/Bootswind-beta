@@ -1,17 +1,20 @@
 import { Utils } from '../utils';
 import { Tabber } from '../modules';
 
-// Breakpoints defined in CSS custom properties (see :root).
-// Used to determine responsive behavior (e.g., when to expand the navbar based on navbar[data-expand={bp}]).
-const style = getComputedStyle(document.documentElement);
+// Breakpoints defined in CSS custom property --js-breakpoints (see :root).
+// Used to determine responsive behavior (e.g., when to expand the navbar based on class .navbar--expand-{bp}.
+// Returns a string that contains JSON (stringified inside quotes)
 
-const BREAKPOINTS = {
-  sm: style.getPropertyValue('--bp-sm'),
-  md: style.getPropertyValue('--bp-md'),
-  lg: style.getPropertyValue('--bp-lg'),
-  xl: style.getPropertyValue('--bp-xl'),
-  xxl: style.getPropertyValue('--bp-xxl'),
-};
+const BREAKPOINTS_RAW = getComputedStyle(document.documentElement)
+  .getPropertyValue('--js-breakpoints')
+  .trim();
+
+BREAKPOINTS_RAW === '' &&
+  console.error(
+    '--js-breakpoints custom property is missing. The Navbar component depends on it and might not work as expected.'
+  );
+
+const BREAKPOINTS_JSON = JSON.parse(BREAKPOINTS_RAW.replace(/^'|'$/g, ''));
 
 /**
  * Interface-like definition for Navbar modules.
@@ -41,10 +44,13 @@ export class Navbar {
     this._isExpanded = false;
     this._isPositionFixed = this._rootEl.dataset.fixed === 'true';
     this._breakpointName = this._breakpointName =
-      [...this._rootEl.classList].find((cls) => cls.startsWith('navbar--expand-'))?.replace('navbar--expand-', '') ??
-      null;
-    this._breakpointValue = BREAKPOINTS[this._breakpointName] || null;
-    this._expandMediaQuery = this._breakpointName ? window.matchMedia(`(min-width: ${this._breakpointValue})`) : null;
+      [...this._rootEl.classList]
+        .find((cls) => cls.startsWith('navbar--expand-'))
+        ?.replace('navbar--expand-', '') ?? null;
+    this._breakpointValue = BREAKPOINTS_JSON[this._breakpointName] || null;
+    this._expandMediaQuery = this._breakpointName
+      ? window.matchMedia(`(min-width: ${this._breakpointValue})`)
+      : null;
 
     this._boundHandleDocumentClick = this._handleDocumentClick.bind(this);
     this._boundHandleKeydown = this._handleKeydown.bind(this);
@@ -69,7 +75,8 @@ export class Navbar {
     this._offcanvasEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));
 
     // Listen for changes
-    this._expandMediaQuery && this._expandMediaQuery.addEventListener('change', this._handleExpandMedia.bind(this));
+    this._expandMediaQuery &&
+      this._expandMediaQuery.addEventListener('change', this._handleExpandMedia.bind(this));
   }
 
   /* == Event handler == */
@@ -129,7 +136,9 @@ export class Navbar {
     this._setTransitionClass();
     this._isTransitioning = true;
 
-    const ariaAttributes = isOpen ? { 'aria-modal': 'true', role: 'dialog' } : { 'aria-modal': null, role: null };
+    const ariaAttributes = isOpen
+      ? { 'aria-modal': 'true', role: 'dialog' }
+      : { 'aria-modal': null, role: null };
     this._updateAriaAttributes(ariaAttributes);
 
     // Focus management

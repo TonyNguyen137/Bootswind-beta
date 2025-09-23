@@ -94,25 +94,17 @@ https://picsum.photos/id/237/200/300
 
 // am überlegen
 custom media query für utilities
-translate fluid
 remove Utils class
-radius mit fixed values
 accordion input fixed, sodass mein auch mehrere dom objkect üvergeben kann anstatt string
 accordion öffnen lassen beim start
-self-flow
-hover background
 transition überbearbeiten
+flow space --custom property responsive / function: 'nested-rules' with breakpoints,
 
 not mandatory:
 sticky table
 modal
 mdn sticky scrollable sidebar
 
-flex-children klassen
-flex 1
-
-children-text-color
-arbirtery value
-
-focus-within utility class mit colors - full setting halt
-outline utility class mit colors - full setting halt
+children/direct children arbirtary value
+responsive pattern custom properties überarbeiten
+@supports

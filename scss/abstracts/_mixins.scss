@@ -45,16 +45,46 @@ Modifications may have been made to the original mixins.
 }
 
 // media query
-@mixin mq($breakpoint, $has-media-hover: false) {
-  @if map.has-key($grid-breakpoints, $breakpoint) and $breakpoint != 'xs' {
-    $breakpoint: map.get($grid-breakpoints, $breakpoint);
 
-    @if ($has-media-hover) {
-      @media screen and (min-width: $breakpoint) and (hover: hover) and (pointer: fine) {
+@mixin mq($breakpoint, $config: ()) {
+  $INTERACTION-FINE: fine;
+  $INTERACTION-COARSE: coarse;
+  $INTERACTION-NONE: none;
+
+  $has-media-hover: false;
+  $_core-config: (
+    grid-breakpoints: $grid-breakpoints,
+    interaction: $INTERACTION-NONE,
+  );
+
+  $_config: map.merge($_core-config, $config);
+
+  $_grid-breakpoints: map.get($_config, grid-breakpoints);
+  $_interaction: map.get($_config, interaction);
+
+  // @debug $_grid-breakpoints;
+  // @debug breakpoint $breakpoint;
+  // @debug bool $breakpoint == xs;
+  // @debug has-key map.has-key($_grid-breakpoints, $breakpoint);
+  // @debug has-key and is xs (map.has-key($_grid-breakpoints, $breakpoint) and $breakpoint == xs);
+  // @debug second ifelse map.get($_grid-breakpoints, $breakpoint);
+
+  @if ($breakpoint == xs) {
+    // do nothing
+    @debug '**NOTE**: Skipping breakpoint xs in @mixin mq';
+  } @else if map.has-key($_grid-breakpoints, $breakpoint) {
+    $breakpoint-size: map.get($_grid-breakpoints, $breakpoint);
+
+    @if ($_interaction == $INTERACTION-FINE) {
+      @media screen and (min-width: $breakpoint-size) and (hover: hover) and (pointer: fine) {
+        @content;
+      }
+    } @else if ($_interaction == $INTERACTION-COARSE) {
+      @media screen and (min-width: $breakpoint-size) and (hover: none) and (pointer: coarse) {
         @content;
       }
     } @else {
-      @media screen and (min-width: $breakpoint) {
+      @media screen and (min-width: $breakpoint-size) {
         @content;
       }
     }
@@ -79,21 +109,13 @@ Modifications may have been made to the original mixins.
 
 @mixin make-container($gutter: $container-padding) {
   width: 100%;
-  padding-inline: if(
-    $gutter == 'responsive',
-    var(--container-padding-res),
-    $gutter
-  );
+  padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
   margin-inline: auto;
 }
 
 @mixin make-container-fluid-max($max-width, $gutter: $container-padding) {
   max-width: $max-width;
-  padding-inline: if(
-    $gutter == 'responsive',
-    var(--container-padding-res),
-    $gutter
-  );
+  padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
   margin-inline: auto;
 }
 
@@ -111,6 +133,17 @@ Modifications may have been made to the original mixins.
     // @debug kein media;
 
     @content;
+  }
+}
+
+@mixin container-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+
+  // @debug min $min;
+  @if $min {
+    @container (width > #{$min}) {
+      @content;
+    }
   }
 }
 
@@ -135,8 +168,7 @@ Modifications may have been made to the original mixins.
 @mixin make-col-ready() {
   // Add box sizing if only the grid is loaded
   box-sizing: if(
-    meta.variable-exists(include-column-box-sizing) and
-      $include-column-box-sizing,
+    meta.variable-exists(include-column-box-sizing) and $include-column-box-sizing,
     border-box,
     null
   );
@@ -267,28 +299,14 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-utility(
-  $utility,
-  $bp: '',
-  $breakpoint-key,
-  $key,
-  $is-rfs-media-query: false
-) {
+@mixin generate-utility($utility, $bp: '', $breakpoint-key, $key, $is-rfs-media-query: false) {
   $values: map.get($utility, values);
-  $selected-function: if(
-    map.has-key($utility, function),
-    map.get($utility, function),
-    'normal'
-  );
+  $selected-function: if(map.has-key($utility, function), map.get($utility, function), 'normal');
 
   // Check if the list is not empty before accessing the first element
   @if list.length($values) > 0 and $values != null {
     // If the values are a list or string, convert it into a map
-    @if meta.type-of($values) ==
-      'string' or
-      meta.type-of(list.nth($values, 1)) !=
-      'list'
-    {
+    @if meta.type-of($values) == 'string' or meta.type-of(list.nth($values, 1)) != 'list' {
       $values: list.zip($values, $values);
     }
   }
@@ -303,7 +321,8 @@ Modifications may have been made to the original mixins.
     map.get($utility, required-property),
     null
   );
-  $properties: map.get($utility, property);
+  $property: map.get($utility, property);
+
   $custom-property-value: if(
     map.has-key($utility, custom-property-value),
     map.get($utility, custom-property-value),
@@ -316,8 +335,8 @@ Modifications may have been made to the original mixins.
   // Multiple properties are possible, for example with vertical or horizontal margins or paddings
   // @debug properties before $properties;
 
-  @if meta.type-of($properties) == 'string' {
-    $properties: list.append((), $properties);
+  @if meta.type-of($property) == 'string' {
+    $property: list.append((), $property);
 
     // @debug properties inside $properties;
   }
@@ -342,11 +361,12 @@ Modifications may have been made to the original mixins.
   $css-variable-name: map.get($utility, css-variable-name);
   $media: map.get($utility, media);
 
-  $arbitary-custom-property: map.get($utility, arbitary-custom-property);
-
+  $arbitrary-custom-property: map.get($utility, arbitrary-custom-property);
+  $responsive-custom-property-value: map.get($utility, responsive-custom-property-value);
   $configuration-map: (
-    arbitary-custom-property: $arbitary-custom-property,
-    properties: $properties,
+    arbitrary-custom-property: $arbitrary-custom-property,
+    property: $property,
+    responsive-custom-property: $responsive-custom-property-value,
     values: $values,
     important: $is-important,
     required-property: $required-property,
@@ -367,8 +387,8 @@ Modifications may have been made to the original mixins.
 
   @if $selected-function == 'normal' {
     @include create-normal-utility($configuration-map);
-  } @else if $selected-function == 'arbitary-value' {
-    @include create-arbitary-value-utility($configuration-map);
+  } @else if $selected-function == 'arbitrary-value' {
+    @include create-arbitrary-value-utility($configuration-map);
   } @else if $selected-function == 'fluid' {
     @include create-fluid-utility($configuration-map);
   } @else if $selected-function == 'custom-property-value' {
@@ -377,27 +397,53 @@ Modifications may have been made to the original mixins.
     @include create-simple-custom-property-utility($configuration-map);
   } @else if $selected-function == 'css-var' {
     @include create-css-var-utility($configuration-map);
-  } @else if $selected-function == 'property-advanced' {
-    @include create-property-advanced-utility($configuration-map);
+  } @else if $selected-function == 'responsive-custom-property' {
+    @include create-responsive-custom-property-utility($configuration-map);
   }
 }
 
-@mixin generate-pattern($pattern, $bp: '', $key, $is-rfs-media-query: false) {
+@mixin create-responsive-custom-property-utility($map) {
+  $responsive-custom-property: map.get($map, responsive-custom-property);
+  $property: map.get($map, property);
+  $important: map.get($map, important);
+  $breakpoint: map.get($map, breakpoint);
+  $breakpoint-key: map.get($map, breakpoint-key);
+  $class: map.get($map, class);
+  $key: map.get($map, key);
+  $properties-length: list.length($property);
+
+  // @debug responsive-custom-property $responsive-custom-property;
+  // @debug important $important;
+  // @debug breakpoint $breakpoint;
+  // @debug breakpoint-key $breakpoint-key;
+  // @debug class $class;
+  // @debug key $key;
+  @debug properties-length $properties-length;
+
+  @if ($properties-length > 2) {
+    @error "#{$key} exceeds the maximum of 2 allowed properties. You provided #{$properties-length}.";
+  }
+  $breakpoint-key: if($breakpoint-key == '', $breakpoint-key, $breakpoint-key + '-');
+
+  .#{$breakpoint}#{$class-namespace}#{$class} {
+    @if ($properties-length == 2) {
+      @each $prop in $property {
+        #{$prop}: var(--#{$breakpoint-key}#{$responsive-custom-property}) #{$important};
+      }
+    } @else {
+      #{$property}: var(--#{$breakpoint-key}#{$responsive-custom-property}) #{$important};
+    }
+  }
+}
+
+@mixin generate-pattern($pattern, $bp: '', $breakpoint-key, $key, $is-rfs-media-query: false) {
   $values: map.get($pattern, values);
-  $selected-function: if(
-    map.has-key($pattern, function),
-    map.get($pattern, function),
-    null
-  );
+  $selected-function: if(map.has-key($pattern, function), map.get($pattern, function), null);
 
   // Check if the list is not empty before accessing the first element
   @if list.length($values) > 0 and $values != null {
     // If the values are a list or string, convert it into a map
-    @if meta.type-of($values) ==
-      'string' or
-      meta.type-of(list.nth($values, 1)) !=
-      'list'
-    {
+    @if meta.type-of($values) == 'string' or meta.type-of(list.nth($values, 1)) != 'list' {
       $values: list.zip($values, $values);
     }
   }
@@ -412,7 +458,9 @@ Modifications may have been made to the original mixins.
     map.get($pattern, required-property),
     null
   );
-  $properties: map.get($pattern, property);
+  $nesting: map.get($pattern, nesting);
+  $properties: map.get($pattern, properties);
+
   $custom-property-value: if(
     map.has-key($pattern, custom-property-value),
     map.get($pattern, custom-property-value),
@@ -421,17 +469,6 @@ Modifications may have been made to the original mixins.
 
   // @debug $custom-property-value;
   $class: map.get($pattern, class);
-
-  // Multiple properties are possible, for example with vertical or horizontal margins or paddings
-  // @debug properties before $properties;
-
-  @if meta.type-of($properties) == 'string' {
-    $properties: list.append((), $properties);
-
-    // @debug properties inside $properties;
-  }
-
-  // @debug properties after $properties;
 
   $local-vars: map.get($pattern, local-vars);
   $is-rtl: map.get($pattern, rtl);
@@ -451,13 +488,17 @@ Modifications may have been made to the original mixins.
   $custom-property-prefix: map.get($pattern, custom-property-prefix);
   $css-variable-name: map.get($pattern, css-variable-name);
   $media: map.get($pattern, media);
+  $responsive-custom-props: map.get($pattern, responsive-custom-properties);
 
   $configuration-map: (
+    nesting: $nesting,
     properties: $properties,
+    responsive-custom-props: $responsive-custom-props,
     values: $values,
     important: $is-important,
     required-property: $required-property,
     breakpoint: $bp,
+    breakpoint-key: $breakpoint-key,
     class: $class,
     key: $key,
     custom-property-name: $custom-property-name,
@@ -473,39 +514,67 @@ Modifications may have been made to the original mixins.
 
   @if $selected-function == 'nested-rules' {
     @include create-nested-rules-pattern($configuration-map);
+  } @else if $selected-function == 'property-advanced' {
+    @include create-property-advanced-utility($configuration-map);
+  } @else if $selected-function == 'responsive-custom-properties' {
+    @include create-pattern-responsive-custom-properties($configuration-map);
   }
 }
 
-@mixin create-arbitary-value-utility($map) {
-  $arbitary-custom-property: map.get($map, arbitary-custom-property);
-  $property: map.get($map, properties);
+@mixin create-arbitrary-value-utility($map) {
+  $arbitrary-custom-property: map.get($map, arbitrary-custom-property);
+  $property: map.get($map, property);
+  $property-length: list.length($property);
   $key: map.get($map, key);
   $values: map.get($map, values);
   $important: map.get($map, important);
   $breakpoint: map.get($map, breakpoint);
-  $breakpoint-key: if(
-    map.get($map, breakpoint-key) != '',
-    map.get($map, breakpoint-key) + '-',
-    ''
-  );
-
+  $breakpoint-key: if(map.get($map, breakpoint-key) != '', map.get($map, breakpoint-key) + '-', '');
+  $key: map.get($map, key);
   $class: map.get($map, class);
 
-  $class-suffix: '-\\\[arbitary\\\]';
+  $class-suffix: '-\\\[arbitrary\\\]';
 
   // @debug bp-key $breakpoint-key;
+  // @debug key $key;
+  // @debug property $property;
+  // @debug type-of meta.type-of($property);
+  // @debug length list.length($property);
+  @if ($property == null) {
+    @error 'no property was provided in #{$key}';
+  }
 
-  .#{$breakpoint}#{$class}#{$class-suffix} {
-    #{$property}: if(
-      $arbitary-custom-property,
-      var(--#{$breakpoint-key}#{$arbitary-custom-property}),
-      var(--#{$breakpoint-key}#{$property}-arbitary)
-    );
+  @if ($property-length > 2) {
+    @error 'The number of properties has been exceeded. You can only provide up to 2 properties, but you provided #{$property-length}';
+  }
+
+  @if ($property-length == 2) {
+    $property-1: list.nth($property, 1);
+    $property-2: list.nth($property, 2);
+    $property-infix: #{$property-1}-#{$property-2};
+
+    .#{$breakpoint}#{$class}#{$class-suffix} {
+      @each $p in $property {
+        #{$p}: if(
+          $arbitrary-custom-property,
+          var(--#{$breakpoint-key}#{$arbitrary-custom-property}),
+          var(--#{$breakpoint-key}#{$property-infix}-arbitrary)
+        );
+      }
+    }
+  } @else {
+    .#{$breakpoint}#{$class}#{$class-suffix} {
+      #{$property}: if(
+        $arbitrary-custom-property,
+        var(--#{$breakpoint-key}#{$arbitrary-custom-property}),
+        var(--#{$breakpoint-key}#{$property}-arbitrary)
+      );
+    }
   }
 }
 
 @mixin create-normal-utility($map) {
-  $properties: map.get($map, properties);
+  $property: map.get($map, property);
   $key: map.get($map, key);
   $values: map.get($map, values);
   $important: map.get($map, important);
@@ -523,7 +592,7 @@ Modifications may have been made to the original mixins.
   // @debug -------normal-utility---------------;
   // @debug media $media;
 
-  // @debug properties $properties;
+  // @debug property $property;
   // @debug values $values;
   // @debug map.get($map, class);
   // @debug required-property $required-property;
@@ -549,7 +618,7 @@ Modifications may have been made to the original mixins.
           // @debug what type meta.type-of($breakpoint);
           // @debug breakpoint 1 $breakpoint;
 
-          .#{$breakpoint}#{$prefix-class}#{if($class, $class, $value)}#{$key-suffix}#{$state} {
+          .#{$breakpoint}#{$class-namespace}#{if($class, $class, $value)}#{$key-suffix}#{$state} {
             @if $local-vars {
               @each $local-var, $value in $local-vars {
                 --#{$local-var}: #{$value};
@@ -562,9 +631,9 @@ Modifications may have been made to the original mixins.
               }
             }
 
-            @each $property in $properties {
+            @each $p in $property {
               // @debug property $property;
-              #{$property}: $value #{$important};
+              #{$p}: $value #{$important};
             }
           }
         }
@@ -591,7 +660,7 @@ Modifications may have been made to the original mixins.
 
         // @debug new bp $breakpoint;
 
-        .#{$breakpoint}#{$prefix-class}#{if($class, $class, $value)}#{if($class, $key-suffix, '')}#{$single-state} {
+        .#{$breakpoint}#{$class-namespace}#{if($class, $class, $value)}#{if($class, $key-suffix, '')}#{$single-state} {
           // @debug value hier- if($class, $class, $value);
 
           @if $local-vars {
@@ -606,7 +675,7 @@ Modifications may have been made to the original mixins.
             }
           }
 
-          @each $property in $properties {
+          @each $property in $property {
             @if $media {
               @media #{$media} {
                 #{$property}: $value #{$important};
@@ -622,7 +691,7 @@ Modifications may have been made to the original mixins.
 }
 
 @mixin create-fluid-utility($map) {
-  $property: map.get($map, properties);
+  $property: map.get($map, property);
   $values: map.get($map, values);
   $important: map.get($map, important);
   $breakpoint: map.get($map, breakpoint);
@@ -640,6 +709,7 @@ Modifications may have been made to the original mixins.
   // @debug important $important;
   // @debug breakpoint $breakpoint;
   // @debug class $class;
+  // @debug breakpoint $breakpoint;
   // @debug -------------------------;
 
   @if ($values != null) {
@@ -647,7 +717,8 @@ Modifications may have been made to the original mixins.
     @each $key in map.keys($fluid-map) {
       $map: map.get($fluid-map, $key);
       // @debug map $map;
-      $selector-suffix: remove-prefix($key, 'fs-');
+
+      $selector-suffix: $key;
 
       // @debug selector-suffix $selector-suffix;
       $custom-property-name: $key;
@@ -687,16 +758,8 @@ Modifications may have been made to the original mixins.
         map.get($map, threshold-unit),
         if(#{$property} == 'font-size', 'rem', 'px')
       );
-      $preferred-unit: if(
-        map.has-key($map, preferred-unit),
-        map.get($map, preferred-unit),
-        'rem'
-      );
-      $relative-to: if(
-        map.has-key($map, relative-to),
-        map.get($map, relative-to),
-        'viewport'
-      );
+      $preferred-unit: if(map.has-key($map, preferred-unit), map.get($map, preferred-unit), 'rem');
+      $relative-to: if(map.has-key($map, relative-to), map.get($map, relative-to), 'viewport');
 
       // @debug min-vp $min-viewport;
       // @debug max-vp $max-viewport;
@@ -706,15 +769,16 @@ Modifications may have been made to the original mixins.
       // @debug preferred-unit $preferred-unit;
       // @debug relative-to $relative-to;
 
+      $breakpoint-prefix: breakpoint-prefix($breakpoint);
       @if ($use-custom-property) {
         // @debug inside;
-        .#{$prefix-class}#{$class}#{$breakpoint}-#{$selector-suffix} {
+        .#{$breakpoint}#{$class-namespace}#{$class}-#{$selector-suffix} {
           @each $prop in $property {
             #{$prop}: var(--#{$prefix}#{$custom-property-name}) #{$important};
           }
         }
       } @else {
-        .#{$prefix-class}#{$class}#{$breakpoint}-#{$selector-suffix} {
+        .#{$breakpoint}#{$class-namespace}#{$class}-#{$selector-suffix} {
           @each $prop in $property {
             #{$prop}: fluid(
                 $min-size,
@@ -734,7 +798,7 @@ Modifications may have been made to the original mixins.
 }
 
 @mixin create-custom-property-value-utility($map) {
-  $properties: map.get($map, properties);
+  $property: map.get($map, property);
   $values: map.get($map, values);
   $custom-property-trunks: if($values, map.keys($values), 'null');
   $custom-property-prefix: map.get($map, custom-property-prefix);
@@ -747,7 +811,7 @@ Modifications may have been made to the original mixins.
   $local-vars: map.get($map, local-vars);
   $state: if(map.get($map, state), to-list(map.get($map, state)), null);
 
-  // @debug properties $properties;
+  // @debug property $property;
   // @debug values $values;
   // @debug required-property $required-property;
   // @debug prefix $custom-property-prefix;
@@ -766,28 +830,27 @@ Modifications may have been made to the original mixins.
   @if ($values != null) {
     @if ($formatted-prefix != null) {
       @each $trunk in $custom-property-trunks {
-        .#{$prefix-class}#{$class}#{$breakpoint}-#{$trunk}#{$state} {
+        .#{$class-namespace}#{$class}#{$breakpoint}-#{$trunk}#{$state} {
           @if ($required-property != null) {
             @each $prop, $value in $required-property {
               #{$prop}: $value #{$important};
             }
           }
-          @each $prop in $properties {
-            #{$prop}: var(--#{$prefix}#{$formatted-prefix}#{$trunk})
-              #{$important};
+          @each $prop in $property {
+            #{$prop}: var(--#{$prefix}#{$formatted-prefix}#{$trunk}) #{$important};
           }
         }
       }
     } @else {
       @each $trunk, $value in $values {
         $formatted-trunk: add-hyphen(#{$trunk}, prepend);
-        .#{$prefix-class}#{$class}#{$breakpoint}#{$formatted-trunk}#{$state} {
+        .#{$class-namespace}#{$class}#{$breakpoint}#{$formatted-trunk}#{$state} {
           @if ($required-property != null) {
             @each $prop, $value in $required-property {
               #{$prop}: $value #{$important};
             }
           }
-          @each $prop in $properties {
+          @each $prop in $property {
             #{$prop}: $value #{$important};
           }
         }
@@ -815,11 +878,14 @@ Modifications may have been made to the original mixins.
   // @debug meta-state meta.type-of($states);
   // @debug local-vars $local-vars;
   // @debug join list.join($states, (), comma);
+  // @debug states $states;
+  // @debug length $states-length;
 
   @if ($states and $states-length > 1) {
     $formatted-states: list.join($states, (), comma);
+    // @debug $formatted-states;
 
-    .#{$prefix-class}#{$class}#{$breakpoint}:where(#{$formatted-states}) {
+    .#{$breakpoint}#{$class-namespace}#{$class}:where(#{$formatted-states}) {
       @each $prop, $value in $properties {
         #{$prop}: $value #{$important};
       }
@@ -828,7 +894,7 @@ Modifications may have been made to the original mixins.
     // Get single state from $states list, returns null if unset
     $single-state: single-or-null($states);
 
-    .#{$prefix-class}#{$class}#{$breakpoint}#{$single-state} {
+    .#{$breakpoint}#{$class-namespace}#{$class}#{$single-state} {
       @each $prop, $value in $properties {
         #{$prop}: $value #{$important};
       }
@@ -836,14 +902,36 @@ Modifications may have been made to the original mixins.
   }
 }
 
+@mixin create-pattern-responsive-custom-properties($map) {
+  $responsive-custom-props: map.get($map, responsive-custom-props);
+  $important: map.get($map, important);
+  $breakpoint: map.get($map, breakpoint);
+  $breakpoint-key: map.get($map, breakpoint-key);
+  $class: map.get($map, class);
+
+  // @debug responsive-custom-props $responsive-custom-props;
+  // @debug important $important;
+  // @debug breakpoint $breakpoint;
+  // @debug breakpoint-key $breakpoint-key;
+  // @debug class $class;
+
+  $breakpoint-key: if($breakpoint-key == '', $breakpoint-key, $breakpoint-key + '-');
+
+  .#{$breakpoint}#{$class-namespace}#{$class} {
+    @each $prop, $value in $responsive-custom-props {
+      #{$prop}: var(--#{$breakpoint-key}#{$value}) #{$important};
+    }
+  }
+}
+
 @mixin create-nested-rules-pattern($map) {
-  $properties: map.get($map, properties);
+  $nesting: map.get($map, nesting);
   $values: map.get($map, values);
   $important: map.get($map, important);
   $breakpoint: map.get($map, breakpoint);
   $class: map.get($map, class);
 
-  // @debug properties $properties;
+  // @debug nesting $nesting;
   // @debug important $important;
   // @debug breakpoint $breakpoint;
   // @debug class $class;
@@ -853,8 +941,8 @@ Modifications may have been made to the original mixins.
 
   @if ($values != null and meta.type-of($values) == map) {
     @each $key, $value in $values {
-      .#{$class}-#{$key} {
-        @each $property, $property-value in $properties {
+      .#{$breakpoint}#{$class}-#{$key} {
+        @each $property, $property-value in $nesting {
           // @debug property $property;
           // @debug property-value $value;
 
@@ -883,9 +971,9 @@ Modifications may have been made to the original mixins.
       }
     }
   } @else {
-    .#{$class} {
-      // Loop through the properties defined for each utility
-      @each $property, $property-value in $properties {
+    .#{$breakpoint}#{$class} {
+      // Loop through the nesting defined for each utility
+      @each $property, $property-value in $nesting {
         @if meta.type-of($property-value) == 'map' {
           $_nested-selector: $property;
 
@@ -896,7 +984,7 @@ Modifications may have been made to the original mixins.
             }
           }
         } @else {
-          #{$property}: #{$value} #{$important};
+          #{$property}: #{$property-value} #{$important};
         }
       }
     }
@@ -904,7 +992,7 @@ Modifications may have been made to the original mixins.
 }
 
 @mixin create-css-var-utility($map) {
-  $properties: map.get($map, properties);
+  $property: map.get($map, property);
   $key: map.get($map, key);
   $values: map.get($map, values);
   $important: map.get($map, important);
@@ -919,7 +1007,7 @@ Modifications may have been made to the original mixins.
   $custom-property-prefix: map.get($map, custom-property-prefix);
 
   // @debug --------------------------;
-  // @debug properties $properties;
+  // @debug property $property;
   // @debug custom-property-trunks $custom-property-trunks;
   // @debug custom-property-prefix $custom-property-prefix;
   // @debug values $values;
@@ -943,13 +1031,11 @@ Modifications may have been made to the original mixins.
           // @debug key-suffix $key-suffix;
 
           @if ($custom-property-prefix) {
-            .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
-              --#{$css-variable-name}: var(
-                --#{$prefix}#{$custom-property-prefix}#{$key-suffix}
-              );
+            .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
+              --#{$css-variable-name}: var(--#{$prefix}#{$custom-property-prefix}#{$key-suffix});
             }
           } @else {
-            .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
+            .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
               --#{$css-variable-name}: #{$value};
             }
           }
@@ -963,14 +1049,14 @@ Modifications may have been made to the original mixins.
         $single-state: single-or-null($states);
         // @debug $single-state;
         @if ($custom-property-prefix) {
-          .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
+          .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
             --#{$css-variable-name}: var(
               --#{$prefix}#{$custom-property-prefix}#{$key}#{$single-state}
             );
           }
         } @else {
           // @debug single-state $single-state;
-          .#{$prefix-class}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
+          .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
             --#{$css-variable-name}: #{$value};
           }
         }
@@ -992,11 +1078,7 @@ Modifications may have been made to the original mixins.
         // @debug key $key;
         // @debug value-map $value-map;
 
-        $_class: if(
-          map.has-key($value-map, class),
-          map.get($value-map, class),
-          $key
-        );
+        $_class: if(map.has-key($value-map, class), map.get($value-map, class), $key);
         $_property: map.get($value-map, property);
 
         @if ($_property) {
@@ -1022,15 +1104,11 @@ Modifications may have been made to the original mixins.
 
       @if ($breakpoint == 'xs') {
         // @debug map map.get($map, $breakpoint);
-        @each $custom-property-name, $value-object in map.get($map, $breakpoint)
-        {
+        @each $custom-property-name, $value-object in map.get($map, $breakpoint) {
           // @debug custom-property-name $custom-property-name;
           // @debug value-object $value-object;
           // @debug ----------;
-          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get(
-              $value-object,
-              value
-            )};
+          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
         }
       } @else {
         @each $custom-property-name, $value in map.get($map, $breakpoint) {
@@ -1095,15 +1173,14 @@ Modifications may have been made to the original mixins.
     }
   }
 }
-@mixin generate-clamp-custom-properties($clamp-map, $default-unit: rem) {
+@mixin generate-clamp-custom-properties(
+  $clamp-map,
+  $default-unit: 'rem',
+  $default-relative-to: 'viewport'
+) {
   // Only loop if the map has entries
-  // @debug map $clamp-map;
-
-  @if (list.length(map.keys($clamp-map)) > 0) {
+  @if ($clamp-map != null and list.length(map.keys($clamp-map)) > 0) {
     @each $key, $map in $clamp-map {
-      // @debug key $key;
-      // @debug map $map;
-
       $has-custom-property: if(
         map.has-key($map, create-custom-property),
         map.get($map, create-custom-property),
@@ -1111,11 +1188,10 @@ Modifications may have been made to the original mixins.
       );
 
       @if ($has-custom-property) {
-        // @debug inside;
         $relative-to: if(
           map.has-key($map, relative-to),
           map.get($map, relative-to),
-          'viewport'
+          $default-relative-to
         );
 
         $threshold-unit: if(
@@ -1123,34 +1199,12 @@ Modifications may have been made to the original mixins.
           map.get($map, threshold-unit),
           $default-unit
         );
-        $preferred-unit: if(
-          map.has-key($map, preferred-unit),
-          map.get($map, preferred-unit),
-          'rem'
-        );
 
         $threshold-keys: map.keys(map.get($map, threshold));
         $threshold-map: map.get($map, threshold);
 
-        // @debug threshold-keys $threshold-keys;
-        // @debug threshold-map $threshold-keys;
-
         $min-size: map.get($threshold-map, list.nth($threshold-keys, 1));
         $max-size: map.get($threshold-map, list.nth($threshold-keys, 2));
-
-        // @debug list 1 list.nth($threshold-keys, 1);
-        // @debug list 2 list.nth($threshold-keys, 2);
-
-        // @debug min-size $min-size;
-        // @debug max-size $max-size;
-
-        // @debug list-1 list.nth($threshold-keys, 1);
-        // @debug list-2 list.nth($threshold-keys, 2);
-
-        // @debug meta-list-1 meta.type-of(list.nth($threshold-keys, 1));
-        // @debug meta-list-2 meta.type-of(list.nth($threshold-keys, 2));
-
-        // @debug map.has-key($grid-breakpoints, list.nth($threshold-keys, 1));
 
         // convert the keys to its corresponding pixel value. Otherwise, use the value as-is.
         $key-min-formatted: if(
@@ -1171,21 +1225,11 @@ Modifications may have been made to the original mixins.
         $min-viewport: remove-unit-and-convert($key-min-formatted);
         $max-viewport: remove-unit-and-convert($key-max-formatted);
 
-        // @debug min-viewport $min-viewport;
-        // @debug max-viewport $max-viewport;
-
         $delta-size: $max-size - $min-size;
         $delta-viewport: $max-viewport - $min-viewport;
         $change: round-to(math.div($delta-size, $delta-viewport), 6);
 
-        $preferred: if(
-          $preferred-unit == 'rem',
-          round-to(
-            math.div($max-size - ($max-viewport * $change), 16) * 1rem,
-            4
-          ),
-          round-to($max-size - ($max-viewport * $change), 4) * 1px
-        );
+        $preferred: round-to(math.div($max-size - ($max-viewport * $change), 16) * 1rem, 4);
 
         $rate-of-change: null;
 
@@ -1197,16 +1241,8 @@ Modifications may have been made to the original mixins.
           @error 'Invalid value for $relativeTo. Expected "viewport" or "container".';
         }
 
-        $min-size: if(
-          $threshold-unit == 'rem',
-          px-to-rem($min-size),
-          $min-size * 1px
-        );
-        $max-size: if(
-          $threshold-unit == 'rem',
-          px-to-rem($max-size),
-          $max-size * 1px
-        );
+        $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
+        $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
 
         --#{$prefix}#{$key}: clamp(
           #{$min-size},
@@ -1299,11 +1335,7 @@ Modifications may have been made to the original mixins.
 
   @each $theme, $color-map, $color-hover in $_theme-map {
     $colors: map.get($color-map, color);
-    $colors-hover: if(
-      map.get($color-map, hover) != null,
-      map.get($color-map, hover),
-      ()
-    );
+    $colors-hover: if(map.get($color-map, hover) != null, map.get($color-map, hover), ());
     // @debug theme $theme;
     // @debug color $colors;
     // @debug color-hover $colors-hover;
@@ -1329,10 +1361,7 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-color-custom-properties-rgb(
-  $color-theme-map: (),
-  $color-prefix: 'clr-'
-) {
+@mixin generate-color-custom-properties-rgb($color-theme-map: (), $color-prefix: 'clr-') {
   // Only loop if the map has entries
 
   // @debug MAPP $color-theme-map;
@@ -1350,4 +1379,34 @@ Modifications may have been made to the original mixins.
       }
     }
   }
+}
+
+@mixin export-breakpoints-json($grid-breakpoints, $prop-name: --js-breakpoints) {
+  $json: '{';
+  $i: 0;
+  $len: list.length($grid-breakpoints);
+  $last-item-index: $len - 1;
+  @each $key, $val in $grid-breakpoints {
+    // Zahl in px ohne Einheit schreiben
+    @if ($key != xs) {
+      @if (math.is-unitless($val)) {
+        @error 'your breakpoint: #{$key}:#{$val} is unitless!';
+      }
+
+      // @debug val $val;
+      // @debug meta.type-of($val);
+      $json: $json + '"' + $key + '":' + '"' + $val + '"';
+
+      @if $i != $last-item-index {
+        $json: $json + ',';
+      }
+    }
+
+    $i: $i + 1;
+  }
+
+  $json: $json + '}';
+  // $json: string.unquote($json);
+
+  #{$prop-name}: '#{$json}';
 }

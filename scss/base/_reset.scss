@@ -7,7 +7,7 @@ html {
 
   @if ($enable-reduced-motion) {
     @media (prefers-reduced-motion: reduce) {
-      &:focus-within {
+      & {
         scroll-behavior: auto !important;
       }
     }
@@ -34,9 +34,15 @@ body {
   line-height: 1.5;
 }
 
+body,
+figure {
+  margin: 0;
+}
+
 /** 
   Image reset by Harry Roberts. 
   @see https://x.com/csswizardry/status/1717841334462005661
+  @see Video: Kevin Powell explains the image reset - https://www.youtube.com/watch?v=345V2MU3E_w&t=151s
 */
 img {
   max-width: 100%;
