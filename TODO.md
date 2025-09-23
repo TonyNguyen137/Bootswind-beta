@@ -108,3 +108,11 @@ mdn sticky scrollable sidebar
 children/direct children arbirtary value
 responsive pattern custom properties überarbeiten
 @supports
+flex-children klassen
+flex 1
+
+add media query 375 xsm
+
+empty --container: wird ausgegeben bei $responsive-custom-properties;
+
+container block für navigation konfig
