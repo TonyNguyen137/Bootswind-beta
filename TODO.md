@@ -108,3 +108,4 @@ mdn sticky scrollable sidebar
 children/direct children arbirtary value
 responsive pattern custom properties überarbeiten
 @supports
+writing mode utilit klassen anpassen
