@@ -127,3 +127,6 @@ values dashed entfernen wenn man class so was hat   class: hover\:,
       navbalink aria-current markieren mit underline oder sonst was
 
       dropdown ausschalten wenn clicked wo anders
+
+
+      min-height flzuid utility machen
