@@ -120,3 +120,6 @@ values dashed entfernen wenn man class so was hat   class: hover\:,
       ),
 
       children a text inherit
+
+
+      Navbar Module Tabber funktioniert nur bei navbar__links, bei Button geht nicht, statt klasse selekten, alle focusable elemente selekten
