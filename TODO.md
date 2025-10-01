@@ -118,3 +118,5 @@ values dashed entfernen wenn man class so was hat   class: hover\:,
         overline: overline,
         line-through: line-through,
       ),
+
+      children a text inherit
