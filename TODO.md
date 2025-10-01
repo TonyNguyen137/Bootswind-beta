@@ -108,3 +108,6 @@ mdn sticky scrollable sidebar
 children/direct children arbirtary value
 responsive pattern custom properties überarbeiten
 @supports
+
+in patterns custom variabbles adden
+hover:text-underline in hover:underline ändern
