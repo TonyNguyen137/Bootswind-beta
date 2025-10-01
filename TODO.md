@@ -111,3 +111,10 @@ responsive pattern custom properties überarbeiten
 
 in patterns custom variabbles adden
 hover:text-underline in hover:underline ändern
+values dashed entfernen wenn man class so was hat   class: hover\:,
+      values: (
+        underline: underline,
+        no-underline: none,
+        overline: overline,
+        line-through: line-through,
+      ),
