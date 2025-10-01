@@ -123,3 +123,7 @@ values dashed entfernen wenn man class so was hat   class: hover\:,
 
 
       Navbar Module Tabber funktioniert nur bei navbar__links, bei Button geht nicht, statt klasse selekten, alle focusable elemente selekten
+
+      navbalink aria-current markieren mit underline oder sonst was
+
+      dropdown ausschalten wenn clicked wo anders
