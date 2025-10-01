@@ -130,3 +130,6 @@ values dashed entfernen wenn man class so was hat   class: hover\:,
 
 
       min-height flzuid utility machen
+
+             justify-stretch: stretch,
+
