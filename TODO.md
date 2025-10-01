@@ -133,3 +133,11 @@ values dashed entfernen wenn man class so was hat   class: hover\:,
 
              justify-stretch: stretch,
 
+
+subgrid anpassen
+               'grid-template-rows': (
+      property: grid-template-rows,
+      class: grid-template-rows,
+      values: subgrid,
+    ),
+
