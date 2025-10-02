@@ -140,4 +140,4 @@ subgrid anpassen
       class: grid-template-rows,
       values: subgrid,
     ),
-
+object-position utility responsive
