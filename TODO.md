@@ -107,7 +107,6 @@ mdn sticky scrollable sidebar
 
 responsive pattern custom properties überarbeiten
 @supports
-
 patterns, ohne function?
 
 utilities check
@@ -124,3 +123,40 @@ vendors > splide + Leaflet
 
 text-decoration > decoration, utility + pattern
 before:content before:wh before:bg
+in patterns custom variabbles adden
+hover:text-underline in hover:underline ändern
+values dashed entfernen wenn man class so was hat class: hover\:,
+values: (
+underline: underline,
+no-underline: none,
+overline: overline,
+line-through: line-through,
+),
+
+      children a text inherit
+
+
+      Navbar Module Tabber funktioniert nur bei navbar__links, bei Button geht nicht, statt klasse selekten, alle focusable elemente selekten
+
+      navbalink aria-current markieren mit underline oder sonst was
+
+      dropdown ausschalten wenn clicked wo anders
+
+
+      min-height flzuid utility machen
+
+             justify-stretch: stretch,
+
+subgrid anpassen
+'grid-template-rows': (
+property: grid-template-rows,
+class: grid-template-rows,
+values: subgrid,
+),
+object-position utility responsive
+
+highighter machen, anwendbar bei tabs oder filter
+
+grid-res responsive machen, und padding entfernen
+
+komisches border bei pagination
