@@ -143,3 +143,5 @@ subgrid anpassen
 object-position utility responsive
 
 highighter machen, anwendbar bei tabs oder filter
+
+grid-res responsive machen, und padding entfernen
