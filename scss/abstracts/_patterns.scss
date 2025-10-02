@@ -15,6 +15,8 @@ $patterns: (
         margin: 0,
       ),
     ),
+    responsive: true,
+    important: true,
   ),
   'direct-children-reset-spacing': (
     function: 'nested-rules',
@@ -44,7 +46,7 @@ $patterns: (
       ),
     ),
   ),
-  'first-child-reset-margin': (
+  'first-child-margin-0': (
     function: 'nested-rules',
     class: first-child\:m-0,
     nesting: (
@@ -53,7 +55,7 @@ $patterns: (
       ),
     ),
   ),
-  'last-child-reset-margin': (
+  'last-child-margin-0': (
     function: 'nested-rules',
     class: last-child\:m-0,
     nesting: (
@@ -275,7 +277,7 @@ $patterns: (
       bottom: 0,
       right: 0,
       left: 0,
-      z-index: var(--#{$prefix}z-1, 999),
+      z-index: var(--#{$cp-namespace}z-1, 999),
     ),
   ),
   'fixed-top': (
@@ -286,7 +288,7 @@ $patterns: (
       top: 0,
       right: 0,
       left: 0,
-      z-index: var(--#{$prefix}z-1),
+      z-index: var(--#{$cp-namespace}z-1),
     ),
   ),
   'clear-float': (
@@ -337,7 +339,7 @@ $patterns: (
     properties: (
       position: sticky,
       top: 0,
-      z-index: var(--#{$prefix}z-1),
+      z-index: var(--#{$cp-namespace}z-1),
     ),
   ),
   'sticky-bottom': (
@@ -346,7 +348,7 @@ $patterns: (
     properties: (
       position: sticky,
       bottom: 0,
-      z-index: var(--#{$prefix}z-1),
+      z-index: var(--#{$cp-namespace}z-1),
     ),
   ),
   'default-button-style': (
@@ -367,16 +369,8 @@ $patterns: (
       align-items: center,
     ),
   ),
-  'place-center': (
-    function: 'property-advanced',
-    class: place-items-center,
-    properties: (
-      display: grid,
-      place-items: center,
-    ),
-  ),
+
   'direct-child-a-text-none': (
-    responsive: true,
     function: 'nested-rules',
     class: direct-children-a\:text-none,
     nesting: (
@@ -391,6 +385,17 @@ $patterns: (
     class: direct-children-a\:reset,
     nesting: (
       '& > a': (
+        text-decoration: none,
+        color: inherit,
+      ),
+    ),
+  ),
+  'children-a-reset': (
+    responsive: true,
+    function: 'nested-rules',
+    class: children-a\:reset,
+    nesting: (
+      '& a': (
         text-decoration: none,
         color: inherit,
       ),

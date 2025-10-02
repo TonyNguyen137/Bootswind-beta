@@ -10,17 +10,12 @@ Modifications may have been made to the original code.
 @use 'sass:meta';
 @use 'sass:list';
 
-// add additionla breakpoints here, example: (xsm: 375px)
-$_additional-breakpoints: ();
-
-$_updated-grid-breakpoints: map.merge($grid-breakpoints, $_additional-breakpoints);
-
 // Loop over each breakpoint
-@each $breakpoint in map.keys($_updated-grid-breakpoints) {
+@each $breakpoint in map.keys($grid-breakpoints) {
   // Generate media query if needed
-  @include media-breakpoint-up($breakpoint, $_updated-grid-breakpoints) {
-    $breakpoint-key: breakpoint-key($breakpoint, $_updated-grid-breakpoints);
-    $bp: breakpoint-prefix($breakpoint, $_updated-grid-breakpoints);
+  @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+    $breakpoint-key: breakpoint-key($breakpoint, $grid-breakpoints);
+    $bp: breakpoint-prefix($breakpoint, $grid-breakpoints);
 
     // Loop over each utility property
     @each $key, $utility in $utilities {
@@ -55,10 +50,10 @@ $_updated-grid-breakpoints: map.merge($grid-breakpoints, $_additional-breakpoint
   }
 }
 
-@each $breakpoint in map.keys($_updated-grid-breakpoints) {
-  @include media-breakpoint-up($breakpoint, $_updated-grid-breakpoints) {
-    $breakpoint-key: breakpoint-key($breakpoint, $_updated-grid-breakpoints);
-    $bp: breakpoint-prefix($breakpoint, $_updated-grid-breakpoints);
+@each $breakpoint in map.keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+    $breakpoint-key: breakpoint-key($breakpoint, $grid-breakpoints);
+    $bp: breakpoint-prefix($breakpoint, $grid-breakpoints);
     @each $key, $pattern in $patterns {
       @if meta.type-of($pattern) == 'map' and (map.get($pattern, responsive) or $bp== '') {
         @include generate-pattern($pattern, $bp, $breakpoint-key, $key);

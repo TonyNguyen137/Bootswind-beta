@@ -12,6 +12,12 @@ Modifications may have been made to the original functions.
 @use 'sass:list';
 @use 'variables' as *;
 
+@function to-rem($value, $precision: 3) {
+  @debug HERE meta.type-of($value);
+  @debug value $value;
+  @return px-to-rem($value, $precision);
+}
+
 @function px-to-rem($value, $precision: 3) {
   $base-font-size: 16;
   $_value: if(math.is-unitless($value), $value, strip-unit($value));
@@ -236,11 +242,6 @@ Modifications may have been made to the original functions.
   @return if($min != 0, $min, null);
 }
 
-@function to-rem($value) {
-  $rem-value: if(math.unit($value) == 'px', px-to-rem($value), $value);
-
-  @return $rem-value;
-}
 @function to-string($value) {
   // meta.inspect returns a string representation
   // Use string.unquote to ensure it’s unquoted (e.g. turns `"3xl"` into 3xl)
@@ -353,30 +354,30 @@ Modifications may have been made to the original functions.
     color.channel($_value, 'blue');
 }
 
-@function hover-color($identifier, $target, $color-prefix, $prefix: '') {
+@function hover-color($identifier, $target, $color-prefix, $cp-namespace: $cp-namespace) {
   // @debug identifier $identifier;
   // @debug target $target;
   // @debug color-prefix $color-prefix;
   // @debug prefix $prefix;
 
-  @return var(--#{$prefix}#{$color-prefix}#{$identifier});
+  @return var(--#{$cp-namespace}#{$color-prefix}#{$identifier});
 }
 
-// @function rgba-css-var($identifier, $target, $color-prefix, $prefix: '') {
+// @function rgba-css-var($identifier, $target, $color-prefix, $cp-namespace: '') {
 //   @if $identifier == 'body' and $target == 'bg' {
 //     @return rgba(
-//       var(--#{$prefix}#{$color-prefix}#{$identifier}-bg-rgb),
+//       var(--#{$cp-namespace}#{$color-prefix}#{$identifier}-bg-rgb),
 //       var(--#{$target})
 //     );
 //   }
 //   @if $identifier == 'body' and $target == 'text' {
 //     @return rgba(
-//       var(--#{$prefix}#{$color-prefix}#{$identifier}-color-rgb),
+//       var(--#{$cp-namespace}#{$color-prefix}#{$identifier}-color-rgb),
 //       var(--#{$target})
 //     );
 //   } @else {
 //     @return rgba(
-//       var(--#{$prefix}#{$color-prefix}#{$identifier}-rgb),
+//       var(--#{$cp-namespace}#{$color-prefix}#{$identifier}-rgb),
 //       var(--#{$target}, 1)
 //     );
 //   }
@@ -385,12 +386,21 @@ Modifications may have been made to the original functions.
 // stylelint-disable scss/dollar-variable-pattern
 @function rgba-css-var($identifier, $target) {
   @if $identifier == 'body' and $target == 'bg' {
-    @return rgba(var(--#{$prefix}#{$identifier}-bg-rgb), var(--#{$prefix}#{$target}-opacity));
+    @return rgba(
+      var(--#{$cp-namespace}#{$identifier}-bg-rgb),
+      var(--#{$cp-namespace}#{$target}-opacity)
+    );
   }
   @if $identifier == 'body' and $target == 'text' {
-    @return rgba(var(--#{$prefix}#{$identifier}-color-rgb), var(--#{$prefix}#{$target}-opacity));
+    @return rgba(
+      var(--#{$cp-namespace}#{$identifier}-color-rgb),
+      var(--#{$cp-namespace}#{$target}-opacity)
+    );
   } @else {
-    @return rgba(var(--#{$prefix}#{$identifier}-rgb), var(--#{$prefix}#{$target}-opacity));
+    @return rgba(
+      var(--#{$cp-namespace}#{$identifier}-rgb),
+      var(--#{$cp-namespace}#{$target}-opacity)
+    );
   }
 }
 
@@ -402,19 +412,19 @@ Modifications may have been made to the original functions.
 ) {
   @if $identifier == 'body' and $target == 'bg' {
     @return rgba(
-      var(--#{$prefix}#{$identifier}-bg-rgb),
-      var(--#{$prefix}#{$opacity-variable-name}, 1)
+      var(--#{$cp-namespace}#{$identifier}-bg-rgb),
+      var(--#{$cp-namespace}#{$opacity-variable-name}, 1)
     );
   }
   @if $identifier == 'body' and $target == 'text' {
     @return rgba(
-      var(--#{$prefix}#{$identifier}-color-rgb),
-      var(--#{$prefix}#{$opacity-variable-name}, 1)
+      var(--#{$cp-namespace}#{$identifier}-color-rgb),
+      var(--#{$cp-namespace}#{$opacity-variable-name}, 1)
     );
   } @else {
     @return rgba(
-      var(--#{$prefix}#{$local-prefix}#{$identifier}-rgb),
-      var(--#{$prefix}#{$opacity-variable-name}, 1)
+      var(--#{$cp-namespace}#{$local-prefix}#{$identifier}-rgb),
+      var(--#{$cp-namespace}#{$opacity-variable-name}, 1)
     );
   }
 }
@@ -483,18 +493,23 @@ Modifications may have been made to the original functions.
   $result: ();
   @each $key, $value in $map {
     @if $key != 0 {
-      $result: map.merge($result, ('n' + $key: (-$value)));
+      $result: map.merge(
+        $result,
+        (
+          $key: -$value,
+        )
+      );
     }
   }
   @return $result;
 }
 
-@function deep-loop($map, $prefix: '') {
+@function deep-loop($map, $cp-namespace: $cp-namespace) {
   $flat-map: (); // Initialize an empty map to store the results
 
   @each $key, $value in $map {
     // Generate a new key by concatenating the prefix and the current key
-    $new-key: if($prefix != '', '#{$prefix}-#{$key}', $key);
+    $new-key: if($cp-namespace != '', '#{$cp-namespace}-#{$key}', $key);
 
     @if meta.type-of($value) == 'map' {
       // Recursively call the function if the value is a map

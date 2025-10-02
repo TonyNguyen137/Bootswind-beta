@@ -1,12 +1,6 @@
 @use '../abstracts' as *;
 @use 'sass:map';
 
-$_breakpoint-xsm: (
-  xsm: 375px,
-);
-
-$_updated-grid-breakpoints: map.merge($grid-breakpoints, $_breakpoint-xsm);
-
 /* == responsive grid without media queries == */
 .grid-res {
   --min-col-size: 275px;
@@ -25,14 +19,14 @@ $_updated-grid-breakpoints: map.merge($grid-breakpoints, $_breakpoint-xsm);
 
 /* == grid snap == */
 .grid-snap {
-  --flow: column;
+  --grid-flow: column;
   --overflow-x: auto;
   --snap-type: x mandatory;
   --col-snap-width: min(45ch, 60vw);
   --snap-align: center;
   --snap-stop: always;
 
-  grid-auto-flow: var(--flow);
+  grid-auto-flow: var(--grid-flow);
   overflow-x: var(--overflow-x);
   scroll-snap-type: var(--snap-type);
 
@@ -45,15 +39,10 @@ $_updated-grid-breakpoints: map.merge($grid-breakpoints, $_breakpoint-xsm);
   }
 }
 
-@each $bp in map.keys($_updated-grid-breakpoints) {
-  $bp-prefix: breakpoint-prefix($bp, $_updated-grid-breakpoints);
+@each $bp in map.keys($grid-breakpoints) {
+  $bp-prefix: breakpoint-prefix($bp, $grid-breakpoints);
 
-  @include mq(
-    $bp,
-    (
-      grid-breakpoints: $_updated-grid-breakpoints,
-    )
-  ) {
+  @include mq($bp) {
     .#{$bp-prefix}grid-snap-revert {
       --flow: row;
       --overflow-x: none;
@@ -61,34 +50,6 @@ $_updated-grid-breakpoints: map.merge($grid-breakpoints, $_breakpoint-xsm);
       --col-snap-width: auto;
       --snap-align: none;
       --snap-stop: normal;
-    }
-  }
-}
-
-/* == grid-item-system == */
-@if $enable-css-grid-item-system {
-  @each $breakpoint in map.keys($grid-breakpoints) {
-    @include media-breakpoint-up($breakpoint) {
-      $bp: breakpoint-prefix($breakpoint);
-
-      @for $start from 1 through $grid-columns {
-        @for $end from ($start + 1) through ($grid-columns + 1) {
-          .#{$bp}#{$class-namespace}grid-column-#{$start}-#{$end} {
-            grid-column: #{$start} / #{$end};
-          }
-
-          .#{$bp}#{$class-namespace}grid-row-#{$start}-#{$end} {
-            grid-row: #{$start} / #{$end};
-          }
-        }
-        .#{$bp}#{$class-namespace}grid-column-#{$start}-end {
-          grid-column: #{$start} / -1;
-        }
-
-        .#{$bp}#{$class-namespace}grid-row-#{$start}-end {
-          grid-row: #{$start} / -1;
-        }
-      }
     }
   }
 }

@@ -1,10 +1,8 @@
-import { Accordion } from './Accordion.js';
-import { Collapse } from './Collapse.js';
-// import { Navbar } from './Navbar.js';
-import { Navbar as NavbarOffcanvas } from './Navbar-Offcanvas.js';
-import { Dropdown } from './Dropdown.js';
-import { Grabber } from './Grabber.js';
-import { Tabs } from './Tabs.js';
-import { Suggestion } from './Suggestion.js';
-
-export { Suggestion, Dropdown, NavbarOffcanvas, Accordion, Grabber, Tabs, Collapse };
+export { Accordion } from './Accordion.js';
+export { Collapse } from './Collapse.js';
+// export { Navbar } from './Navbar.js';
+export { Navbar as NavbarOffcanvas } from './Navbar-Offcanvas.js';
+export { Dropdown } from './Dropdown.js';
+export { Grabber } from './Grabber.js';
+export { Tabs } from './Tabs.js';
+export { Suggestion } from './Suggestion.js';

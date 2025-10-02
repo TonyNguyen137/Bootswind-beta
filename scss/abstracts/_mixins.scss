@@ -107,15 +107,15 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin make-container($gutter: $container-padding) {
+@mixin make-container() {
   width: 100%;
-  padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
+  padding-inline: var(--container-padding, 12px);
   margin-inline: auto;
 }
 
-@mixin make-container-fluid-max($max-width, $gutter: $container-padding) {
+@mixin make-container-fluid-max($max-width) {
   max-width: $max-width;
-  padding-inline: if($gutter == 'responsive', var(--container-padding-res), $gutter);
+  padding-inline: var(--container-padding, 12px);
   margin-inline: auto;
 }
 
@@ -301,7 +301,7 @@ Modifications may have been made to the original mixins.
 
 @mixin generate-utility($utility, $bp: '', $breakpoint-key, $key, $is-rfs-media-query: false) {
   $values: map.get($utility, values);
-  $selected-function: if(map.has-key($utility, function), map.get($utility, function), 'normal');
+  $selected-function: if(map.has-key($utility, function), map.get($utility, function), 'default');
 
   // Check if the list is not empty before accessing the first element
   @if list.length($values) > 0 and $values != null {
@@ -346,6 +346,8 @@ Modifications may have been made to the original mixins.
   $local-vars: map.get($utility, local-vars);
   $is-rtl: map.get($utility, rtl);
   $custom-property-name: map.get($utility, custom-property-name);
+
+  @debug cpn $custom-property-name;
   $nested-selectors: if(
     map.has-key($utility, complex-selectors),
     map.get($utility, complex-selectors),
@@ -361,10 +363,8 @@ Modifications may have been made to the original mixins.
   $css-variable-name: map.get($utility, css-variable-name);
   $media: map.get($utility, media);
 
-  $arbitrary-custom-property: map.get($utility, arbitrary-custom-property);
   $responsive-custom-property-value: map.get($utility, responsive-custom-property-value);
   $configuration-map: (
-    arbitrary-custom-property: $arbitrary-custom-property,
     property: $property,
     responsive-custom-property: $responsive-custom-property-value,
     values: $values,
@@ -385,10 +385,8 @@ Modifications may have been made to the original mixins.
     media: $media,
   );
 
-  @if $selected-function == 'normal' {
-    @include create-normal-utility($configuration-map);
-  } @else if $selected-function == 'arbitrary-value' {
-    @include create-arbitrary-value-utility($configuration-map);
+  @if $selected-function == 'default' {
+    @include create-default-utility($configuration-map);
   } @else if $selected-function == 'fluid' {
     @include create-fluid-utility($configuration-map);
   } @else if $selected-function == 'custom-property-value' {
@@ -418,7 +416,7 @@ Modifications may have been made to the original mixins.
   // @debug breakpoint-key $breakpoint-key;
   // @debug class $class;
   // @debug key $key;
-  @debug properties-length $properties-length;
+  // @debug properties-length $properties-length;
 
   @if ($properties-length > 2) {
     @error "#{$key} exceeds the maximum of 2 allowed properties. You provided #{$properties-length}.";
@@ -521,59 +519,7 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin create-arbitrary-value-utility($map) {
-  $arbitrary-custom-property: map.get($map, arbitrary-custom-property);
-  $property: map.get($map, property);
-  $property-length: list.length($property);
-  $key: map.get($map, key);
-  $values: map.get($map, values);
-  $important: map.get($map, important);
-  $breakpoint: map.get($map, breakpoint);
-  $breakpoint-key: if(map.get($map, breakpoint-key) != '', map.get($map, breakpoint-key) + '-', '');
-  $key: map.get($map, key);
-  $class: map.get($map, class);
-
-  $class-suffix: '-\\\[arbitrary\\\]';
-
-  // @debug bp-key $breakpoint-key;
-  // @debug key $key;
-  // @debug property $property;
-  // @debug type-of meta.type-of($property);
-  // @debug length list.length($property);
-  @if ($property == null) {
-    @error 'no property was provided in #{$key}';
-  }
-
-  @if ($property-length > 2) {
-    @error 'The number of properties has been exceeded. You can only provide up to 2 properties, but you provided #{$property-length}';
-  }
-
-  @if ($property-length == 2) {
-    $property-1: list.nth($property, 1);
-    $property-2: list.nth($property, 2);
-    $property-infix: #{$property-1}-#{$property-2};
-
-    .#{$breakpoint}#{$class}#{$class-suffix} {
-      @each $p in $property {
-        #{$p}: if(
-          $arbitrary-custom-property,
-          var(--#{$breakpoint-key}#{$arbitrary-custom-property}),
-          var(--#{$breakpoint-key}#{$property-infix}-arbitrary)
-        );
-      }
-    }
-  } @else {
-    .#{$breakpoint}#{$class}#{$class-suffix} {
-      #{$property}: if(
-        $arbitrary-custom-property,
-        var(--#{$breakpoint-key}#{$arbitrary-custom-property}),
-        var(--#{$breakpoint-key}#{$property}-arbitrary)
-      );
-    }
-  }
-}
-
-@mixin create-normal-utility($map) {
+@mixin create-default-utility($map) {
   $property: map.get($map, property);
   $key: map.get($map, key);
   $values: map.get($map, values);
@@ -645,6 +591,9 @@ Modifications may have been made to the original mixins.
         $key-suffix: null-safe-suffix($key);
         $single-state: single-or-null($states);
 
+        // @debug key $key;
+        // @debug value $value;
+
         // @debug key-suffix $key-suffix;
 
         // @debug single-state $single-state;
@@ -660,7 +609,7 @@ Modifications may have been made to the original mixins.
 
         // @debug new bp $breakpoint;
 
-        .#{$breakpoint}#{$class-namespace}#{if($class, $class, $value)}#{if($class, $key-suffix, '')}#{$single-state} {
+        .#{$breakpoint}#{$class-namespace}#{if($class, $class, $key)}#{if($class, $key-suffix, '')}#{$single-state} {
           // @debug value hier- if($class, $class, $value);
 
           @if $local-vars {
@@ -774,7 +723,7 @@ Modifications may have been made to the original mixins.
         // @debug inside;
         .#{$breakpoint}#{$class-namespace}#{$class}-#{$selector-suffix} {
           @each $prop in $property {
-            #{$prop}: var(--#{$prefix}#{$custom-property-name}) #{$important};
+            #{$prop}: var(--#{$cp-namespace}#{$custom-property-name}) #{$important};
           }
         }
       } @else {
@@ -837,7 +786,7 @@ Modifications may have been made to the original mixins.
             }
           }
           @each $prop in $property {
-            #{$prop}: var(--#{$prefix}#{$formatted-prefix}#{$trunk}) #{$important};
+            #{$prop}: var(--#{$cp-namespace}#{$formatted-prefix}#{$trunk}) #{$important};
           }
         }
       }
@@ -1032,7 +981,9 @@ Modifications may have been made to the original mixins.
 
           @if ($custom-property-prefix) {
             .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
-              --#{$css-variable-name}: var(--#{$prefix}#{$custom-property-prefix}#{$key-suffix});
+              --#{$css-variable-name}: var(
+                --#{$cp-namespace}#{$custom-property-prefix}#{$key-suffix}
+              );
             }
           } @else {
             .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$state} {
@@ -1051,7 +1002,7 @@ Modifications may have been made to the original mixins.
         @if ($custom-property-prefix) {
           .#{$class-namespace}#{$class}#{$breakpoint}#{$key-suffix}#{$single-state} {
             --#{$css-variable-name}: var(
-              --#{$prefix}#{$custom-property-prefix}#{$key}#{$single-state}
+              --#{$cp-namespace}#{$custom-property-prefix}#{$key}#{$single-state}
             );
           }
         } @else {
@@ -1083,7 +1034,7 @@ Modifications may have been made to the original mixins.
 
         @if ($_property) {
           .#{$_class} {
-            #{$_property}: var(--#{$prefix}#{$key});
+            #{$_property}: var(--#{$cp-namespace}#{$key});
           }
         }
       }
@@ -1091,10 +1042,10 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-responsive-custom-properties($map, $local-prefix: '') {
+@mixin generate-responsive-custom-properties($map, $local-namespace: '') {
   // @debug map $map;
   // @debug bps map.keys($map);
-  $_prefix: if(string.length($local-prefix) > 0, $local-prefix + '-', '');
+  $_prefix: if(string.length($local-namespace) > 0, $local-namespace + '-', '');
 
   @each $breakpoint in map.keys($map) {
     // @debug bp $breakpoint;
@@ -1108,7 +1059,7 @@ Modifications may have been made to the original mixins.
           // @debug custom-property-name $custom-property-name;
           // @debug value-object $value-object;
           // @debug ----------;
-          --#{$prefix}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
+          --#{$cp-namespace}#{$_prefix}#{$custom-property-name}: #{map.get($value-object, value)};
         }
       } @else {
         @each $custom-property-name, $value in map.get($map, $breakpoint) {
@@ -1119,7 +1070,7 @@ Modifications may have been made to the original mixins.
           // @debug ----------;
 
           & {
-            --#{$prefix}#{$_prefix}#{$custom-property-name}: #{$value};
+            --#{$cp-namespace}#{$_prefix}#{$custom-property-name}: #{$value};
           }
         }
       }
@@ -1127,7 +1078,7 @@ Modifications may have been made to the original mixins.
   }
 }
 
-@mixin generate-custom-properties($map: (), $local-prefix: '') {
+@mixin generate-custom-properties($map: (), $local-namespace: '') {
   @if $map != null {
     @if map.has-key($map, custom-property-prefix) {
       $_name: map.get($map, custom-property-prefix);
@@ -1146,14 +1097,14 @@ Modifications may have been made to the original mixins.
 
           @if ($key != 'none') {
             $_key: if($key != null, if($key == 0, '-0', -$key), '');
-            --#{$prefix}#{$local-prefix}#{$_name}#{$_key}: #{$value};
+            --#{$cp-namespace}#{$local-namespace}#{$_name}#{$_key}: #{$value};
           }
         }
       }
     } @else if(map.has-key($map, xs)) {
       @each $key, $value in $map {
         @if $key != xs {
-          --#{$prefix}#{$local-prefix}#{$key}: #{$value};
+          --#{$cp-namespace}#{$local-namespace}#{$key}: #{$value};
         }
       }
     }
@@ -1165,9 +1116,9 @@ Modifications may have been made to the original mixins.
     @if list.length(map.keys($map)) > 0 {
       @each $key, $value in $map {
         @if (meta.type-of($value) == map) {
-          --#{$prefix}#{$key}: #{map.get($value, value)};
+          --#{$cp-namespace}#{$key}: #{map.get($value, value)};
         } @else {
-          --#{$prefix}#{$key}: #{$value};
+          --#{$cp-namespace}#{$key}: #{$value};
         }
       }
     }
@@ -1244,7 +1195,7 @@ Modifications may have been made to the original mixins.
         $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
         $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
 
-        --#{$prefix}#{$key}: clamp(
+        --#{$cp-namespace}#{$key}: clamp(
           #{$min-size},
           calc(#{$preferred} + #{$rate-of-change}),
           #{$max-size}
@@ -1317,7 +1268,7 @@ Modifications may have been made to the original mixins.
     $sizeMin: if($threshold-unit == 'rem', px-to-rem($sizeMin), $sizeMin * 1px);
     $sizeMax: if($threshold-unit == 'rem', px-to-rem($sizeMax), $sizeMax * 1px);
 
-    --#{$prefix}#{$clamp-prefix}#{$key}: clamp(
+    --#{$cp-namespace}#{$clamp-prefix}#{$key}: clamp(
       #{$sizeMin},
       calc(#{$preferred} + #{$rateOfChange}),
       #{$sizeMax}
@@ -1354,7 +1305,7 @@ Modifications may have been made to the original mixins.
 
   @each $color-name, $value in $color-theme {
     @if (meta.type-of($value) == 'color') {
-      --#{$prefix}#{$color-prefix}#{$color-name}: #{$value};
+      --#{$cp-namespace}#{$color-prefix}#{$color-name}: #{$value};
     } @else {
       @error 'the color input is not correct';
     }
@@ -1373,7 +1324,7 @@ Modifications may have been made to the original mixins.
         // @debug color $color;
         // @debug rgb $rgb-value;
 
-        --#{$prefix}#{$color-prefix}#{$color}-rgb: #{$rgb-value};
+        --#{$cp-namespace}#{$color-prefix}#{$color}-rgb: #{$rgb-value};
       } @else {
         @error 'the color input is not correct';
       }

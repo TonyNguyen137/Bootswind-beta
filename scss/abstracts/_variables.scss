@@ -13,22 +13,25 @@ Modifications may have been made to the original code.
 /* General setting
 /* ****************************************************** */
 
-$prefix: '';
-$class-namespace: $prefix;
+$cp-namespace: '';
+$class-namespace: '';
 $enable-transitions: true;
 $enable-reduced-motion: true;
-$enable-css-grid-item-system: true;
 
 /* ****************************************************** */
-/* Bootstrap grid system, container 
+/* Bootstrap grid system
 /* ****************************************************** */
 
 $bs-prefix: bs-;
-$enable-bootstrap-grid-system: true;
+$enable-bootstrap-grid-system: false;
 $enable-gutters: false;
 $grid-columns: 12;
 $grid-gutter-width: 24px;
 $grid-row-columns: 6;
+
+/* ****************************************************** */
+/* Container
+/* ****************************************************** */
 
 $enable-container-classes: true;
 $enable-max-container-classes: false;
@@ -42,6 +45,7 @@ $container-padding: 12px;
 // px values
 $grid-breakpoints: (
   xs: 0,
+  xsm: 375px,
   sm: 576px,
   md: 768px,
   lg: 992px,
@@ -261,7 +265,7 @@ $responsive-custom-properties: (
 
 $enable-negative-margins: true;
 
-$factor: 4px;
+$factor: 4px; //  0.25rem
 $sizes-regular: ();
 
 @for $i from 0 through 50 {
@@ -282,10 +286,11 @@ $sizes-regular: map.merge(
 );
 
 $sizes-irregular: ();
+$factor: 1px; // 0.0625rem
 
 @for $i from 1 through 200 {
   @if ($i % 4 != 0) {
-    $sizes-irregular: map.merge($sizes-irregular, (i-#{$i}: $i * 1px));
+    $sizes-irregular: map.merge($sizes-irregular, (i-#{$i}: $i * $factor));
   }
 }
 
@@ -320,6 +325,7 @@ $box-shadows: (
 $z-indeces: (
   custom-property-prefix: 'z',
   values: (
+    n2: -2,
     n1: -1,
     0: 0,
     1: 999,
@@ -336,7 +342,7 @@ $z-indeces: (
 $borders: (
   custom-property-prefix: 'border',
   values: (
-    main: 1px solid var(--#{$prefix}clr-zero),
+    main: 1px solid var(--#{$cp-namespace}clr-zero),
   ),
 );
 

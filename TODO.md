@@ -105,7 +105,22 @@ sticky table
 modal
 mdn sticky scrollable sidebar
 
-children/direct children arbirtary value
 responsive pattern custom properties überarbeiten
 @supports
-writing mode utilit klassen anpassen
+
+patterns, ohne function?
+
+utilities check
+
+- border
+- transition
+- prefix in namespace umbennen, cp-namespace
+- einige SAchen in variables.css cleanen
+- namespace-class testen
+- z-index
+  -synced variablen
+
+vendors > splide + Leaflet
+
+text-decoration > decoration, utility + pattern
+before:content before:wh before:bg

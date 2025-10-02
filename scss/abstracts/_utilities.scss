@@ -44,7 +44,7 @@ $simple-custom-properties-merged: map.merge(
     ()
   )
 );
-//
+
 $utilities: ();
 $utilities: map.merge(
   (
@@ -103,6 +103,13 @@ $utilities: map.merge(
       property: scrollbar-width,
       values: auto thin none,
     ),
+    'aspect-ratio-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: aspect-ratio,
+      responsive-custom-property-value: aspect-ratio,
+      class: aspect-ratio,
+      responsive: true,
+    ),
     'aspect-ratio': (
       class: aspect-ratio,
       property: aspect-ratio,
@@ -116,13 +123,6 @@ $utilities: map.merge(
       ),
     ),
 
-    'aspect-ratio-responsive-custom-property': (
-      function: 'responsive-custom-property',
-      property: aspect-ratio,
-      responsive-custom-property-value: aspect-ratio,
-      class: aspect-ratio,
-      responsive: true,
-    ),
     'border-custom-properties': (
       function: 'custom-property-value',
       property: border,
@@ -200,6 +200,137 @@ $utilities: map.merge(
         ),
       values: if(meta.variable-exists(borders), map.get($borders, values), null),
     ),
+    'border': (
+      class: border,
+      property: border,
+      values: (
+        none: none,
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+      responsive: true,
+    ),
+    'border-y': (
+      class: border-y,
+      property: border-block,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-x': (
+      class: border-x,
+      property: border-inline,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-left': (
+      class: border-start,
+      property: border-left,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-right': (
+      class: border-end,
+      property: border-right,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-top': (
+      class: border-top,
+      property: border-top,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-bottom': (
+      class: border-bottom,
+      property: border-bottom,
+      values: (
+        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
+      ),
+    ),
+    'border-width-custom-property': (
+      function: 'css-var',
+      css-variable-name: border-width,
+      class: border-width,
+      values: $border-widths,
+    ),
+
+    'border-width': (
+      property: border-width,
+      class: border,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-block-width': (
+      property: border-width,
+      class: border-y,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-inline-width': (
+      property: border-width,
+      class: border-x,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-width-top': (
+      class: border-top,
+      property: border-top-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-width-bottom': (
+      class: border-bottom,
+      property: border-bottom-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-width-left': (
+      class: border-start,
+      property: border-left-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-width-right': (
+      class: border-end,
+      property: border-right-width,
+      values: if(meta.variable-exists(border-widths), $border-widths, null),
+      important: true,
+      responsive: true,
+    ),
+    'border-styles': (
+      property: border-style,
+      class: border-style,
+      values: solid dashed dotted groove none double inset,
+    ),
+    'border-style-custom-property': (
+      function: 'css-var',
+      css-variable-name: border-style,
+      class: border,
+      values: $border-styles,
+    ),
+    'border-color-rgba-custom-property-value': (
+      function: 'css-var',
+      css-variable-name: border-color,
+      class: border,
+      values: map-loop(
+          $selected-theme-rgb-colors,
+          rgba-css-var-advanced,
+          '$key',
+          null,
+          $color-prefix,
+          border-alpha
+        ),
+    ),
     'box-sizing': (
       property: box-sizing,
       values: border-box content-box,
@@ -271,12 +402,11 @@ $utilities: map.merge(
       class: object,
       values: top bottom left right center,
     ),
-    'display': (
+    'display-none': (
       responsive: true,
       property: display,
       class: d,
-      values: inline inline-block block grid inline-grid table table-row table-cell flex inline-flex
-        none,
+      values: none,
     ),
     'display-none-hidden': (
       responsive: true,
@@ -299,7 +429,7 @@ $utilities: map.merge(
     'grid-template-rows-responsive-custom-property': (
       function: 'responsive-custom-property',
       property: grid-template-rows,
-      responsive-custom-property-value: row-temp,
+      responsive-custom-property-value: temp-rows,
       class: grid-rows,
       responsive: true,
     ),
@@ -311,12 +441,19 @@ $utilities: map.merge(
     'grid-template-columns-responsive-custom-property': (
       function: 'responsive-custom-property',
       property: grid-template-columns,
-      responsive-custom-property-value: col-temp,
+      responsive-custom-property-value: temp-cols,
       class: grid-cols,
       responsive: true,
     ),
 
-    'grid-row-span': (
+    'grid-row-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-row,
+      responsive-custom-property-value: row-span,
+      class: row-span,
+      responsive: true,
+    ),
+    'grid-row': (
       property: grid-row,
       class: row-span,
       values: (
@@ -333,6 +470,83 @@ $utilities: map.merge(
         10: span 10,
         11: span 11,
         12: span 12,
+        '1-2': string.unquote('1 / 2'),
+        '1-3': string.unquote('1 / 3'),
+        '1-4': string.unquote('1 / 4'),
+        '1-5': string.unquote('1 / 5'),
+        '1-6': string.unquote('1 / 6'),
+        '1-7': string.unquote('1 / 7'),
+        '1-8': string.unquote('1 / 8'),
+        '1-9': string.unquote('1 / 9'),
+        '1-10': string.unquote('1 / 10'),
+        '1-11': string.unquote('1 / 11'),
+        '1-12': string.unquote('1 / 12'),
+        '1-full': string.unquote('1 / -1'),
+        '2-3': string.unquote('2 / 3'),
+        '2-4': string.unquote('2 / 4'),
+        '2-5': string.unquote('2 / 5'),
+        '2-6': string.unquote('2 / 6'),
+        '2-7': string.unquote('2 / 7'),
+        '2-8': string.unquote('2 / 8'),
+        '2-9': string.unquote('2 / 9'),
+        '2-10': string.unquote('2 / 10'),
+        '2-11': string.unquote('2 / 11'),
+        '2-12': string.unquote('2 / 12'),
+        '2-full': string.unquote('2 / -1'),
+        '3-4': string.unquote('3 / 4'),
+        '3-5': string.unquote('3 / 5'),
+        '3-6': string.unquote('3 / 6'),
+        '3-7': string.unquote('3 / 7'),
+        '3-8': string.unquote('3 / 8'),
+        '3-9': string.unquote('3 / 9'),
+        '3-10': string.unquote('3 / 10'),
+        '3-11': string.unquote('3 / 11'),
+        '3-12': string.unquote('3 / 12'),
+        '3-full': string.unquote('3 / -1'),
+        '4-5': string.unquote('4 / 5'),
+        '4-6': string.unquote('4 / 6'),
+        '4-7': string.unquote('4 / 7'),
+        '4-8': string.unquote('4 / 8'),
+        '4-9': string.unquote('4 / 9'),
+        '4-10': string.unquote('4 / 10'),
+        '4-11': string.unquote('4 / 11'),
+        '4-12': string.unquote('4 / 12'),
+        '4-full': string.unquote('4 / -1'),
+        '5-6': string.unquote('5 / 6'),
+        '5-7': string.unquote('5 / 7'),
+        '5-8': string.unquote('5 / 8'),
+        '5-9': string.unquote('5 / 9'),
+        '5-10': string.unquote('5 / 10'),
+        '5-11': string.unquote('5 / 11'),
+        '5-12': string.unquote('5 / 12'),
+        '5-full': string.unquote('5 / -1'),
+        '6-7': string.unquote('6 / 7'),
+        '6-8': string.unquote('6 / 8'),
+        '6-9': string.unquote('6 / 9'),
+        '6-10': string.unquote('6 / 10'),
+        '6-11': string.unquote('6 / 11'),
+        '6-12': string.unquote('6 / 12'),
+        '6-full': string.unquote('6 / -1'),
+        '7-9': string.unquote('7 / 9'),
+        '7-8': string.unquote('7 / 8'),
+        '7-10': string.unquote('7 / 10'),
+        '7-11': string.unquote('7 / 11'),
+        '7-12': string.unquote('7 / 12'),
+        '7-full': string.unquote('7 / -1'),
+        '8-9': string.unquote('8 / 9'),
+        '8-10': string.unquote('8 / 10'),
+        '8-11': string.unquote('8 / 11'),
+        '8-12': string.unquote('8 / 12'),
+        '8-full': string.unquote('8 / -1'),
+        '9-10': string.unquote('9 / 10'),
+        '9-11': string.unquote('9 / 11'),
+        '9-12': string.unquote('9 / 12'),
+        '9-full': string.unquote('9 / -1'),
+        '10-11': string.unquote('10 / 11'),
+        '10-12': string.unquote('10 / 12'),
+        '10-full': string.unquote('10 / -1'),
+        '11-12': string.unquote('11 / 12'),
+        '11-full': string.unquote('11 / -1'),
       ),
     ),
     'grid-row-start': (
@@ -363,7 +577,15 @@ $utilities: map.merge(
       responsive: true,
     ),
 
-    'grid-column-span': (
+    'grid-column-responsive-custom-property': (
+      function: 'responsive-custom-property',
+      property: grid-column,
+      responsive-custom-property-value: col-span,
+      class: col-span,
+      responsive: true,
+    ),
+
+    'grid-column': (
       property: grid-column,
       class: col-span,
       values: (
@@ -380,6 +602,83 @@ $utilities: map.merge(
         10: span 10,
         11: span 11,
         12: span 12,
+        '1-2': string.unquote('1 / 2'),
+        '1-3': string.unquote('1 / 3'),
+        '1-4': string.unquote('1 / 4'),
+        '1-5': string.unquote('1 / 5'),
+        '1-6': string.unquote('1 / 6'),
+        '1-7': string.unquote('1 / 7'),
+        '1-8': string.unquote('1 / 8'),
+        '1-9': string.unquote('1 / 9'),
+        '1-10': string.unquote('1 / 10'),
+        '1-11': string.unquote('1 / 11'),
+        '1-12': string.unquote('1 / 12'),
+        '1-full': string.unquote('1 / -1'),
+        '2-3': string.unquote('2 / 3'),
+        '2-4': string.unquote('2 / 4'),
+        '2-5': string.unquote('2 / 5'),
+        '2-6': string.unquote('2 / 6'),
+        '2-7': string.unquote('2 / 7'),
+        '2-8': string.unquote('2 / 8'),
+        '2-9': string.unquote('2 / 9'),
+        '2-10': string.unquote('2 / 10'),
+        '2-11': string.unquote('2 / 11'),
+        '2-12': string.unquote('2 / 12'),
+        '2-full': string.unquote('2 / -1'),
+        '3-4': string.unquote('3 / 4'),
+        '3-5': string.unquote('3 / 5'),
+        '3-6': string.unquote('3 / 6'),
+        '3-7': string.unquote('3 / 7'),
+        '3-8': string.unquote('3 / 8'),
+        '3-9': string.unquote('3 / 9'),
+        '3-10': string.unquote('3 / 10'),
+        '3-11': string.unquote('3 / 11'),
+        '3-12': string.unquote('3 / 12'),
+        '3-full': string.unquote('3 / -1'),
+        '4-5': string.unquote('4 / 5'),
+        '4-6': string.unquote('4 / 6'),
+        '4-7': string.unquote('4 / 7'),
+        '4-8': string.unquote('4 / 8'),
+        '4-9': string.unquote('4 / 9'),
+        '4-10': string.unquote('4 / 10'),
+        '4-11': string.unquote('4 / 11'),
+        '4-12': string.unquote('4 / 12'),
+        '4-full': string.unquote('4 / -1'),
+        '5-6': string.unquote('5 / 6'),
+        '5-7': string.unquote('5 / 7'),
+        '5-8': string.unquote('5 / 8'),
+        '5-9': string.unquote('5 / 9'),
+        '5-10': string.unquote('5 / 10'),
+        '5-11': string.unquote('5 / 11'),
+        '5-12': string.unquote('5 / 12'),
+        '5-full': string.unquote('5 / -1'),
+        '6-7': string.unquote('6 / 7'),
+        '6-8': string.unquote('6 / 8'),
+        '6-9': string.unquote('6 / 9'),
+        '6-10': string.unquote('6 / 10'),
+        '6-11': string.unquote('6 / 11'),
+        '6-12': string.unquote('6 / 12'),
+        '6-full': string.unquote('6 / -1'),
+        '7-9': string.unquote('7 / 9'),
+        '7-8': string.unquote('7 / 8'),
+        '7-10': string.unquote('7 / 10'),
+        '7-11': string.unquote('7 / 11'),
+        '7-12': string.unquote('7 / 12'),
+        '7-full': string.unquote('7 / -1'),
+        '8-9': string.unquote('8 / 9'),
+        '8-10': string.unquote('8 / 10'),
+        '8-11': string.unquote('8 / 11'),
+        '8-12': string.unquote('8 / 12'),
+        '8-full': string.unquote('8 / -1'),
+        '9-10': string.unquote('9 / 10'),
+        '9-11': string.unquote('9 / 11'),
+        '9-12': string.unquote('9 / 12'),
+        '9-full': string.unquote('9 / -1'),
+        '10-11': string.unquote('10 / 11'),
+        '10-12': string.unquote('10 / 12'),
+        '10-full': string.unquote('10 / -1'),
+        '11-12': string.unquote('11 / 12'),
+        '11-full': string.unquote('11 / -1'),
       ),
     ),
 
@@ -428,6 +727,50 @@ $utilities: map.merge(
         10: repeat(10, 1fr),
         11: repeat(11, 1fr),
         12: repeat(12, 1fr),
+      ),
+    ),
+    'grid-auto-flow': (
+      property: grid-auto-flow,
+      responsive: true,
+      class: grid-flow,
+      values: (
+        row: row,
+        col: column,
+        dense: dense,
+        row-dense: row dense,
+        col-dense: column dense,
+      ),
+    ),
+    'place-items': (
+      property: place-items,
+      responsive: true,
+      class: place-items,
+      values: (
+        start: start,
+        end: end,
+        center: center,
+        stretch: stretch,
+        start-center: start center,
+        start-end: start end,
+        center-start: center start,
+        center-end: center end,
+        end-start: end start,
+        end-center: end center,
+      ),
+    ),
+    'place-content': (
+      property: place-content,
+      responsive: true,
+      class: place-content,
+      values: (
+        start: start,
+        end: end,
+        center: center,
+        stretch: stretch,
+        between: between,
+        around: around,
+        evenly: evenly,
+        baseline: baseline,
       ),
     ),
 
@@ -580,193 +923,18 @@ $utilities: map.merge(
       values: $border-widths,
     ),
 
-    'border': (
-      class: border,
-      property: border,
-      values: (
-        none: none,
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-      responsive: true,
-    ),
-    'border-y': (
-      class: border-y,
-      property: border-block,
-      values: (
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-    ),
-    'border-x': (
-      class: border-x,
-      property: border-inline,
-      values: (
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-    ),
-    'border-left': (
-      class: border-start,
-      property: border-left,
-      values: (
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-    ),
-    'border-right': (
-      class: border-end,
-      property: border-right,
-      values: (
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-    ),
-    'border-top': (
-      class: border-top,
-      property: border-top,
-      values: (
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-    ),
-    'border-bottom': (
-      class: border-bottom,
-      property: border-bottom,
-      values: (
-        null: var(--border-width, 1px) var(--border-type, solid) var(--border-color, currentColor),
-      ),
-    ),
-    'border-width-custom-property': (
+    'focus-ring-rgba-colors-cp': (
       function: 'css-var',
-      css-variable-name: border-width,
-      class: border-width,
-      values: $border-widths,
-    ),
-
-    'border-width': (
-      property: border-width,
-      class: border,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-block-width': (
-      property: border-width,
-      class: border-y,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-inline-width': (
-      property: border-width,
-      class: border-x,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-width-top': (
-      class: border-top,
-      property: border-top-width,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-width-bottom': (
-      class: border-bottom,
-      property: border-bottom-width,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-width-left': (
-      class: border-start,
-      property: border-left-width,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-width-right': (
-      class: border-end,
-      property: border-right-width,
-      values: if(meta.variable-exists(border-widths), $border-widths, null),
-      important: true,
-      responsive: true,
-    ),
-    'border-styles': (
-      property: border-style,
-      class: border-style,
-      values: solid dashed dotted groove none double inset,
-    ),
-    'border-style-custom-property': (
-      function: 'css-var',
-      css-variable-name: border-style,
-      class: border,
-      values: $border-styles,
-    ),
-    'border-color-rgba-custom-property-value': (
-      function: 'css-var',
-      css-variable-name: border-color,
-      class: border,
+      css-variable-name: focus-ring-color,
+      class: focus-ring-clr-rgb,
       values: map-loop(
           $selected-theme-rgb-colors,
           rgba-css-var-advanced,
           '$key',
-          null,
-          $color-prefix,
-          border-alpha
+          'focus-ring',
+          $color-prefix
         ),
     ),
-    // 'border-colors-custom-property-value': (
-    //   function: 'css-var',
-    //   css-variable-name: border-clr,
-    //   class: border-clr,
-    //   custom-property-prefix:
-    //     if(meta.variable-exists(color-prefix), $color-prefix, null),
-    //   values:
-    //     if(
-    //       meta.variable-exists(selected-theme-hex-colors),
-    //       $selected-theme-hex-colors,
-    //       null
-    //     ),
-    // ),
-    // 'focus-ring':
-    //   (
-    //     function: 'property-advanced',
-    //     class: focus-ring,
-    //     state: ':focus',
-    //     properties: (
-    //       outline: 0,
-    //       box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-    //         var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-    //     ),
-    //   ),
-    // 'focus-ring-focus-visible': (
-    //   function: 'property-advanced',
-    //   class: focus-ring-fv,
-    //   state: ':focus-visible',
-    //   properties: (
-    //     outline: 0,
-    //     box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-    //       var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-    //   ),
-    // ),
-    // 'focus-ring-focus-focus-visible': (
-    //   function: 'property-advanced',
-    //   class: focus-ring-ffv,
-    //   state: ':focus' ':focus-visible',
-    //   properties: (
-    //     outline: 0,
-    //     box-shadow: 0 0 0 var(--focus-ring-width, 4px)
-    //       var(--focus-ring-color, var(--#{$prefix}clr-primary)),
-    //   ),
-    // ),
-    'focus-ring-rgba-colors-cp': (
-        function: 'css-var',
-        css-variable-name: focus-ring-color,
-        class: focus-ring-clr-rgb,
-        values: map-loop(
-            $selected-theme-rgb-colors,
-            rgba-css-var-advanced,
-            '$key',
-            'focus-ring',
-            $color-prefix
-          ),
-      ),
     'focus-ring-hex-colors-cp': (
       function: 'css-var',
       css-variable-name: focus-ring-color,
@@ -793,7 +961,7 @@ $utilities: map.merge(
       ),
     ),
     'before-content': (
-      class: before-content,
+      class: before\:content,
       state: '::before',
       property: content,
       values: (
@@ -859,7 +1027,7 @@ $utilities: map.merge(
       function: 'responsive-custom-property',
       property: max-width,
       class: max-w,
-      responsive-custom-property-value: max-w,
+      responsive-custom-property-value: max-width,
       responsive: true,
     ),
 
@@ -987,7 +1155,7 @@ $utilities: map.merge(
       class: flex,
       values: wrap nowrap wrap-reverse,
     ),
-    'justify-content-tailwind': (
+    'justify-content': (
       class: justify,
       responsive: true,
       property: justify-content,
@@ -1000,19 +1168,7 @@ $utilities: map.merge(
         evenly: space-evenly,
       ),
     ),
-    'justify-content': (
-      class: justify-content,
-      responsive: true,
-      property: justify-content,
-      values: (
-        start: flex-start,
-        end: flex-end,
-        center: center,
-        between: space-between,
-        around: space-around,
-        evenly: space-evenly,
-      ),
-    ),
+
     'align-items': (
       class: items,
       responsive: true,
@@ -1025,20 +1181,10 @@ $utilities: map.merge(
         stretch: stretch,
       ),
     ),
-    'items': (
-      class: align-items,
-      responsive: true,
-      property: align-items,
-      values: (
-        start: flex-start,
-        end: flex-end,
-        center: center,
-        baseline: baseline,
-        stretch: stretch,
-      ),
-    ),
+
     'align-content': (
       responsive: true,
+      class: content,
       property: align-content,
       values: (
         start: flex-start,
@@ -1052,7 +1198,7 @@ $utilities: map.merge(
     'align-self': (
       responsive: true,
       property: align-self,
-      class: align-self,
+      class: self,
       values: (
         auto: auto,
         start: start,
@@ -1093,14 +1239,24 @@ $utilities: map.merge(
       class: order,
       property: order,
       values: (
-        first: -1,
+        first: -9999,
         0: 0,
         1: 1,
         2: 2,
         3: 3,
         4: 4,
         5: 5,
-        last: 6,
+        last: 9999,
+      ),
+    ),
+    'order-negative': (
+      responsive: true,
+      class: \-order,
+      property: order,
+      values: (
+        1: -1,
+        2: -2,
+        3: -3,
       ),
     ),
     'font-size': (
@@ -1119,13 +1275,26 @@ $utilities: map.merge(
     ),
     'font-style': (
       property: font-style,
-      class: fst,
-      values: italic normal,
+      values: (
+        italic: italic,
+        not-italic: normal,
+        normal: normal,
+      ),
     ),
     'font-weight': (
       property: font-weight,
       class: fw,
-      values: $font-weights,
+      values: (
+        thin: 100,
+        extra-light: 200,
+        light: 300,
+        regular: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
+        extra-bold: 800,
+        'black': 900,
+      ),
     ),
     'font-weight-numbers': (
       property: font-weight,
@@ -1155,6 +1324,12 @@ $utilities: map.merge(
         120: 1.2,
         130: 1.3,
         140: 1.4,
+        150: 1.5,
+        160: 1.6,
+        170: 1.7,
+        180: 1.8,
+        190: 1.9,
+        200: 2,
         base: 1.5,
         heading: 1.1,
         sm: 1.25,
@@ -1166,37 +1341,33 @@ $utilities: map.merge(
       responsive: true,
       property: text-align,
       class: text,
-      values: (
-        start: left,
-        end: right,
-        center: center,
-      ),
+      values: left center right start justify end,
     ),
+
     'text-transform': (
       property: text-transform,
-      class: text,
-      values: lowercase uppercase capitalize,
+      values: lowercase uppercase capitalize normal-case,
     ),
 
     'white-space': (
       property: white-space,
       class: white-space,
-      values: (
-        wrap: normal,
-        nowrap: nowrap,
-      ),
+      values: normal nowrap,
     ),
     'word-break': (
       property: word-break,
-      class: text,
-      responsive: true,
-      values: normal break-all keep-all break-word,
+      class: break,
+      values: (
+        normal: normal,
+        break-all: break-all,
+        keep: keep-all,
+      ),
     ),
     'word-spacing': (
       property: word-spacing,
       class: word-spacing,
       values: (
-        null: var(--word-spacing-value),
+        null: var(--word-spacing),
         1: 1px,
         2: 2px,
         3: 3px,
@@ -1206,7 +1377,16 @@ $utilities: map.merge(
         7: 7px,
         8: 8px,
         9: 9px,
-        10: 10px,
+        11: 11px,
+        12: 12px,
+        13: 13px,
+        14: 14px,
+        15: 15px,
+        16: 16px,
+        17: 17px,
+        18: 18px,
+        19: 19px,
+        20: 20px,
       ),
     ),
     'alpha': (
@@ -1258,22 +1438,21 @@ $utilities: map.merge(
       property: background-image,
       class: bg,
       values: (
-        gradient: var(--#{$prefix}gradient),
+        gradient: var(--#{$cp-namespace}gradient),
       ),
     ),
     'text-underline': (
       property: text-decoration-line,
-      class: text,
       values: (
         underline: underline,
-        none: none,
-        underline-dotted: underline dotted,
+        no-underline: none,
+        overline: overline,
         line-through: line-through,
       ),
     ),
     'text-underline-offset': (
       property: text-underline-offset,
-      class: text-underline-offset,
+      class: underline-offset,
       values: (
         0: 0,
         1: 1px,
@@ -1285,12 +1464,23 @@ $utilities: map.merge(
         7: 7px,
         8: 8px,
         9: 9px,
+        10: 10px,
+        11: 11px,
+        12: 12px,
+        13: 13px,
+        14: 14px,
+        15: 15px,
+        16: 16px,
+        17: 17px,
+        18: 18px,
+        19: 19px,
+        20: 20px,
       ),
     ),
     'text-decoration-color': (
       function: 'custom-property-value',
       property: text-decoration-color,
-      class: text-decoration,
+      class: decoration,
       custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
       values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
     ),
@@ -1363,38 +1553,18 @@ $utilities: map.merge(
       css-variable-name: shadow-width,
       values: $border-widths,
     ),
-    // 'focus-ring-main': (
-    //   function: 'custom-property-value',
-    //   state: ':focus',
-    //   required-property: (
-    //     outline: 0,
-    //   ),
-    //   property: box-shadow,
-    //   class: focus-ring,
-    //   custom-property-prefix:
-    //     if(
-    //       meta.variable-exists(focus-rings),
-    //       map.get($focus-rings, custom-property-prefix),
-    //       null
-    //     ),
-    //   values:
-    //     if(
-    //       meta.variable-exists(focus-rings),
-    //       map.get($focus-rings, values),
-    //       null
-    //     ),
-    // ),
+
     'transition-custom': (
-        function: 'custom-property-value',
-        property: transition,
-        class: transition,
-        custom-property-prefix: if(
-            meta.variable-exists(transitions),
-            map.get($transitions, custom-property-prefix),
-            null
-          ),
-        values: if(meta.variable-exists(transitions), map.get($transitions, values), null),
-      ),
+      function: 'custom-property-value',
+      property: transition,
+      class: transition,
+      custom-property-prefix: if(
+          meta.variable-exists(transitions),
+          map.get($transitions, custom-property-prefix),
+          null
+        ),
+      values: if(meta.variable-exists(transitions), map.get($transitions, values), null),
+    ),
     'transition': (
       property: transition,
       class: transition,
@@ -1728,7 +1898,7 @@ $utilities: map.merge(
     'border-radius-sync': (
       function: 'custom-property-value',
       property: border-radius,
-      class: radius,
+      class: rounded,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1740,7 +1910,7 @@ $utilities: map.merge(
     'border-radius-variable-left': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-top-left-radius,
-      class: radius-l,
+      class: rounded-l,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1751,7 +1921,7 @@ $utilities: map.merge(
     'border-radius-variable-right': (
       function: 'custom-property-value',
       property: border-bottom-right-radius border-top-right-radius,
-      class: radius-r,
+      class: rounded-r,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1762,7 +1932,7 @@ $utilities: map.merge(
     'border-radius-variable-top': (
       function: 'custom-property-value',
       property: border-top-left-radius border-top-right-radius,
-      class: radius-t,
+      class: rounded-t,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1773,7 +1943,7 @@ $utilities: map.merge(
     'border-radius-variable-bottom': (
       function: 'custom-property-value',
       property: border-bottom-left-radius border-bottom-right-radius,
-      class: radius-b,
+      class: rounded-b,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1784,7 +1954,7 @@ $utilities: map.merge(
     'border-radius-variable-top-left': (
       function: 'custom-property-value',
       property: border-top-left-radius,
-      class: radius-tl,
+      class: rounded-tl,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1795,7 +1965,7 @@ $utilities: map.merge(
     'border-radius-variable-top-right': (
       function: 'custom-property-value',
       property: border-top-right-radius,
-      class: radius-tr,
+      class: rounded-tr,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1806,7 +1976,7 @@ $utilities: map.merge(
     'border-radius-variable-bottom-left': (
       function: 'custom-property-value',
       property: border-bottom-left-radius,
-      class: radius-bl,
+      class: rounded-bl,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -1817,7 +1987,7 @@ $utilities: map.merge(
     'border-radius-variable-bottom-right': (
       function: 'custom-property-value',
       property: border-bottom-right-radius,
-      class: radius-br,
+      class: rounded-br,
       custom-property-prefix: if(
           meta.variable-exists(border-radius),
           map.get($border-radius, custom-property-prefix),
@@ -2102,7 +2272,7 @@ $utilities: map.merge(
     ),
     'text-color-alpha': (
       property: color,
-      class: color,
+      class: texta,
       // custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
       values: if(
           $enable-rgb-colors,
@@ -2116,6 +2286,12 @@ $utilities: map.merge(
       class: text,
       custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
       values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
+    ),
+    'text-color-inherit': (
+      property: color,
+      class: text,
+      // custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
+      values: inherit,
     ),
     'hover:text-color-hex-custom-properties': (
       state: ':hover',
@@ -2484,28 +2660,28 @@ $utilities: map.merge(
       function: 'fluid',
       responsive: true,
       property: row-gap,
-      class: row-gap,
+      class: gap-y,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
     'row-gap-fluid-container': (
       function: 'fluid',
       responsive: true,
       property: row-gap,
-      class: row-gap,
+      class: gap-y,
       values: if(meta.variable-exists(container-clamp), $container-clamp, null),
     ),
     'column-gap-fluid': (
       function: 'fluid',
       responsive: true,
       property: column-gap,
-      class: column-gap,
+      class: gap-x,
       values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     ),
     'column-gap-fluid-container': (
       function: 'fluid',
       responsive: true,
       property: column-gap,
-      class: column-gap,
+      class: gap-x,
       values: if(meta.variable-exists(container-clamp), $container-clamp, null),
     ),
     'gap': (
@@ -2525,28 +2701,28 @@ $utilities: map.merge(
     'row-gap': (
       responsive: true,
       property: row-gap,
-      class: row-gap,
+      class: gap-y,
       values: map.merge($sizes-regular, $sizes-irregular),
     ),
     'row-gap-responsive-custom-property': (
       function: 'responsive-custom-property',
       property: row-gap,
       responsive-custom-property-value: row-gap,
-      class: row-gap,
+      class: gap-y,
       responsive: true,
     ),
 
     'column-gap': (
       responsive: true,
       property: column-gap,
-      class: column-gap,
+      class: gap-x,
       values: map.merge($sizes-regular, $sizes-irregular),
     ),
     'column-gap-responsive-custom-property': (
       function: 'responsive-custom-property',
       property: column-gap,
       responsive-custom-property-value: column-gap,
-      class: column-gap,
+      class: gap-x,
       responsive: true,
     ),
     'margin-responsive-custom-property': (
@@ -2674,7 +2850,7 @@ $utilities: map.merge(
     'negative-margin': (
       responsive: true,
       property: margin,
-      class: m,
+      class: \-m,
       important: true,
 
       values: map.merge($negative-spacers, $negative-spacers-irregular),
@@ -2682,7 +2858,7 @@ $utilities: map.merge(
     'negative-margin-x': (
       responsive: true,
       property: margin-inline,
-      class: mx,
+      class: \-mx,
       values: map.merge(
           map.merge($negative-spacers, $negative-spacers-irregular),
           (
@@ -2694,21 +2870,21 @@ $utilities: map.merge(
     'negative-margin-y': (
       responsive: true,
       property: margin-block,
-      class: my,
+      class: \-my,
       values: map.merge($negative-spacers, $negative-spacers-irregular),
       important: true,
     ),
     'negative-margin-top': (
       responsive: true,
       property: margin-top,
-      class: mt,
+      class: \-mt,
       values: map.merge($negative-spacers, $negative-spacers-irregular),
       important: true,
     ),
     'negative-margin-end': (
       responsive: true,
       property: margin-inline-end,
-      class: me,
+      class: \-me,
       values: map.merge(
           map.merge($negative-spacers, $negative-spacers-irregular),
           (
@@ -2720,7 +2896,7 @@ $utilities: map.merge(
     'negative-margin-right': (
       responsive: true,
       property: margin-right,
-      class: mr,
+      class: \-mr,
       values: map.merge(
           map.merge($negative-spacers, $negative-spacers-irregular),
           (
@@ -2732,14 +2908,14 @@ $utilities: map.merge(
     'negative-margin-bottom': (
       responsive: true,
       property: margin-bottom,
-      class: mb,
+      class: \-mb,
       values: map.merge($negative-spacers, $negative-spacers-irregular),
       important: true,
     ),
     'negative-margin-start': (
       responsive: true,
       property: margin-inline-start,
-      class: ms,
+      class: \-ms,
       values: map.merge(
           map.merge($negative-spacers, $negative-spacers-irregular),
           (
@@ -2751,7 +2927,7 @@ $utilities: map.merge(
     'negative-margin-left': (
       responsive: true,
       property: margin-left,
-      class: ml,
+      class: \-ml,
       values: map.merge(
           map.merge($negative-spacers, $negative-spacers-irregular),
           (
@@ -2813,6 +2989,18 @@ $utilities: map.merge(
       responsive: true,
       property: padding-inline-end,
       class: pe,
+      values: map.merge(
+          map.merge($sizes-regular, $sizes-irregular),
+          (
+            container: var(--container-padding),
+          )
+        ),
+      important: true,
+    ),
+    'padding-right': (
+      responsive: true,
+      property: padding-right,
+      class: pr,
       values: map.merge(
           map.merge($sizes-regular, $sizes-irregular),
           (
