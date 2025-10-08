@@ -147,3 +147,29 @@ highighter machen, anwendbar bei tabs oder filter
 grid-res responsive machen, und padding entfernen
 
 komisches border bei pagination
+
+
+
+custom variable to pattern
+@include mq(xsm) {
+  .xsm\:footer-line {
+    --_offset: 35px;
+    --_length: 2px;
+    --_line-start: calc(var(--_offset) + var(--_length));
+    background-image: linear-gradient(
+      to bottom,
+      transparent var(--_offset),
+      var(--clr-primary) var(--_offset) var(--_line-start),
+      transparent var(--_line-start) var(--_line-start)
+    );
+  }
+}
+
+.curve::before {
+  content: '';
+  width: 62px;
+  height: 62px;
+  display: block;
+  margin-bottom: 4px;
+  background-image: url('/src/assets/images/kurve.svg');
+}
