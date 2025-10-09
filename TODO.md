@@ -173,3 +173,6 @@ custom variable to pattern
   margin-bottom: 4px;
   background-image: url('/src/assets/images/kurve.svg');
 }
+
+
+click and Drag Class
