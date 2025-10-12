@@ -23,7 +23,11 @@ $selected-theme-rgb-colors: if(
     null
   )
 );
-$selected-theme-hover-colors: if($enable-rgb-colors, map-loop($selected-theme-hover-hex-colors, to-rgb, '$value'), null);
+$selected-theme-hover-colors: if(
+  $enable-rgb-colors,
+  map-loop($selected-theme-hover-hex-colors, to-rgb, '$value'),
+  null
+);
 $utilities: ();
 $utilities: map.merge(
   (
@@ -1559,7 +1563,11 @@ $utilities: map.merge(
       function: 'apply-custom-prop',
       property: font-family,
       class: ff,
-      custom-property-prefix: if(meta.variable-exists(font-families), map.get($font-families, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(font-families),
+          map.get($font-families, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(font-families), map.get($font-families, values), null),
       responsive: false,
     ),
@@ -1966,6 +1974,7 @@ $utilities: map.merge(
             round: 100%,
           )
         ),
+      responsive: false,
     ),
     'border-bottom-left-radius-merged': (
       property: border-bottom-left-radius,
@@ -1977,68 +1986,105 @@ $utilities: map.merge(
             round: 100%,
           )
         ),
+      responsive: false,
     ),
     'border-radius-sync': (
       function: 'apply-custom-prop',
       property: border-radius,
       class: rounded,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-left': (
       function: 'apply-custom-prop',
       property: border-bottom-left-radius border-top-left-radius,
       class: rounded-l,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-right': (
       function: 'apply-custom-prop',
       property: border-bottom-right-radius border-top-right-radius,
       class: rounded-r,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-top': (
       function: 'apply-custom-prop',
       property: border-top-left-radius border-top-right-radius,
       class: rounded-t,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-bottom': (
       function: 'apply-custom-prop',
       property: border-bottom-left-radius border-bottom-right-radius,
       class: rounded-b,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-top-left': (
       function: 'apply-custom-prop',
       property: border-top-left-radius,
       class: rounded-tl,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-top-right': (
       function: 'apply-custom-prop',
       property: border-top-right-radius,
       class: rounded-tr,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-bottom-left': (
       function: 'apply-custom-prop',
       property: border-bottom-left-radius,
       class: rounded-bl,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'border-radius-variable-bottom-right': (
       function: 'apply-custom-prop',
       property: border-bottom-right-radius,
       class: rounded-br,
-      custom-property-prefix: if(meta.variable-exists(border-radius), map.get($border-radius, custom-property-name), null),
+      custom-property-prefix: if(
+          meta.variable-exists(border-radius),
+          map.get($border-radius, custom-property-name),
+          null
+        ),
       values: if(meta.variable-exists(border-radius), map.get($border-radius, values), null),
     ),
     'position': (
