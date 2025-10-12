@@ -1,63 +1,59 @@
-import { Utils } from '../utils';
+import { select } from '../utils';
 import { Tabber } from '../modules';
-
-// Breakpoints defined in CSS custom property --js-breakpoints (see :root).
-// Used to determine responsive behavior (e.g., when to expand the navbar based on class .navbar--expand-{bp}.
-// Returns a string that contains JSON (stringified inside quotes)
-
-const BREAKPOINTS_RAW = getComputedStyle(document.documentElement)
-  .getPropertyValue('--js-breakpoints')
-  .trim();
-
-BREAKPOINTS_RAW === '' &&
-  console.error(
-    '--js-breakpoints custom property is missing. The Navbar component depends on it and might not work as expected.'
-  );
-
-const BREAKPOINTS_JSON = JSON.parse(BREAKPOINTS_RAW.replace(/^'|'$/g, ''));
 
 /**
  * Interface-like definition for Navbar modules.
  *
- * Modules can optionally implement the following lifecycle hooks:
- * - onOpen():   Called when the offcanvas menu is opened.
+ * A module can optionally implement the following lifecycle hooks:
+ *
+ * - onOpen():   Called when the off-canvas menu is opened.
  * - onClose():  Called when the menu is closed.
- * - onExpand(): Called when the expand media query breakpoint is true.
-
- * These methods are optional. The system checks if they exist before calling them.
+ * - onExpand(): Called when the "expand" media query breakpoint becomes active.
+ *
+ * All hooks are optional — the system checks whether a method exists before calling it.
+ *
+ * To use modules, pass them as an array to the options.modules:
+ *
+ * new Navbar('.navbar', { modules: [yourModule] });
  */
+
+// eslint-disable-next-line
 const MODULE_INTERFACE = {
   onOpen: 'function',
   onClose: 'function',
   onExpand: 'function',
 };
 
+const BP_PREFIX = '--bp-';
+const CORE_MODULES = [Tabber];
+const CLASS_EXPAND_CORE = 'navbar--expand-';
+const CLASS_OPEN = 'navbar--open';
+const CLASS_TRANSITION = 'showing';
+const CLASS_SHOW = 'show';
+
 export class Navbar {
-  constructor(rootEl = '.navbar', options = {}) {
-    this._rootEl = typeof rootEl === 'string' ? Utils.select(rootEl) : rootEl;
-    if (!this._rootEl) return;
-    this._openBtnEl = this._rootEl.querySelector('.navbar__btn-open');
-    this._closeBtnEl = this._rootEl.querySelector('.navbar__btn-close');
-    this._containerEl = this._rootEl.querySelector('.navbar__container');
-    this._offcanvasEl = this._rootEl.querySelector('.navbar__offcanvas');
+  constructor(blockSelector = '.navbar', options = {}) {
+    this._blockSl = blockSelector;
+    this._blockEl = typeof blockSelector === 'string' ? select(blockSelector) : blockSelector;
+    if (!this._blockEl) return;
+    this._openBtnEl = this._blockEl.querySelector(`${this._blockSl}__btn-open`);
+    this._closeBtnEl = this._blockEl.querySelector(`${this._blockSl}__btn-close`);
+    this._containerEl = this._blockEl.querySelector(`${this._blockSl}__container`);
+    this._offcanvasEl = this._blockEl.querySelector(`${this._blockSl}__offcanvas`);
     this._isTransitioning = false;
     this._isExpanded = false;
-    this._isPositionFixed = this._rootEl.dataset.fixed === 'true';
-    this._breakpointName = this._breakpointName =
-      [...this._rootEl.classList]
-        .find((cls) => cls.startsWith('navbar--expand-'))
-        ?.replace('navbar--expand-', '') ?? null;
-    this._breakpointValue = BREAKPOINTS_JSON[this._breakpointName] || null;
-    this._expandMediaQuery = this._breakpointName
-      ? window.matchMedia(`(min-width: ${this._breakpointValue})`)
-      : null;
+    this._isPositionFixed = this._blockEl.dataset.fixed === 'true';
+    this._breakpointName =
+      [...this._blockEl.classList].find((cls) => cls.startsWith(CLASS_EXPAND_CORE))?.replace(CLASS_EXPAND_CORE, '') ?? null;
+    this._breakpointValue = getComputedStyle(document.documentElement).getPropertyValue(BP_PREFIX + this._breakpointName) || null;
+    this._expandMediaQuery = this._breakpointName ? window.matchMedia(`(min-width: ${this._breakpointValue})`) : null;
 
     this._boundHandleDocumentClick = this._handleDocumentClick.bind(this);
     this._boundHandleKeydown = this._handleKeydown.bind(this);
     this._options = options;
-    this._modules = [Tabber, ...(this._options?.modules || [])];
+    this._modules = [...CORE_MODULES, ...(this._options?.modules || [])];
     this._context = {
-      rootEl: this._rootEl,
+      blockEl: this._blockEl,
       offcanvasEl: this._offcanvasEl,
       containerEl: this._containerEl,
       isPositionFixed: this._isPositionFixed,
@@ -75,8 +71,7 @@ export class Navbar {
     this._offcanvasEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));
 
     // Listen for changes
-    this._expandMediaQuery &&
-      this._expandMediaQuery.addEventListener('change', this._handleExpandMedia.bind(this));
+    this._expandMediaQuery && this._expandMediaQuery.addEventListener('change', this._handleExpandMedia.bind(this));
   }
 
   /* == Event handler == */
@@ -87,7 +82,7 @@ export class Navbar {
   }
 
   _handleDocumentClick(e) {
-    const clickedInside = e.target.closest('.navbar__offcanvas') === this._offcanvasEl;
+    const clickedInside = e.target.closest(`${this._blockSl}__offcanvas`) === this._offcanvasEl;
 
     if (!this._isExpanded || this._isTransitioning || clickedInside) return;
     this._handleCloseOffcanvas();
@@ -101,11 +96,11 @@ export class Navbar {
     }
   }
 
-  _handleOpenOffcanvas(e) {
+  _handleOpenOffcanvas() {
     this._toggleOffcanvas(true);
   }
 
-  _handleCloseOffcanvas(e) {
+  _handleCloseOffcanvas() {
     this._toggleOffcanvas(false);
   }
 
@@ -119,26 +114,28 @@ export class Navbar {
   /* == helper methods == */
   _setExpandedState(isExpanded) {
     this._openBtnEl.ariaExpanded = isExpanded;
+    this._blockEl.classList.toggle(CLASS_OPEN, isExpanded);
     this._isExpanded = isExpanded;
   }
   _setTransitionClass() {
-    this._offcanvasEl.classList.add('showing');
+    this._offcanvasEl.classList.add(CLASS_TRANSITION);
   }
 
   _toggleOffcanvasClasses(isExpanded) {
-    this._offcanvasEl.classList.remove('showing');
+    this._offcanvasEl.classList.remove(CLASS_TRANSITION);
     const method = isExpanded ? 'add' : 'remove';
-    this._offcanvasEl.classList[method]('show');
+    this._offcanvasEl.classList[method](CLASS_SHOW);
   }
 
   _toggleOffcanvas(isOpen) {
     this._setExpandedState(isOpen);
+    this._blockEl.classList.toggle(CLASS_OPEN, isOpen);
+
     this._setTransitionClass();
+
     this._isTransitioning = true;
 
-    const ariaAttributes = isOpen
-      ? { 'aria-modal': 'true', role: 'dialog' }
-      : { 'aria-modal': null, role: null };
+    const ariaAttributes = isOpen ? { 'aria-modal': 'true', role: 'dialog' } : { 'aria-modal': null, role: null };
     this._updateAriaAttributes(ariaAttributes);
 
     // Focus management
@@ -154,6 +151,7 @@ export class Navbar {
 
   _onExpand(state) {
     this._setExpandedState(state);
+    this._blockEl.classList.toggle(CLASS_OPEN, state);
     const ariaAttributes = { 'aria-modal': null, role: null };
     this._updateAriaAttributes(ariaAttributes);
     this._toggleOffcanvasClasses(state);

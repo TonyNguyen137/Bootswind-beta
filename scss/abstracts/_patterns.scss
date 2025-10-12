@@ -7,7 +7,6 @@
 
 $patterns: (
   'children-reset-spacing': (
-    function: 'nested-rules',
     class: children\:spacing-0,
     nesting: (
       '& *': (
@@ -18,8 +17,8 @@ $patterns: (
     responsive: true,
     important: true,
   ),
+
   'direct-children-reset-spacing': (
-    function: 'nested-rules',
     class: direct-children\:spacing-0,
     nesting: (
       '& > *': (
@@ -29,7 +28,6 @@ $patterns: (
     ),
   ),
   'children-remove-margin': (
-    function: 'nested-rules',
     class: children\:m-0,
     nesting: (
       '& *': (
@@ -38,7 +36,6 @@ $patterns: (
     ),
   ),
   'direct-children-remove-margin': (
-    function: 'nested-rules',
     class: direct-children\:m-0,
     nesting: (
       '& > *': (
@@ -47,7 +44,6 @@ $patterns: (
     ),
   ),
   'first-child-margin-0': (
-    function: 'nested-rules',
     class: first-child\:m-0,
     nesting: (
       '& > *:first-child': (
@@ -56,7 +52,6 @@ $patterns: (
     ),
   ),
   'last-child-margin-0': (
-    function: 'nested-rules',
     class: last-child\:m-0,
     nesting: (
       '& > *:first-child': (
@@ -65,7 +60,6 @@ $patterns: (
     ),
   ),
   'children-custom-marker': (
-    function: 'nested-rules',
     class: children\:custom-marker,
     nesting: (
       '& li::marker': (
@@ -75,7 +69,6 @@ $patterns: (
     ),
   ),
   'children-marker-image': (
-    function: 'nested-rules',
     class: children\:custom-marker-image,
     nesting: (
       '& li::marker': (
@@ -84,7 +77,6 @@ $patterns: (
     ),
   ),
   'direct-children-marker-image': (
-    function: 'nested-rules',
     class: direct-children\:custom-marker-image,
     nesting: (
       '& li::marker': (
@@ -93,7 +85,6 @@ $patterns: (
     ),
   ),
   'direct-child-custom-marker': (
-    function: 'nested-rules',
     class: direct-children\:custom-marker,
     nesting: (
       '& > li::marker': (
@@ -103,7 +94,6 @@ $patterns: (
     ),
   ),
   'focus-visible-children': (
-    function: 'nested-rules',
     class: focus-visible\:children,
     nesting: (
       '& :where(a, button, input, textarea, select, details, iframe):focus-visible': (
@@ -112,92 +102,8 @@ $patterns: (
       ),
     ),
   ),
-  'custom-container': (
-    function: 'property-advanced',
-    class: container-dynamic,
-    properties: (
-      padding-inline: $container-padding,
-      margin-inline: auto,
-      width: 100%,
-      max-width: var(--container-dynamic-max-width),
-    ),
-  ),
-  'text-shorten': (
-    function: 'property-advanced',
-    class: shorten,
-    properties: (
-      overflow: hidden,
-      line-height: var(--shorten-line-height, 1.5),
-      max-height: calc(1em * var(--shorten-line-height, 1.5) * var(--shorten-max-line, 4)),
-    ),
-  ),
-  'text-shorten-1': (
-    function: 'property-advanced',
-    class: shorten-1,
-    properties: (
-      overflow: hidden,
-      line-height: var(--shorten-line-height, 1.5),
-      max-height: calc(1em * var(--shorten-line-height, 1.5) * 1),
-    ),
-  ),
-  'text-shorten-2': (
-    function: 'property-advanced',
-    class: shorten-2,
-    properties: (
-      overflow: hidden,
-      line-height: var(--shorten-line-height, 1.5),
-      max-height: calc(1em * var(--shorten-line-height, 1.5) * 2),
-    ),
-  ),
-  'text-shorten-3': (
-    function: 'property-advanced',
-    class: shorten-3,
-    properties: (
-      overflow: hidden,
-      line-height: var(--shorten-line-height, 1.5),
-      max-height: calc(1em * var(--shorten-line-height, 1.5) * 3),
-    ),
-  ),
-  'text-shorten-4': (
-    function: 'property-advanced',
-    class: shorten-4,
-    properties: (
-      overflow: hidden,
-      line-height: var(--shorten-line-height, 1.5),
-      max-height: calc(1em * var(--shorten-line-height, 1.5) * 4),
-    ),
-  ),
-  'text-shorten-5': (
-    function: 'property-advanced',
-    class: shorten-5,
-    properties: (
-      overflow: hidden,
-      line-height: var(--shorten-line-height, 1.5),
-      max-height: calc(1em * var(--shorten-line-height, 1.5) * 5),
-    ),
-  ),
-
-  'text-truncate': (
-    function: 'property-advanced',
-    class: truncate,
-    properties: (
-      display: -webkit-box,
-      -webkit-line-clamp: var(--line-clamp, 3),
-      -webkit-box-orient: vertical,
-      overflow: hidden,
-    ),
-  ),
-  'text-overflow-ellipsis': (
-    function: 'property-advanced',
-    class: text-ellipsis,
-    properties: (
-      text-overflow: ellipsis,
-      overflow: hidden,
-    ),
-  ),
 
   'flow-direct-children': (
-    function: 'nested-rules',
     class: flow,
     nesting: (
       '& > * + *': (
@@ -206,7 +112,6 @@ $patterns: (
     ),
   ),
   'flow-all': (
-    function: 'nested-rules',
     class: flow-all,
     nesting: (
       '& * + *': (
@@ -215,7 +120,6 @@ $patterns: (
     ),
   ),
   'overlay-custom': (
-    function: 'nested-rules',
     class: overlay,
     nesting: (
       position: relative,
@@ -230,7 +134,6 @@ $patterns: (
     ),
   ),
   'fade': (
-    function: 'nested-rules',
     class: fade,
     nesting: (
       transition: opacity 0.15s linear,
@@ -243,7 +146,6 @@ $patterns: (
     ),
   ),
   'collapse': (
-    function: 'nested-rules',
     class: collapse,
     nesting: (
       '&:not(.show)': (
@@ -251,137 +153,18 @@ $patterns: (
       ),
     ),
   ),
-  'collapsing': (
-    function: 'property-advanced',
-    class: collapsing,
-    properties: (
-      height: 0,
-      overflow: hidden,
-      transition: height 0.35s ease,
-    ),
-  ),
-  'collapsing-horizontal': (
-    function: 'property-advanced',
-    class: collapsing-horizontal,
-    properties: (
-      width: 0,
-      height: auto,
-      transition: width 0.35 ease,
-    ),
-  ),
-  'fixed-bottom': (
-    function: 'property-advanced',
-    class: fixed-bottom,
-    properties: (
-      position: fixed,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      z-index: var(--#{$cp-namespace}z-1, 999),
-    ),
-  ),
-  'fixed-top': (
-    function: 'property-advanced',
-    class: fixed-top,
-    properties: (
-      position: fixed,
-      top: 0,
-      right: 0,
-      left: 0,
-      z-index: var(--#{$cp-namespace}z-1),
-    ),
-  ),
-  'clear-float': (
-    function: 'property-advanced',
-    class: clear-float,
-    state: '::after',
-    properties: (
-      content: '',
-      display: block,
-      clear: both,
-    ),
-  ),
-  'sr-only-focusable': (
-    function: 'property-advanced',
-    class: sr-only-focusable,
-    state: ':active' ':focus',
-    properties: (
-      clip: auto,
-      -webkit-clip-path: none,
-      clip-path: none,
-      height: auto,
-      margin: auto,
-      overflow: visible,
-      width: auto,
-      white-space: normal,
-    ),
-  ),
-  'sr-only': (
-    function: 'property-advanced',
-    class: sr-only,
-    properties: (
-      border: 0,
-      clip: rect(1px, 1px, 1px, 1px),
-      -webkit-clip-path: inset(50%),
-      clip-path: inset(50%),
-      height: 1px,
-      margin: -1px,
-      overflow: hidden,
-      padding: 0,
-      position: absolute,
-      width: 1px,
-      white-space: nowrap,
-    ),
-  ),
-  'sticky-top': (
-    function: 'property-advanced',
-    class: sticky-top,
-    properties: (
-      position: sticky,
-      top: 0,
-      z-index: var(--#{$cp-namespace}z-1),
-    ),
-  ),
-  'sticky-bottom': (
-    function: 'property-advanced',
-    class: sticky-bottom,
-    properties: (
-      position: sticky,
-      bottom: 0,
-      z-index: var(--#{$cp-namespace}z-1),
-    ),
-  ),
-  'default-button-style': (
-    function: 'property-advanced',
-    class: btn-style-reset,
-    properties: (
-      background-color: transparent,
-      cursor: pointer,
-      border: none,
-    ),
-  ),
-  'flex-center': (
-    function: 'property-advanced',
-    class: flex-center,
-    properties: (
-      display: flex,
-      justify-content: center,
-      align-items: center,
-    ),
-  ),
 
   'direct-child-a-text-none': (
-    function: 'nested-rules',
-    class: direct-children-a\:text-none,
+    class: direct-children-a\:no-underline,
     nesting: (
       '& > a': (
         text-decoration: none,
       ),
     ),
   ),
-  'direct-child-a-reset': (
+  'direct-children-a-reset': (
     responsive: true,
-    function: 'nested-rules',
+
     class: direct-children-a\:reset,
     nesting: (
       '& > a': (
@@ -392,7 +175,7 @@ $patterns: (
   ),
   'children-a-reset': (
     responsive: true,
-    function: 'nested-rules',
+
     class: children-a\:reset,
     nesting: (
       '& a': (
@@ -402,16 +185,30 @@ $patterns: (
     ),
   ),
   'children-a-text-none': (
-    function: 'nested-rules',
-    class: children-a\:text-none,
+    class: children-a\:no-underline,
     nesting: (
       '&  a': (
         text-decoration: none,
       ),
     ),
   ),
+  'children-a-text-color': (
+    class: children-a\:text-color,
+    nesting: (
+      '& a': (
+        color: var(--a-clr),
+      ),
+    ),
+  ),
+  'children-a-text-inherit': (
+    class: children-a\:text-inherit,
+    nesting: (
+      '& a': (
+        color: inherit,
+      ),
+    ),
+  ),
   'children-list-reset': (
-    function: 'nested-rules',
     class: children\:list-reset,
     nesting: (
       '&  ul': (
@@ -421,7 +218,6 @@ $patterns: (
     ),
   ),
   'children-list-none': (
-    function: 'nested-rules',
     class: children\:list-reset,
     nesting: (
       '&  ul': (
@@ -430,7 +226,6 @@ $patterns: (
     ),
   ),
   'direct-children-list-reset': (
-    function: 'nested-rules',
     class: direct-children\:list-none,
     nesting: (
       '& > ul': (
@@ -440,7 +235,6 @@ $patterns: (
     ),
   ),
   'direct-children-list-none': (
-    function: 'nested-rules',
     class: direct-children\:list-none,
     nesting: (
       '& > ul': (
@@ -449,7 +243,6 @@ $patterns: (
     ),
   ),
   'children-center': (
-    function: 'nested-rules',
     class: children\:center,
     nesting: (
       '& *': (
@@ -457,17 +250,7 @@ $patterns: (
       ),
     ),
   ),
-  'children-a-text-color': (
-    function: 'nested-rules',
-    class: children\:a-text-color,
-    nesting: (
-      '& a': (
-        color: var(--a-clr),
-      ),
-    ),
-  ),
   'before-background': (
-    function: 'nested-rules',
     class: before\:background,
     nesting: (
       '&::before': (
@@ -481,8 +264,20 @@ $patterns: (
       ),
     ),
   ),
+  'before-dot': (
+    class: before\:dot,
+    nesting: (
+      '&::before': (
+        content: '',
+        display: var(--before-display, block),
+        background-color: var(--before-bg, var(--clr-primary)),
+        width: var(--before-width, 20px),
+        height: var(--before-height, 20px),
+        border-radius: 100%,
+      ),
+    ),
+  ),
   'focus-within-outline': (
-    function: 'nested-rules',
     class: focus-within\:outline,
     nesting: (
       '&:focus-within': (
@@ -492,27 +287,8 @@ $patterns: (
       ),
     ),
   ),
-  'list-reset': (
-    function: 'property-advanced',
-    class: list-reset,
-    properties: (
-      list-style: none,
-      padding-left: 0,
-      margin-block: 0,
-    ),
-  ),
-  'scrollthumb-webkit-custom': (
-    function: 'property-advanced',
-    state: '::-webkit-scrollbar-thumb',
-    class: custom-scrollthumb,
-    properties: (
-      border-radius: 8px,
-      border: 3px solid #fff,
-      background-color: rgba(0, 0, 0, 0.3),
-    ),
-  ),
+
   'children-font-weight': (
-    function: 'nested-rules',
     values: $font-weights,
     class: children\:fw,
     nesting: (
@@ -522,7 +298,6 @@ $patterns: (
     ),
   ),
   'direct-children-flex': (
-    function: 'nested-rules',
     class: direct-children\:flex-1,
     nesting: (
       '& > *': (
@@ -531,7 +306,6 @@ $patterns: (
     ),
   ),
   'children-color-inherit': (
-    function: 'nested-rules',
     class: children\:text-inherit,
     nesting: (
       '&  *': (
@@ -540,21 +314,11 @@ $patterns: (
     ),
   ),
   'direct-children-color-inherit': (
-    function: 'nested-rules',
     class: direct-children\:text-inherit,
     nesting: (
       '& > *': (
         color: inherit,
       ),
-    ),
-  ),
-  'grid-templates': (
-    function: 'responsive-custom-properties',
-    class: grid-template,
-    responsive: true,
-    responsive-custom-properties: (
-      grid-template-columns: col-temp,
-      grid-template-rows: row-temp,
     ),
   ),
 );

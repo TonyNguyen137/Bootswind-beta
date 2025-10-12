@@ -1,4 +1,4 @@
-import { Utils } from '../utils';
+import { selectAll, debounce, select } from '../utils';
 
 const DELAY = 500;
 const API =
@@ -6,7 +6,7 @@ const API =
 
 export class Suggestion {
   constructor(rootElSelector = '.suggestion') {
-    this._rootEls = Utils.$$(rootElSelector);
+    this._rootEls = selectAll(rootElSelector);
     let i = this._rootEls.length;
     while (i--) {
       this._initRootEl(this._rootEls[i]);
@@ -14,10 +14,10 @@ export class Suggestion {
   }
 
   _initRootEl(rootEl) {
-    rootEl.inputEl = Utils.$('.suggestion__input', rootEl);
-    rootEl.listEl = Utils.$('.suggestion__list', rootEl);
+    rootEl.inputEl = select('.suggestion__input', rootEl);
+    rootEl.listEl = select('.suggestion__list', rootEl);
 
-    const debouncedSuggest = Utils.debounce(this._suggest.bind(this), DELAY);
+    const debouncedSuggest = debounce(this._suggest.bind(this), DELAY);
 
     rootEl.inputEl.addEventListener('input', debouncedSuggest.bind(this));
     // rootEl.inputEl.addEventListener('change', (e) => {
@@ -52,14 +52,8 @@ export class Suggestion {
     for (let i = 0; i < matchArray.length; i++) {
       const listItemEl = document.createElement('li');
 
-      const cityName = matchArray[i].city.replace(
-        regex,
-        `<strong>${e.target.value}</strong>`
-      );
-      const stateName = matchArray[i].state.replace(
-        regex,
-        `<strong>${e.target.value}</strong>`
-      );
+      const cityName = matchArray[i].city.replace(regex, `<strong>${e.target.value}</strong>`);
+      const stateName = matchArray[i].state.replace(regex, `<strong>${e.target.value}</strong>`);
 
       listItemEl.innerHTML = `${cityName}, ${stateName}`;
       documentFragment.append(listItemEl);

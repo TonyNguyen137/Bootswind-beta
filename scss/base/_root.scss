@@ -5,11 +5,11 @@
 @use 'sass:math';
 
 :root {
-  @include export-breakpoints-json($grid-breakpoints);
-  // @include generate-custom-properties(
-  //   if(meta.variable-exists(grid-breakpoints), $grid-breakpoints, null),
-  //   'bp-'
-  // );
+  // @include export-breakpoints-json($grid-breakpoints);
+  @include generate-custom-properties(
+    if(meta.variable-exists(grid-breakpoints), $grid-breakpoints, null),
+    'bp-'
+  );
   @include generate-custom-properties(
     if(meta.variable-exists(font-families), $font-families, null)
   );
@@ -27,7 +27,6 @@
 
   // Custom properties for default color theme
   @include generate-color-custom-properties($selected-theme-hex-colors, $color-prefix);
-
   @include generate-color-custom-properties-rgb($selected-theme-rgb-colors, $color-prefix);
 
   // @include generate-color-custom-properties-rgb(
@@ -44,7 +43,6 @@
     ),
     if(meta.variable-exists(hover-prefix), $hover-prefix, '')
   );
-
   @include generate-color-custom-properties-rgb(
     if(
       $enable-rgb-colors and map.get($color-theme, $selected-theme, hover),
@@ -53,16 +51,13 @@
     ),
     if(meta.variable-exists(hover-prefix), $hover-prefix, '')
   );
-
   @include generate-clamp-custom-properties(
     if(meta.variable-exists(font-size-clamp), $font-size-clamp, null)
   );
-
   @include generate-clamp-custom-properties(
     if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
     'px'
   );
-
   @include generate-clamp-custom-properties(
     if(meta.variable-exists(container-clamp), $container-clamp, null),
     'rem',
@@ -70,10 +65,7 @@
   );
 
   // Generates responsive custom properties
-  @include generate-responsive-custom-properties(
-    $responsive-custom-properties,
-    $responsive-custom-properties-prefix
-  );
+  @include generate-responsive-custom-properties($responsive-custom-properties);
 }
 
 @if $enable-color-themes {

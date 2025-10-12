@@ -4,7 +4,7 @@
   background-color: white;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0.5rem rgb(0 0 0 / 10%);
   display: grid;
   grid-template-columns: px-to-rem(250) 1fr;
   grid-template-rows: px-to-rem(200);
@@ -42,7 +42,7 @@
   }
 
   &__btn-link {
-    background-color: hsl(195, 53%, 79%);
+    background-color: hsl(195deg 53% 79%);
     color: black;
     border: none;
     padding: 0.5rem 1rem;

@@ -1,11 +1,9 @@
 @use '../abstracts/' as *;
 
 html {
-  -moz-text-size-adjust: none;
-  -webkit-text-size-adjust: none;
   text-size-adjust: none;
 
-  @if ($enable-reduced-motion) {
+  @if $enable-reduced-motion {
     @media (prefers-reduced-motion: reduce) {
       & {
         scroll-behavior: auto !important;
@@ -18,7 +16,8 @@ html {
 *::before,
 *::after {
   box-sizing: border-box;
-  @if ($enable-reduced-motion) {
+
+  @if $enable-reduced-motion {
     @media (prefers-reduced-motion: reduce) {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
@@ -28,7 +27,8 @@ html {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: Montserrat, sans-serif;
+
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;

@@ -1,31 +1,22 @@
-import { Utils } from '../utils';
+const CLASS_OPEN = 'dropdown--open';
 
 export class Dropdown {
   constructor(dropdownEl = '.dropdown') {
     document.addEventListener('click', (e) => {
       const isDropdownButton = e.target.matches('.dropdown__toggle');
 
-      console.log(isDropdownButton);
-      console.log(e.target.closest('.dropdown'));
-
-      console.log(
-        'condition ',
-        !isDropdownButton && e.target.closest('.dropdown') != null
-      );
-
       if (!isDropdownButton && e.target.closest('.dropdown') != null) return;
-      console.log('passed');
 
       let currentDropdown;
       if (isDropdownButton) {
         currentDropdown = e.target.closest('.dropdown');
-        currentDropdown.classList.toggle('active');
+        currentDropdown.classList.toggle(CLASS_OPEN);
       }
 
       // will not execute if node list is empty
-      document.querySelectorAll('.dropdown.active').forEach((dropdown) => {
+      document.querySelectorAll(CLASS_OPEN).forEach((dropdown) => {
         if (dropdown === currentDropdown) return;
-        dropdown.classList.remove('active');
+        dropdown.classList.remove(CLASS_OPEN);
       });
     });
   }

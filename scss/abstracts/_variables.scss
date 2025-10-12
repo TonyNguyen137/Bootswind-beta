@@ -10,11 +10,11 @@ Modifications may have been made to the original code.
 @use 'sass:math';
 
 /* ****************************************************** */
+
 /* General setting
 /* ****************************************************** */
 
 $cp-namespace: '';
-$class-namespace: '';
 $enable-transitions: true;
 $enable-reduced-motion: true;
 
@@ -33,12 +33,21 @@ $grid-row-columns: 6;
 /* Container
 /* ****************************************************** */
 
-$enable-container-classes: true;
+$enable-container-classes: false;
 $enable-max-container-classes: false;
 $enable-max-container-fluid-classes: false;
 $container-padding: 12px;
 
+/* ****************************************************** */
+/* Container free layout
+/* ****************************************************** */
+
+$enable-container-free-layout: true;
+$content-max-size: 1340px;
+$content-padding: 2rem;
+$content-breakout: 4rem;
 /* ******************************************************* */
+
 /* Breakpoints 
 /* ******************************************************* */
 
@@ -51,9 +60,7 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
-  3xl: 1600px,
 );
-
 $grid-breakpoints-up: map.remove($grid-breakpoints, xs);
 
 // rem values
@@ -67,6 +74,7 @@ $grid-breakpoints-up: map.remove($grid-breakpoints, xs);
 // );
 
 /* ****************************************************** */
+
 /* Container max-widths 
 /* ****************************************************** */
 
@@ -76,7 +84,6 @@ $container-max-widths: (
   lg: 960px,
   xl: 1140px,
   xxl: 1320px,
-  3xl: 1500px,
 );
 
 // @debug map.get($container-max-widths, sm);
@@ -84,20 +91,19 @@ $container-max-widths: (
 // @debug map.get($grid-breakpoints, 3xl);
 
 /* ****************************************************** */
+
 /* Container queries width
 /* ****************************************************** */
 
-$container-query-sizes: (
-  'card': 470px,
-);
+$container-query-sizes: ();
 
 /* ****************************************************** */
+
 /* Color theme
 /* ****************************************************** */
 
 $color-prefix: clr-;
 $hover-prefix: hover-;
-
 $primary: #0d6efd;
 $secondary: #6c757d;
 $success: #198754;
@@ -106,7 +112,6 @@ $warning: #ffc107;
 $danger: #dc3545;
 $light: #f8f9fa;
 $dark: #212529;
-
 $color-theme: (
   default: (
     color: (
@@ -125,28 +130,15 @@ $color-theme: (
     ),
     hover: (
       'gold': #ffd700,
-      // 'primary': #012345,
-      // 'secondary': $secondary,
-      // 'success': $success,
-      // 'info': $info,
-      // 'warning': $warning,
-      // 'danger': $danger,
-      // 'light': $light,
-      // 'dark': $dark,
-      // 'zero': #000,
-       // 'quindecenary': #fff,
     ),
   ),
 );
-
 $selected-theme: default;
-
 $selected-theme-hex-colors: if(
   map.has-key($color-theme, $selected-theme, color),
   map.get($color-theme, $selected-theme, color),
   null
 );
-
 $selected-theme-hover-hex-colors: if(
   map.has-key($color-theme, $selected-theme, hover),
   map.get($color-theme, $selected-theme, hover),
@@ -162,6 +154,7 @@ $enable-rgb-colors: true;
 $enable-color-themes: false;
 
 /* ************************************************************* */
+
 /* Clamp() values
 /* ************************************************************* */
 
@@ -179,7 +172,6 @@ $font-size-clamp: (
     relative-to: 'viewport',
   ),
 );
-
 $spacing-clamp: (
   'fluid-sp-32-150': (
     // default true
@@ -194,7 +186,6 @@ $spacing-clamp: (
     relative-to: 'viewport',
   ),
 );
-
 $container-clamp: (
   'fluid-ct-16-48': (
     // default true
@@ -211,6 +202,7 @@ $container-clamp: (
 );
 
 /* ************************************************************* */
+
 /* Simple custom properties
 /* ************************************************************* */
 
@@ -226,45 +218,54 @@ $simple-custom-properties: (
 );
 
 /* ****************************************************** */
-/* Responsive custom Properties 
-/* ****************************************************** */
 
-$responsive-custom-properties-prefix: '';
+/* Responsive Custom Properties
+/* ****************************************************** */
 
 $responsive-custom-properties: (
   xs: (
-    'heading-1': (
-      value: 24px,
+    'container-padding': (
+      value: $container-padding,
 
       // optional utility class
-      property: font-size,
-      class: res-heading-1,
+      property: padding-inline,
+      class: border-width-container,
+    ),
+    'navigation-header': (
+      value: 50px,
+      //optional
+      property: height,
+      class: navigation-height,
     ),
   ),
   sm: (
-    // 'heading-1': 34px,
     container: map.get($container-max-widths, sm),
+    navigation-header: 60px,
   ),
   md: (
     container: map.get($container-max-widths, md),
+    navigation-header: 70px,
   ),
   lg: (
     container: map.get($container-max-widths, lg),
+    navigation-header: 80px,
   ),
   xl: (
     container: map.get($container-max-widths, xl),
+    navigation-header: 90px,
   ),
   xxl: (
     container: map.get($container-max-widths, xxl),
+    navigation-header: 100px,
   ),
 );
 
 /* ****************************************************** */
+
 /* Spacing
 /* ****************************************************** */
 
 $enable-negative-margins: true;
-
 $factor: 4px; //  0.25rem
 $sizes-regular: ();
 
@@ -284,12 +285,11 @@ $sizes-regular: map.merge(
     100: 100 * $factor,
   )
 );
-
 $sizes-irregular: ();
 $factor: 1px; // 0.0625rem
 
 @for $i from 1 through 200 {
-  @if ($i % 4 != 0) {
+  @if $i % 4 != 0 {
     $sizes-irregular: map.merge($sizes-irregular, (i-#{$i}: $i * $factor));
   }
 }
@@ -303,55 +303,58 @@ $sizes-irregular: map.merge(
 );
 
 /* ****************************************************** */
+
 /* Box shadows 
 /* ****************************************************** */
 
 $box-shadows: (
-  custom-property-prefix: 'box-shadow',
+  custom-property-name: 'box-shadow',
   values: (
-    focus: 0 0 0 var(--shadow-width, 0.25rem) rgba(var(--clr-primary-rgb), 0.25),
-    focus-inset: inset 0 0 0 0.25rem rgba(var(--clr-primary-rgb), 0.25),
-    null: 0 0.5rem 1rem rgba(var(--clr-dark-rgb), 0.15),
-    sm: 0 0.125rem 0.25rem rgba(var(--clr-dark-rgb), 0.075),
-    lg: 0 1rem 3rem rgba(var(--clr-dark-rgb), 0.175),
-    inset: inset 0 1px 2px rgba(var(--clr-dark-rgb), 0.075),
+    focus: 0 0 0 var(--shadow-width, 0.25rem) rgb(var(--clr-primary-rgb), 0.25),
+    focus-inset: inset 0 0 0 0.25rem rgb(var(--clr-primary-rgb), 0.25),
+    null: 0 0.5rem 1rem rgb(var(--clr-dark-rgb), 0.15),
+    sm: 0 0.125rem 0.25rem rgb(var(--clr-dark-rgb), 0.075),
+    lg: 0 1rem 3rem rgb(var(--clr-dark-rgb), 0.175),
+    inset: inset 0 1px 2px rgb(var(--clr-dark-rgb), 0.075),
   ),
 );
 
 /* ****************************************************** */
+
 /* Z-index 
 /* ****************************************************** */
 
 $z-indeces: (
-  custom-property-prefix: 'z',
+  custom-property-name: 'z',
   values: (
-    n2: -2,
-    n1: -1,
-    0: 0,
-    1: 999,
-    2: 998,
-    3: 997,
-    4: 996,
+    1st: 999,
+    2nd: 998,
+    3rd: 997,
+    last: -999,
+    2nd-last: -998,
+    3rd-last: -997,
   ),
 );
 
 /* ****************************************************** */
+
 /* Borders  
 /* ****************************************************** */
 
 $borders: (
-  custom-property-prefix: 'border',
+  custom-property-name: 'border',
   values: (
-    main: 1px solid var(--#{$cp-namespace}clr-zero),
+    main: 1px solid var(--#{$cp-namespace}clr-primary),
   ),
 );
 
 /* ****************************************************** */
+
 /* Border radius 
 /* ****************************************************** */
 
 $border-radius: (
-  custom-property-prefix: 'radius',
+  custom-property-name: 'rounded',
   values: (
     sm: 4px,
     base: 8px,
@@ -360,40 +363,33 @@ $border-radius: (
 );
 
 /* ****************************************************** */
+
 /* Transitions
 /* ****************************************************** */
 
 $transitions: (
-  custom-property-prefix: 'transition',
+  custom-property-name: 'transition',
   values: (
-    focus: 0.15s ease-in-out,
-    base: all 0.2s ease-in-out,
-    fade: opacity 0.15s linear,
-    collapse: height 0.35s ease,
-    collapse-width: width 0.35s ease,
+    base: 250ms ease,
+    fade: 300ms ease,
+    movement: 200ms linear,
+
     bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5),
   ),
 );
 
 /* ****************************************************** */
+
 /* Font family
 /* ****************************************************** */
 
 $font-families: (
   custom-property-name: 'font-family',
-  values: (
-    main: (
-      'Arial',
-      sans-serif,
-    ),
-    sub: (
-      'Liberation Mono',
-      monospace,
-    ),
-  ),
+  values: null,
 );
 
 /* ****************************************************** */
+
 /* Maps
 /* ****************************************************** */
 
@@ -420,7 +416,6 @@ $percentage-values: (
   95: 95%,
   100: 100%,
 );
-
 $decimal-percentage-values: (
   0: 0,
   5: 0.05,
@@ -453,7 +448,6 @@ $decimal-percentage-values: (
   120: 1.2,
   130: 1.3,
 );
-
 $viewport-height-values: (
   25: 25vh,
   50: 50vh,
@@ -466,7 +460,6 @@ $viewport-width-values: (
   75: 75vw,
   100: 100vw,
 );
-
 $border-widths: (
   n3: -3px,
   n2: -2px,
@@ -498,7 +491,6 @@ $border-widths: (
   '04lh': 0.4lh,
   '05lh': 0.5lh,
 );
-
 $border-styles: (
   solid: solid,
   dashed: dashed,
@@ -508,7 +500,6 @@ $border-styles: (
   double: double,
   inset: inset,
 );
-
 $duration-values-map: (
   100: 100ms,
   200: 200ms,
@@ -525,7 +516,6 @@ $duration-values-map: (
   2500: 2500ms,
   3000: 3000ms,
 );
-
 $font-weights: (
   thin: 100,
   extra-light: 200,

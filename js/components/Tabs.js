@@ -1,26 +1,26 @@
-import { Utils } from '../utils';
+import { toArray, select, wrap } from '../utils';
 
 export class Tabs {
   constructor() {
-    this._rootEls = Utils.toArray('.tabs');
+    this._rootEls = toArray('.tabs');
+
     if (!this._rootEls) return;
     let i = this._rootEls.length; // total number of .tabs components on the page
 
     while (i--) {
       this._initRootEl(this._rootEls[i]);
     }
+    console.log('clicked in constructor');
   }
 
   _initRootEl(rootEl) {
-    rootEl.tabListEl = Utils.$('.tabs__list', rootEl);
-    rootEl.tabEls = Utils.toArray('.tabs__tab', rootEl.tabListEl);
-    rootEl.currentActiveTabEl = Utils.$("[aria-selected='true']", rootEl);
-    rootEl.wrapperPanelsEl = Utils.$('.tabs__wrapper-panels', rootEl);
+    rootEl.tabListEl = select('.tabs__list', rootEl);
+    rootEl.tabEls = toArray('.tabs__tab', rootEl.tabListEl);
+    rootEl.currentActiveTabEl = select("[aria-selected='true']", rootEl);
+    rootEl.wrapperPanelsEl = select('.tabs__wrapper-panels', rootEl);
+
     // Prevent selecting panels from nested tabs
-    rootEl.panelEls = Utils.toArray(
-      ':scope > .tabs__panel',
-      rootEl.wrapperPanelsEl
-    );
+    rootEl.panelEls = toArray(':scope > .tabs__panel', rootEl.wrapperPanelsEl);
 
     // Event Listener
     rootEl.tabListEl.addEventListener('click', this._activeTab.bind(this));
@@ -43,14 +43,9 @@ export class Tabs {
   _moveTab(event, direction = 0) {
     event.preventDefault();
     const rootEl = event.currentTarget.closest('.tabs');
-    const currentActiveTabIndex = rootEl.tabEls.indexOf(
-      rootEl.currentActiveTabEl
-    );
+    const currentActiveTabIndex = rootEl.tabEls.indexOf(rootEl.currentActiveTabEl);
 
-    const nextTabEl = Utils.wrapArray(
-      rootEl.tabEls,
-      currentActiveTabIndex + direction
-    );
+    const nextTabEl = wrap(rootEl.tabEls, currentActiveTabIndex + direction);
 
     this._setTab(rootEl.currentActiveTabEl, false, rootEl);
     this._setTab(nextTabEl, true, rootEl);
@@ -75,10 +70,11 @@ export class Tabs {
   }
 
   _activeTab(e) {
+    console.log('clicked active tab');
+
     const clickedTabEl = e.target.closest('.tabs__tab');
 
-    if (clickedTabEl === e.currentTarget.currentActiveTabEl || !clickedTabEl)
-      return;
+    if (clickedTabEl === e.currentTarget.currentActiveTabEl || !clickedTabEl) return;
 
     const rootEl = e.currentTarget.closest('.tabs');
 
@@ -92,9 +88,7 @@ export class Tabs {
 function reset() {
   const FIRST_TAB_INDEX = 0;
 
-  let activeTabEls = this._rootEl.querySelectorAll(
-    '.tabs__tab[aria-selected="true"]'
-  );
+  let activeTabEls = this._rootEl.querySelectorAll('.tabs__tab[aria-selected="true"]');
 
   activeTabEls.forEach((tab, i) => {
     let activeTabElIndex = this._tabListEls[i].tabEls.indexOf(tab);

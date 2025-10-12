@@ -9,6 +9,7 @@
   &__list-item {
     padding-left: 0.5rem;
   }
+
   &__list-item + &__list-item::before {
     content: var(--breadcrumb-divider, '/');
     padding-right: 0.5rem;

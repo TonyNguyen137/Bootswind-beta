@@ -10,11 +10,15 @@ Modifications may have been made to the original code.
 @use 'sass:list';
 
 @if $enable-container-classes {
+  %container-base {
+    @include make-container;
+  }
+
   // Single container class with breakpoint max-widths
   .container,
   // 100% wide container at all breakpoints
   .container-fluid {
-    @include make-container();
+    @extend %container-base;
   }
 
   // Responsive containers that are 100% wide until a breakpoint
@@ -22,19 +26,20 @@ Modifications may have been made to the original code.
     $bp: breakpoint-prefix($breakpoint);
 
     .#{$bp}container {
-      @extend .container-fluid;
+      @extend %container-base;
     }
 
     // The max-container for the last breakpoint is redundant because it matches the default container's size.
     $last-breakpoint: list.nth(map.keys($container-max-widths), -1);
-    @if ($enable-max-container-classes and $breakpoint != $last-breakpoint) {
+
+    @if $enable-max-container-classes and $breakpoint != $last-breakpoint {
       .#{$bp}container-max {
-        @extend .container-fluid;
+        @extend %container-base;
       }
     }
 
     // Single fluid container class with max-widths
-    @if ($enable-max-container-fluid-classes) {
+    @if $enable-max-container-fluid-classes {
       .#{$bp}container-fluid {
         @include make-container-fluid-max($container-max-width);
       }
@@ -49,20 +54,20 @@ Modifications may have been made to the original code.
       $extend-breakpoint: true;
 
       @each $name, $width in $grid-breakpoints {
-        @if ($extend-breakpoint) {
+        @if $extend-breakpoint {
           .#{breakpoint-prefix($name, $grid-breakpoints)}container {
             @extend %responsive-container-#{$breakpoint};
           }
 
-          //Once the current breakpoint is reached, stop extending
-          @if ($breakpoint == $name) {
+          // Once the current breakpoint is reached, stop extending
+          @if $breakpoint == $name {
             $extend-breakpoint: false;
           }
         }
 
         // create max containers up to their breakpoint
-        @if ($enable-max-container-classes) {
-          @if (breakpoint-prefix($name, $grid-breakpoints) != '') {
+        @if $enable-max-container-classes {
+          @if breakpoint-prefix($name, $grid-breakpoints) != '' {
             $condition: map.get($grid-breakpoints, $name) >=
               map.get($grid-breakpoints, $breakpoint) and
               $name !=
@@ -71,7 +76,7 @@ Modifications may have been made to the original code.
             // @debug condition;
             // @debug $name, $last-breakpoint;
             // @debug $name != $last-breakpoint;
-            @if ($condition) {
+            @if $condition {
               .#{breakpoint-prefix($name, $grid-breakpoints)}container-max {
                 @extend %responsive-container-#{$breakpoint};
               }

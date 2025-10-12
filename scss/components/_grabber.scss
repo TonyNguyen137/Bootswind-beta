@@ -4,10 +4,13 @@
 
   &__slider {
     overflow-x: auto;
+
     // IE and Edge
     -ms-overflow-style: none;
+
     // Firefox
     scrollbar-width: none;
+
     // Chrome, Safari and Opera
     &::-webkit-scrollbar {
       display: none;
@@ -20,9 +23,6 @@
     justify-content: space-between;
 
     * {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
   }

@@ -1,5 +1,6 @@
 .offcanvas {
   $panel-width: 400px;
+
   &__toggle {
     outline: 2px dashed black;
     border: none;
@@ -11,7 +12,6 @@
     width: $panel-width;
     max-width: 100%;
     position: fixed;
-
     outline: 5px dashed black;
 
     &--start {
@@ -39,7 +39,6 @@
       left: 0;
       right: 0;
       width: revert;
-
       min-height: 100px;
     }
   }

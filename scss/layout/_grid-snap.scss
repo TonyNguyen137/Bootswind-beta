@@ -1,23 +1,6 @@
 @use '../abstracts' as *;
 @use 'sass:map';
 
-/* == responsive grid without media queries == */
-.grid-res {
-  --min-col-size: 275px;
-  --auto-mode: auto-fill;
-
-  padding: 12px;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(var(--auto-mode), minmax(min(var(--min-col-size), 100%), 1fr));
-
-  /* modifiers */
-  &--auto-fit {
-    --auto-mode: auto-fit;
-  }
-}
-
-/* == grid snap == */
 .grid-snap {
   --grid-flow: column;
   --overflow-x: auto;
@@ -32,8 +15,10 @@
 
   & > * {
     width: var(--col-snap-width);
+
     /* Choose how to align children on scroll */
     scroll-snap-align: var(--snap-align);
+
     /* Prevents scrolling past more than one child */
     scroll-snap-stop: var(--snap-stop);
   }

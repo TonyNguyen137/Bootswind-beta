@@ -6,5 +6,4 @@ dist/
 dist/
 *.log
 
-notes.md
 scss/test.scss

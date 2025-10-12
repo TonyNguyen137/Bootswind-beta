@@ -1,9 +1,8 @@
-import { Utils } from '../utils';
+import { select } from '../utils';
 
 export class Grabber {
   constructor(selector) {
-    this._grabberEl =
-      typeof selector === 'string' ? Utils.select(selector) : selector;
+    this._grabberEl = typeof selector === 'string' ? select(selector) : selector;
     this._grabberInnerEl = this._grabberEl.querySelector('.grabber__inner');
     this._grabbed = false;
     this._isInit = false;
@@ -58,8 +57,7 @@ export class Grabber {
   _getScrollPercentage() {
     return (
       (this._grabberInnerEl.parentElement.scrollLeft /
-        (this._grabberInnerEl.parentElement.scrollWidth -
-          this._grabberInnerEl.parentElement.clientWidth)) *
+        (this._grabberInnerEl.parentElement.scrollWidth - this._grabberInnerEl.parentElement.clientWidth)) *
       100
     );
   }

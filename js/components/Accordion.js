@@ -1,6 +1,6 @@
 import { toArray } from '../utils';
 export class Accordion {
-  constructor(rootElSelector = '.accordion', config = {}) {
+  constructor(rootElSelector = '.accordion') {
     this._rootEls = typeof rootElSelector === 'string' ? toArray(rootElSelector) : [rootElSelector];
     if (!this._rootEls.length) return;
     this._rootEls.forEach((rootEl) => this._initRootEl(rootEl));
@@ -28,7 +28,6 @@ export class Accordion {
 
     if (isSameToggler) {
       // Collapse current
-      console.log('same');
 
       this._toggleAccordionItem(togglerEl, false);
       rootEl._currentActiveItem = null;

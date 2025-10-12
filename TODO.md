@@ -1,162 +1,21 @@
-# function normal
+# Todos
 
-```sh
-   (
-    function: 'normal', // default
-    local-vars: (
-      'alpha': 1,
-    ),
-    state: ':active' ':focus',
-    class: gap, // if class is not provided, key fallback
-    values: map.merge($sizes-regular, $sizes-irregular),
-    responsive: true,
-    property: gap,
-    important: true,
-  ),
-```
+## components
 
-# function fluid
+- accordion input fixed, sodass mein auch mehrere dom objkect üvergeben kann anstatt string
+- akkordion open at item level not button
+- accordion öffnen lassen beim start
+- modal
+- highighter machen, anwendbar bei tabs oder filter
+- dropdown ausschalten wenn clicked wo anders
+- navbalink aria-current markieren mit underline oder sonst was
+- Navbar Module Tabber funktioniert nur bei navbar\_\_links, bei Button geht nicht, statt klasse selekten, alle focusable - elemente selekten
+- dropdown standalone und in navbar muss funktionieren
+- close dropdown when focus left
 
-```sh
-    (
-      function: 'fluid',
-      class: px,
-      property: padding-inline,
-      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
-      responsive: true,
-      important: true,
-    )
-```
+## utilities
 
-# function custom-property-values
+-@supports utilities?
+spacing and font system like on https://utopia.fyi/?
 
-```sh
-    (
-      function: 'custom-property-value',
-      class: bg,
-      property: background-color,
-      custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null)
-      values: if(meta.variable-exists(spacing-clamp), $spacing-clamp, null),
-      responsive: true,
-      important: true,
-    )
-```
-
-# function properties-advanced
-
-```sh
-   (
-    function: 'properties-advanced',
-    class: fixed-bottom,
-    props: (
-      position: fixed,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      z-index: var(--z-1, 999),
-    ),
-    responsive: true,
-    important: true,
-  ),
-```
-
-# function nested-rules
-
-```sh
-   (
-    class: revert-spacing,
-    complex-selectors: (
-      padding: revert,
-      margin: revert,
-      '*': (
-        padding: revert,
-        margin: revert,
-      ),
-    ),
-   )
-```
-
-# function css-var
-
-```sh
-    (
-    function: 'css-var',
-    css-variable-name: border-clr,
-    class: border-clr,
-    custom-property-prefix: if(meta.variable-exists(color-prefix), $color-prefix, null),
-    values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
-    // values: map-loop($selected-theme-rgb-colors, rgba-css-var-advanced, '$key', null, $color-prefix),
-    // values: if(meta.variable-exists(selected-theme-hex-colors), $selected-theme-hex-colors, null),
-    )
-```
-
-https://picsum.photos/id/237/200/300
-
-// am überlegen
-custom media query für utilities
-remove Utils class
-accordion input fixed, sodass mein auch mehrere dom objkect üvergeben kann anstatt string
-accordion öffnen lassen beim start
-transition überbearbeiten
-flow space --custom property responsive / function: 'nested-rules' with breakpoints,
-
-not mandatory:
-sticky table
-modal
-mdn sticky scrollable sidebar
-
-responsive pattern custom properties überarbeiten
-@supports
-patterns, ohne function?
-
-utilities check
-
-- border
-- transition
-- prefix in namespace umbennen, cp-namespace
-- einige SAchen in variables.css cleanen
-- namespace-class testen
-- z-index
-  -synced variablen
-
-vendors > splide + Leaflet
-
-text-decoration > decoration, utility + pattern
-before:content before:wh before:bg
-in patterns custom variabbles adden
-hover:text-underline in hover:underline ändern
-values dashed entfernen wenn man class so was hat class: hover\:,
-values: (
-underline: underline,
-no-underline: none,
-overline: overline,
-line-through: line-through,
-),
-
-      children a text inherit
-
-
-      Navbar Module Tabber funktioniert nur bei navbar__links, bei Button geht nicht, statt klasse selekten, alle focusable elemente selekten
-
-      navbalink aria-current markieren mit underline oder sonst was
-
-      dropdown ausschalten wenn clicked wo anders
-
-
-      min-height flzuid utility machen
-
-             justify-stretch: stretch,
-
-subgrid anpassen
-'grid-template-rows': (
-property: grid-template-rows,
-class: grid-template-rows,
-values: subgrid,
-),
-object-position utility responsive
-
-highighter machen, anwendbar bei tabs oder filter
-
-grid-res responsive machen, und padding entfernen
-
-komisches border bei pagination
+function apply-custom-prop nochmal anschauen wegen custom-prop-prefix

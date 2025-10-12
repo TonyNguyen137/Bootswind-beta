@@ -1,11 +1,11 @@
-# Project name - Front-end Style Guide
+# ${Your Project name} - Front-end Style Guide
 
 ## Layout
 
 The designs were created to the following widths:
 
-- Mobile: 375px
-- Desktop: 1480px
+- Mobile: ${mobile-width}
+- Desktop: ${desktop-width}
 
 > 💡 These are just the design sizes. Ensure content is responsive and meets WCAG requirements by testing the full range of screen sizes from 320px to large screens.
 
@@ -50,3 +50,5 @@ border-main: 1px solid #9e9e9e
 
 radius-main: 8px
 radius-subtle: 4px
+
+## Spacing

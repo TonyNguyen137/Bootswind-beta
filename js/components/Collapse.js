@@ -1,4 +1,4 @@
-import { Utils } from '../utils';
+import { toArray, select } from '../utils';
 
 const TOGGLE_TEXT = {
   expanded: 'weniger anzeigen',
@@ -7,7 +7,7 @@ const TOGGLE_TEXT = {
 
 export class Collapse {
   constructor(selector = '.collapseRootEl') {
-    this._rootEls = Utils.toArray(selector);
+    this._rootEls = toArray(selector);
 
     if (!this._rootEls) return;
 
@@ -19,9 +19,9 @@ export class Collapse {
   }
 
   _init(rootEl) {
-    rootEl.togglerEl = Utils.select('.btn--toggler', rootEl);
-    rootEl.collapseEl = Utils.select('.collapseEl', rootEl);
-    rootEl.labelEl = Utils.select('.text-label', rootEl);
+    rootEl.togglerEl = select('.btn--toggler', rootEl);
+    rootEl.collapseEl = select('.collapseEl', rootEl);
+    rootEl.labelEl = select('.text-label', rootEl);
 
     rootEl.togglerEl.addEventListener('click', (e) => this._handleClick(e, rootEl));
     rootEl.collapseEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));

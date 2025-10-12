@@ -55,6 +55,7 @@
           background: var(--_bg);
           grid-column: 1 / 2;
         }
+
         > *:not(img):last-child::before {
           grid-column: 4 / 5;
         }

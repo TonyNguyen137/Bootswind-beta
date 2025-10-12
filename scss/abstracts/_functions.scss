@@ -13,14 +13,13 @@ Modifications may have been made to the original functions.
 @use 'variables' as *;
 
 @function to-rem($value, $precision: 3) {
-  @debug HERE meta.type-of($value);
-  @debug value $value;
   @return px-to-rem($value, $precision);
 }
 
 @function px-to-rem($value, $precision: 3) {
   $base-font-size: 16;
   $_value: if(math.is-unitless($value), $value, strip-unit($value));
+
   @return round-to(math.div($_value, $base-font-size), $precision) * 1rem;
 }
 
@@ -31,13 +30,16 @@ Modifications may have been made to the original functions.
 @function px-to-em($value, $precision: 3) {
   $base-font-size: 16;
   $_value: if(math.is-unitless($value), $value, strip-unit($value));
+
   @return round-to(math.div($_value, $base-font-size), $precision) * 1em;
 }
 
 @function round-to($number, $precision: 4) {
   $factor: math.pow(10, $precision);
+
   @return math.div(math.round($number * $factor), $factor);
 }
+
 @function apply-unit($value, $unit) {
   @return #{$value}#{$unit}; // Ensures no space
 }
@@ -54,7 +56,6 @@ Modifications may have been made to the original functions.
   $relative-to: $relative-to;
   $threshold-unit: $threshold-unit;
   $preferred-unit: $preffered-unit;
-
   $min-size: $min-size;
   $max-size: $max-size;
 
@@ -70,13 +71,11 @@ Modifications may have been made to the original functions.
   $delta-size: $max-size - $min-size;
   $delta-viewport: $max-viewport - $min-viewport;
   $change: round-to(math.div($delta-size, $delta-viewport), 6);
-
   $preferred: if(
     $preferred-unit == 'rem',
     round-to(math.div($max-size - ($max-viewport * $change), 16) * 1rem, 4),
     round-to($max-size - ($max-viewport * $change), 4) * 1px
   );
-
   $rate-of-change: null;
 
   @if $relative-to == 'viewport' {
@@ -89,10 +88,9 @@ Modifications may have been made to the original functions.
 
   $min-size: if($threshold-unit == 'rem', px-to-rem($min-size), $min-size * 1px);
   $max-size: if($threshold-unit == 'rem', px-to-rem($max-size), $max-size * 1px);
-
   $should-swap: $min-size > $max-size;
 
-  @if ($should-swap) {
+  @if $should-swap {
     $temp: $min-size;
     $min-size: $max-size;
     $max-size: $temp;
@@ -130,13 +128,14 @@ Modifications may have been made to the original functions.
 
   @if $unit == rem {
     $unitless-number: calc($value / 1rem);
-    @return multiplyBy(16, $unitless-number);
+
+    @return multiply-by(16, $unitless-number);
   }
 
   @if $unit == em {
     $unitless-number: calc($value / 1em);
 
-    @return multiplyBy(16, $unitless-number);
+    @return multiply-by(16, $unitless-number);
   }
 
   @if $unit == px {
@@ -148,9 +147,10 @@ Modifications may have been made to the original functions.
   @return $value;
 }
 
-@function multiplyBy($factor: 16, $value) {
+@function multiply-by($factor: 16, $value) {
   @return $factor * $value;
 }
+
 // @function clr($color, $shade) {
 //   @if map.has-key($colors, $color, $shade) {
 //     @return map.get($colors, $color, $shade);
@@ -177,12 +177,11 @@ Modifications may have been made to the original functions.
   // @debug before meta.type-of($name);
   // @debug name $name;
 
-  @if breakpoint-min($name, $breakpoints) == null {
+  @if not breakpoint-min($name, $breakpoints) {
     @return '';
   } @else if meta.type-of($name) == number {
     // @debug is number;
     @return '\\00003#{$name}\\:';
-
     @return escape-leading-digit(to-string($name));
   } @else {
     @return '#{$name}\\:';
@@ -190,12 +189,13 @@ Modifications may have been made to the original functions.
 
   // @return if(breakpoint-min($name, $breakpoints) == null, '', '#{$name}\\:');
 }
+
 @function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
   @return if(breakpoint-min($name, $breakpoints) == null, '', '-#{$name}');
 }
 
 @function breakpoint-key($name, $breakpoints: $grid-breakpoints) {
-  @if (breakpoint-min($name, $breakpoints) == null) {
+  @if not breakpoint-min($name, $breakpoints) {
     @return '';
   }
 
@@ -208,6 +208,7 @@ Modifications may have been made to the original functions.
   }
 
   $first: string.slice($value, 1, 1); // first character
+
   @return string.index('0123456789', $first) != null;
 }
 
@@ -233,6 +234,10 @@ Modifications may have been made to the original functions.
 
 @function null-safe-suffix($value) {
   @return if($value == null, '', '-#{$value}');
+}
+
+@function null-safe-value($value) {
+  @return if($value == null, '', '#{$value}');
 }
 
 @function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
@@ -292,6 +297,7 @@ Modifications may have been made to the original functions.
     // @debug value $value;
 
     $_args: ();
+
     @each $arg in $args {
       $_args: list.append(
         $_args,
@@ -304,6 +310,7 @@ Modifications may have been made to the original functions.
 
       // @debug _args $_args;
     }
+
     // @debug _args after loop $_args;
 
     $_map: map.merge(
@@ -331,6 +338,7 @@ Modifications may have been made to the original functions.
   @if string.index($string, $prefix) == 1 {
     @return string.slice($string, string.length($prefix) + 1);
   }
+
   @return $string;
 }
 
@@ -340,6 +348,7 @@ Modifications may have been made to the original functions.
 
     @return string.slice($string, 1, $sub-string-index);
   }
+
   @return $string;
 }
 
@@ -350,6 +359,7 @@ Modifications may have been made to the original functions.
 @function to-rgb($value) {
   // @debug value $value;
   $_value: if($value == null, #000, $value);
+
   @return color.channel($_value, 'red'), color.channel($_value, 'green'),
     color.channel($_value, 'blue');
 }
@@ -391,6 +401,7 @@ Modifications may have been made to the original functions.
       var(--#{$cp-namespace}#{$target}-opacity)
     );
   }
+
   @if $identifier == 'body' and $target == 'text' {
     @return rgba(
       var(--#{$cp-namespace}#{$identifier}-color-rgb),
@@ -416,6 +427,7 @@ Modifications may have been made to the original functions.
       var(--#{$cp-namespace}#{$opacity-variable-name}, 1)
     );
   }
+
   @if $identifier == 'body' and $target == 'text' {
     @return rgba(
       var(--#{$cp-namespace}#{$identifier}-color-rgb),
@@ -434,7 +446,7 @@ Modifications may have been made to the original functions.
   // @debug axis $axis;
   @if $axis == x {
     @return translateX(#{$value});
-  } @else if $axis ==y {
+  } @else if $axis == y {
     @return translateY(#{$value});
   } @else {
     @return translate(#{$value});
@@ -442,7 +454,7 @@ Modifications may have been made to the original functions.
 }
 
 @function add-hyphen($string, $position: 'append', $separator: '-') {
-  @if $string != null {
+  @if $string {
     // Handle empty string
     @if $string == '' {
       @return $string;
@@ -467,6 +479,7 @@ Modifications may have been made to the original functions.
       @if $first-char != $separator {
         $result: $separator + $result;
       }
+
       @if $last-char != $separator {
         $result: $result + $separator;
       }
@@ -474,6 +487,7 @@ Modifications may have been made to the original functions.
 
     @return $result;
   }
+
   @return null;
 }
 
@@ -486,21 +500,26 @@ Modifications may have been made to the original functions.
     // @debug list value list.nth($list, 1);
     @return list.nth($list, 1);
   }
+
   @return null;
 }
 
 @function negativify-map($map) {
   $result: ();
+
   @each $key, $value in $map {
+    $negative-value: -1 * $value;
+
     @if $key != 0 {
       $result: map.merge(
         $result,
         (
-          $key: -$value,
+          $key: $negative-value,
         )
       );
     }
   }
+
   @return $result;
 }
 

@@ -1,11 +1,15 @@
 export class Tabber {
   constructor({ offcanvasEl, closeBtnEl }) {
     this._offcanvasEl = offcanvasEl;
-    this._listEl = offcanvasEl.querySelector('.navbar__list');
+    this._offcanvasBodyEl = offcanvasEl.querySelector('.navbar__offcanvas-body');
 
     // The first and last tabbable elements inside the offcanvas menu
     this._firstTabbableEl = closeBtnEl;
-    this._lastTabbableEl = Array.from(this._listEl.querySelectorAll('.navbar__link, .navbar__dropdown-toggle')).at(-1);
+    this._lastTabbableEl = Array.from(
+      this._offcanvasBodyEl.querySelectorAll(
+        '.navbar__link:not(.disabled), dropdown__toggle, :scope > form input, :scope > button'
+      )
+    ).at(-1);
 
     this._boundKeydownHandler = this._keydownHandler.bind(this);
   }
