@@ -4,17 +4,17 @@ Source: https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
 The code used in accordance with Bootstrap's open-source license (MIT).
 Modifications may have been made to the original code.
 */
-@use 'sass:map';
-@use 'sass:string';
-@use 'sass:list';
-@use 'sass:math';
+@use "sass:map";
+@use "sass:string";
+@use "sass:list";
+@use "sass:math";
 
 /* ****************************************************** */
 
 /* General setting
 /* ****************************************************** */
 
-$cp-namespace: '';
+$cp-namespace: "";
 $enable-transitions: true;
 $enable-reduced-motion: true;
 
@@ -33,7 +33,7 @@ $grid-row-columns: 6;
 /* Container
 /* ****************************************************** */
 
-$enable-container-classes: false;
+$enable-container-classes: true;
 $enable-max-container-classes: false;
 $enable-max-container-fluid-classes: false;
 $container-padding: 12px;
@@ -42,10 +42,11 @@ $container-padding: 12px;
 /* Container free layout
 /* ****************************************************** */
 
-$enable-container-free-layout: true;
+$enable-container-free-layout: false;
 $content-max-size: 1340px;
 $content-padding: 2rem;
 $content-breakout: 4rem;
+
 /* ******************************************************* */
 
 /* Breakpoints 
@@ -104,32 +105,26 @@ $container-query-sizes: ();
 
 $color-prefix: clr-;
 $hover-prefix: hover-;
-$primary: #0d6efd;
-$secondary: #6c757d;
-$success: #198754;
-$info: #0dcaf0;
-$warning: #ffc107;
-$danger: #dc3545;
-$light: #f8f9fa;
-$dark: #212529;
+
 $color-theme: (
   default: (
     color: (
-      'primary': $primary,
-      'secondary': $secondary,
-      'success': $success,
-      'info': $info,
-      'warning': $warning,
-      'danger': $danger,
-      'light': $light,
-      'dark': $dark,
-      'zero': #000,
-      'one': #fff,
-      'black': #000,
-      'white': #fff,
+      "primary": #0d6efd,
+      "secondary": #6c757d,
+      "success": #198754,
+      "info": #0dcaf0,
+      "warning": #ffc107,
+      "danger": #dc3545,
+      "light": #f8f9fa,
+      "dark": #212529,
+      "neutral": #dee2e6,
+      "zero": #000,
+      "one": #fff,
+      "black": #000,
+      "white": #fff,
     ),
     hover: (
-      'gold': #ffd700,
+      "gold": #ffd700,
     ),
   ),
 );
@@ -167,13 +162,13 @@ $font-size-clamp: (
       1800: 60,
     ),
     // default rem
-    threshold-unit: 'rem',
+    threshold-unit: "rem",
     // default viewport
-    relative-to: 'viewport',
+    relative-to: "viewport",
   ),
 );
 $spacing-clamp: (
-  'fluid-sp-32-150': (
+  "fluid-sp-32-150": (
     // default true
     create-custom-property: true,
     threshold: (
@@ -181,13 +176,13 @@ $spacing-clamp: (
       1400px: 150,
     ),
     // default px
-    threshold-unit: 'px',
+    threshold-unit: "px",
     // default viewport
-    relative-to: 'viewport',
+    relative-to: "viewport",
   ),
 );
 $container-clamp: (
-  'fluid-ct-16-48': (
+  "fluid-ct-16-48": (
     // default true
     create-custom-property: true,
     threshold: (
@@ -195,9 +190,9 @@ $container-clamp: (
       992px: 48,
     ),
     // default px
-    threshold-unit: 'rem',
+    threshold-unit: "rem",
     // default container
-    relative-to: 'container',
+    relative-to: "container",
   ),
 );
 
@@ -207,10 +202,10 @@ $container-clamp: (
 /* ************************************************************* */
 
 $simple-custom-properties: (
-  'container-padding': (
+  "container-padding": (
     value: $container-padding,
   ),
-  'example-custom-property': (
+  "example-custom-property": (
     value: 32px,
     property: font-size,
     class: example-class,
@@ -224,14 +219,14 @@ $simple-custom-properties: (
 
 $responsive-custom-properties: (
   xs: (
-    'container-padding': (
+    "container-padding": (
       value: $container-padding,
 
       // optional utility class
       property: padding-inline,
       class: border-width-container,
     ),
-    'navigation-header': (
+    "navigation-header": (
       value: 50px,
       //optional
       property: height,
@@ -308,7 +303,7 @@ $sizes-irregular: map.merge(
 /* ****************************************************** */
 
 $box-shadows: (
-  custom-property-name: 'box-shadow',
+  custom-property-name: "box-shadow",
   values: (
     focus: 0 0 0 var(--shadow-width, 0.25rem) rgb(var(--clr-primary-rgb), 0.25),
     focus-inset: inset 0 0 0 0.25rem rgb(var(--clr-primary-rgb), 0.25),
@@ -325,7 +320,7 @@ $box-shadows: (
 /* ****************************************************** */
 
 $z-indeces: (
-  custom-property-name: 'z',
+  custom-property-name: "z",
   values: (
     1st: 999,
     2nd: 998,
@@ -342,7 +337,7 @@ $z-indeces: (
 /* ****************************************************** */
 
 $borders: (
-  custom-property-name: 'border',
+  custom-property-name: "border",
   values: (
     main: 1px solid var(--#{$cp-namespace}clr-primary),
   ),
@@ -354,10 +349,10 @@ $borders: (
 /* ****************************************************** */
 
 $border-radius: (
-  custom-property-name: 'rounded',
+  custom-property-name: "rounded",
   values: (
     sm: 4px,
-    base: 8px,
+    base: 6px,
     lg: 12px,
   ),
 );
@@ -368,7 +363,7 @@ $border-radius: (
 /* ****************************************************** */
 
 $transitions: (
-  custom-property-name: 'transition',
+  custom-property-name: "transition",
   values: (
     base: 250ms ease,
     fade: 300ms ease,
@@ -384,7 +379,7 @@ $transitions: (
 /* ****************************************************** */
 
 $font-families: (
-  custom-property-name: 'font-family',
+  custom-property-name: "font-family",
   values: null,
 );
 
@@ -485,11 +480,11 @@ $border-widths: (
   18: 18px,
   19: 19px,
   20: 20px,
-  '01lh': 0.1lh,
-  '02lh': 0.2lh,
-  '03lh': 0.3lh,
-  '04lh': 0.4lh,
-  '05lh': 0.5lh,
+  "01lh": 0.1lh,
+  "02lh": 0.2lh,
+  "03lh": 0.3lh,
+  "04lh": 0.4lh,
+  "05lh": 0.5lh,
 );
 $border-styles: (
   solid: solid,
@@ -525,5 +520,5 @@ $font-weights: (
   semibold: 600,
   bold: 700,
   extra-bold: 800,
-  'black': 900,
+  "black": 900,
 );
