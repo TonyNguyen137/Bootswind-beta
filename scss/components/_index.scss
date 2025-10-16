@@ -1,22 +1,19 @@
-@forward "navbar-offcanvas";
+// @forward 'accordion';
+@forward "banner";
+// @forward 'breadcrumb';
+// @forward 'buttons';
+// @forward 'card';
+@forward "dropdown";
+// @forward 'footer';
+@forward "form";
 
+@forward "hero";
 // @forward 'navbar';
 // @forward 'navbar-light';
-@forward "dropdown";
+@forward "navbar-offcanvas";
+// @forward 'offcanvas';
 @forward "pagination";
 // @forward 'search';
-// @forward 'backdrop';
-// @forward 'breadcrumb';
-
-// @forward 'buttons';
-@forward "form";
-// @forward 'offcanvas';
-// @forward 'backdrop';
-
-// @forward 'card';
+// @forward 'spinner';
 // @forward 'suggestion';
-// @forward 'accordion';
-@forward "hero";
 // @forward 'tabs';
-// @forward 'pagination';
-// @forward 'footer';
