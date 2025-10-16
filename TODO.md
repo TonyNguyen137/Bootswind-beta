@@ -3,7 +3,7 @@
 ## components
 
 - Toast
-- Hero
+- banner
 - ToolTips
 - Spinners
 - Placeholder / Skeleton loading
