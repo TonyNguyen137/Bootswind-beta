@@ -6,6 +6,7 @@
   overflow: hidden;
   box-shadow: 0 0 0.5rem rgb(0 0 0 / 10%);
   display: grid;
+  grid-template-rows: 300px 1fr;
   gap: 16px;
 
   &__image {
@@ -37,5 +38,6 @@
 
   &--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
   }
 }
