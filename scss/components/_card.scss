@@ -1,4 +1,4 @@
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 .card {
   background-color: white;
@@ -6,8 +6,7 @@
   overflow: hidden;
   box-shadow: 0 0 0.5rem rgb(0 0 0 / 10%);
   display: grid;
-  grid-template-columns: px-to-rem(250) 1fr;
-  grid-template-rows: px-to-rem(200);
+  gap: 16px;
 
   &__image {
     width: 100%;
@@ -17,23 +16,18 @@
     object-position: center;
   }
 
+  &__body {
+    // overflow: hidden;
+    // display: -webkit-box;
+    // -webkit-box-orient: vertical;
+    // -webkit-line-clamp: 5;
+    padding: 16px;
+  }
+
   &__heading {
     font-weight: bold;
     font-size: 1.25rem;
-  }
-
-  &__body {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-  }
-
-  &__wrapper-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
+    margin-block: 0;
   }
 
   &__footer {
@@ -41,12 +35,7 @@
     margin-top: auto;
   }
 
-  &__btn-link {
-    background-color: hsl(195deg 53% 79%);
-    color: black;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
+  &--cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

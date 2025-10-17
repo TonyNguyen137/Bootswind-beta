@@ -1,5 +1,6 @@
 <div class="banner">
   <img
+    aria-hidden="true"
     src="https://picsum.photos/seed/picsum/1920/1080"
     alt=""
     class="banner__media"
@@ -8,6 +9,7 @@
 
 <section class="banner banner--overlay">
   <img
+    aria-hidden="true"
     class="banner__media"
     src="https://picsum.photos/seed/picsum/1920/1080"
     alt=""
@@ -25,9 +27,41 @@
 </section>
 
 <section class="banner">
-  <video class="banner__media" autoplay muted loop playsinline>
+  <video
+    aria-hidden="true"
+    class="banner__media"
+    autoplay
+    muted
+    loop
+    playsinline
+  >
     <source
       src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     />
   </video>
+</section>
+
+<section class="banner">
+  <video
+    aria-hidden="true"
+    class="banner__media"
+    autoplay
+    muted
+    loop
+    playsinline
+  >
+    <source
+      src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    />
+  </video>
+  <div class="container bg-white banner__container">
+    <h1 class="banner__heading">This is a huge heading inside a banner</h1>
+    <p class="banner__paragraph">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis doloribus
+      quod distinctio consequuntur, earum numquam exercitationem quasi
+      consectetur error aliquam esse impedit ipsa! Veritatis dignissimos
+      architecto laborum sint dolorum corporis!
+    </p>
+    <a href="" class="btn-cta"> read more </a>
+  </div>
 </section>

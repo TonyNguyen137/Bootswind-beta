@@ -5,7 +5,6 @@
 - Toast
 - ToolTips
 - Spinners
-- Placeholder / Skeleton loading
 - Collapse (für Textreveal)
 - accordion input fixed, sodass mein auch mehrere dom objkect üvergeben kann anstatt string
 - akkordion open at item level not button
