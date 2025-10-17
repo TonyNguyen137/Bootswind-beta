@@ -2,7 +2,8 @@
 // Version: 0.1.0-beta
 // Author: Tony Nguyen
 
-@use 'base';
-@use 'components';
-@use 'layout';
-@use 'utilities';
+@use "base";
+@use "components";
+// @use "layout";
+// @use "utilities";
+@import "bootstrap/scss/bootstrap";
