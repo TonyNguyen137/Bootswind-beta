@@ -84,6 +84,7 @@ export class Tabs {
   }
 }
 
+/*
 function reset() {
   const FIRST_TAB_INDEX = 0;
 
@@ -101,3 +102,5 @@ function reset() {
     tabListEl.currentActiveTabEl = firstTabEl;
   });
 }
+
+*/
