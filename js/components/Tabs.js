@@ -10,7 +10,6 @@ export class Tabs {
     while (i--) {
       this._initRootEl(this._rootEls[i]);
     }
-    console.log('clicked in constructor');
   }
 
   _initRootEl(rootEl) {
