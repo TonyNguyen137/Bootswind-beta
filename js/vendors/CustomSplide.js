@@ -1,9 +1,9 @@
-import { toArray, getRandomNumber } from '../utils';
-import Splide from '@splidejs/splide';
+import { toArray, getRandomNumber } from "../utils";
+import Splide from "@splidejs/splide";
 
 export class CustomSplide {
   constructor() {
-    this._rootEls = toArray('.splide');
+    this._rootEls = toArray(".splide");
 
     if (!this._rootEls) return;
 
@@ -15,30 +15,30 @@ export class CustomSplide {
   }
 
   _initRootEl(rootEl) {
-    const config = JSON.parse(rootEl.dataset.configuration ?? '{}');
+    const config = JSON.parse(rootEl.dataset.configuration ?? "{}");
 
     let splide = new Splide(rootEl, {
-      type: 'fade',
+      type: "fade",
       autoplay: true,
       interval: 3000,
       perPage: 1,
       gap: 0,
       rewind: true,
       speed: 500,
-      arrows: false,
-      role: 'group',
+      role: "group",
       pagination: true,
-      mediaQuery: 'min',
+      mediaQuery: "min",
       ...config,
     });
 
-    splide.on('overflow', function (isOverflow) {
+    splide.on("overflow", function (isOverflow) {
       isOverflow && splide.go(0);
 
       console.log(isOverflow);
 
       splide.options = {
         pagination: isOverflow,
+        arrows: isOverflow,
         drag: isOverflow,
         clones: isOverflow ? undefined : 0, // Toggle clones
       };

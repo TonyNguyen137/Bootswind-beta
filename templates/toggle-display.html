@@ -1,0 +1,175 @@
+<div class="container my-5">
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target="#toggleExample"
+		aria-expanded="false"
+		aria-controls="toggleExample">
+		displayToggling
+	</button>
+
+	<div id="toggleExample" class="mt-4 hidden">
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+</div>
+
+<hr />
+
+<h1>multi targets</h1>
+
+<div class="container my-5">
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target=".multi"
+		aria-expanded="false"
+		aria-controls="toggleExample1 toggleExample2">
+		display multi
+	</button>
+
+	<div id="toggleExample1" class="mt-4 hidden multi">
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+
+	<div id="toggleExample2" class="mt-4 hidden multi">
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+</div>
+
+<hr />
+
+<h1>close target before opening</h1>
+
+<div class="container my-5">
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target="#sampleTarget1"
+		data-bw-close-target="#sampleTarget2"
+		aria-expanded="false"
+		aria-controls="sampleTarget1">
+		close sampleTarget2, display sample target1
+	</button>
+
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target="#sampleTarget2"
+		data-bw-close-target="#sampleTarget1"
+		aria-expanded="true"
+		aria-controls="sampleTarget2">
+		close sampleTarget1, display sample target2
+	</button>
+
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target="#sampleTarget3"
+		data-bw-close-target=".closeMulti"
+		aria-expanded="false"
+		aria-controls="sampleTarget3">
+		close Multi
+	</button>
+
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target="#sampleTarget4"
+		aria-expanded="true"
+		aria-controls="sampleTarget4">
+		display sample target 4
+	</button>
+
+	<button
+		class=""
+		data-bw-toggle="display"
+		data-bw-target="#sampleTarget5"
+		aria-expanded="true"
+		aria-controls="sampleTarget5">
+		display sample target 5
+	</button>
+
+	<div id="sampleTarget1" class="mt-4 hidden">
+		<h2>Sample Target 1</h2>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+
+	<div id="sampleTarget2" class="mt-4 hidden">
+		<h2>Sample Target 2</h2>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+
+	<div id="sampleTarget3" class="mt-4 hidden">
+		<h2>Sample Target 3</h2>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+	<div id="sampleTarget4" class="mt-4 closeMulti">
+		<h2>Sample Target 4</h2>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+	<div id="sampleTarget5" class="mt-4 closeMulti">
+		<h2>Sample Target 5</h2>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi nam id dolorum corrupti nulla consectetur
+			nemo sit quas vitae odit unde a, ad fugit velit eum, provident atque perferendis laborum?
+		</p>
+	</div>
+</div>
+
+<hr />
+
+<h1>progressive Enhancement</h1>
+
+<div
+	class="container mt-10"
+	data-bw-toggle-container="display"
+	data-bw-target="collapse"
+	data-bw-text-content="test"
+	data-bw-insert-position="prepend">
+	<span>this is a test</span>
+</div>
+<div class="container">
+	<div id="collapse">
+		<p>
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam facilis tempore dolores amet accusamus vel
+			repellendus, repudiandae debitis reiciendis voluptatum saepe similique magni incidunt animi reprehenderit
+			pariatur quaerat qui vero.
+		</p>
+	</div>
+</div>
+
+<hr />
+
+<div class="container mt-10" data-bw-toggle-container="display" data-bw-target="collapse2">
+	<span>this is a test</span>
+</div>
+<div class="container">
+	<div id="collapse2">
+		<p>
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam facilis tempore dolores amet accusamus vel
+			repellendus, repudiandae debitis reiciendis voluptatum saepe similique magni incidunt animi reprehenderit
+			pariatur quaerat qui vero.
+		</p>
+	</div>
+</div>

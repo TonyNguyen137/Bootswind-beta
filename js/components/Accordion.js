@@ -1,97 +1,105 @@
 import { toArray } from '../utils';
+
+const BLOCK_NAME = '.accordion';
+
 export class Accordion {
-  constructor(rootElSelector = '.accordion') {
-    this._rootEls = typeof rootElSelector === 'string' ? toArray(rootElSelector) : [rootElSelector];
-    if (!this._rootEls.length) return;
-    this._rootEls.forEach((rootEl) => this._initRootEl(rootEl));
-  }
+	constructor() {
+		this._blockEls = toArray(BLOCK_NAME);
 
-  _initRootEl(rootEl) {
-    rootEl._itemEls = toArray('.accordion__item', rootEl);
-    rootEl._isTransitioning = false;
-    rootEl._currentActiveItem = rootEl.querySelector('[aria-expanded=true]') || null;
-    rootEl.addEventListener('click', this._handleClick.bind(this));
-    rootEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));
-  }
+		if (!this._blockEls || this._blockEls.length === 0) return;
 
-  /* == Event Handler == */
-  _handleClick(e) {
-    const togglerEl = e.target.closest('.accordion__toggler');
-    const rootEl = e.currentTarget;
+		let i = this._blockEls.length;
 
-    if (!togglerEl || rootEl._isTransitioning) return;
+		while (i--) {
+			this._init(this._blockEls[i]);
+		}
+	}
 
-    const isSameToggler = rootEl._currentActiveItem === togglerEl;
-    const isExpanded = togglerEl.ariaExpanded === 'true';
+	_init(blockEl) {
+		blockEl._itemEls = toArray(`${BLOCK_NAME}__item`, blockEl);
+		blockEl._isTransitioning = false;
+		blockEl._currentActiveItem = blockEl.querySelector('[aria-expanded=true]') || null;
+		blockEl.addEventListener('click', this._handleClick.bind(this));
+		blockEl.addEventListener('transitionend', this._handleTransitionEnd.bind(this));
+	}
 
-    rootEl._isTransitioning = true;
+	/* == Event Handler == */
+	_handleClick(e) {
+		const togglerEl = e.target.closest(`${BLOCK_NAME}__toggler`);
+		const rootEl = e.currentTarget;
 
-    if (isSameToggler) {
-      // Collapse current
+		if (!togglerEl || rootEl._isTransitioning) return;
 
-      this._toggleAccordionItem(togglerEl, false);
-      rootEl._currentActiveItem = null;
-    } else {
-      // expand new
-      this._toggleAccordionItem(togglerEl, !isExpanded);
+		const isSameToggler = rootEl._currentActiveItem === togglerEl;
+		const isExpanded = togglerEl.ariaExpanded === 'true';
 
-      // Collapse previous if exists
-      if (rootEl._currentActiveItem) {
-        this._toggleAccordionItem(rootEl._currentActiveItem, false);
-      }
+		rootEl._isTransitioning = true;
 
-      // Update reference to the currently expanded toggler
-      rootEl._currentActiveItem = togglerEl;
-    }
-  }
+		if (isSameToggler) {
+			// Collapse current
+			this._toggleAccordionItem(togglerEl, false);
+			rootEl._currentActiveItem = null;
+		} else {
+			// expand new
+			this._toggleAccordionItem(togglerEl, !isExpanded);
 
-  _handleTransitionEnd(e) {
-    if (e.propertyName !== 'height') return;
+			// Collapse previous if exists
+			if (rootEl._currentActiveItem) {
+				this._toggleAccordionItem(rootEl._currentActiveItem, false);
+			}
 
-    const collapseEl = e.target;
-    collapseEl.classList.remove('collapsing');
+			// Update reference to the currently expanded toggler
+			rootEl._currentActiveItem = togglerEl;
+		}
+	}
 
-    if (collapseEl.style.height) {
-      collapseEl.classList.add('show');
-    } else {
-      collapseEl.classList.add('collapse');
-    }
-    collapseEl.style.height = '';
+	_handleTransitionEnd(e) {
+		if (e.propertyName !== 'height') return;
 
-    e.currentTarget._isTransitioning = false;
-  }
+		const collapseEl = e.target;
+		collapseEl.classList.remove('collapsing');
 
-  /* == helper methods == */
+		if (collapseEl.style.height) {
+			collapseEl.classList.add('show');
+		} else {
+			collapseEl.classList.add('collapse');
+		}
+		collapseEl.style.height = '';
 
-  _toggleAccordionItem(togglerEl, expand) {
-    const itemEl = togglerEl.closest('.accordion__item');
-    const collapseEl = itemEl.querySelector('.accordion__collapse');
+		e.currentTarget._isTransitioning = false;
+	}
 
-    togglerEl.ariaExpanded = expand;
+	/* == helper methods == */
 
-    if (expand) {
-      // Opening
-      this._prepareCollapseTransition(collapseEl, 'collapse');
-      this._setCollapseHeight(collapseEl);
-    } else {
-      // Closing
-      this._setCollapseHeight(collapseEl);
+	_toggleAccordionItem(togglerEl, expand) {
+		const itemEl = togglerEl.closest(`${BLOCK_NAME}__item`);
+		const collapseEl = itemEl.querySelector(`${BLOCK_NAME}__collapse`);
 
-      // Force reflow
-      collapseEl.offsetHeight;
+		togglerEl.ariaExpanded = expand;
 
-      this._prepareCollapseTransition(collapseEl, 'show');
+		if (expand) {
+			// Opening
+			this._prepareCollapseTransition(collapseEl, 'collapse');
+			this._setCollapseHeight(collapseEl);
+		} else {
+			// Closing
+			this._setCollapseHeight(collapseEl);
 
-      collapseEl.style.height = '';
-    }
-  }
+			// Force reflow
+			collapseEl.offsetHeight;
 
-  _prepareCollapseTransition(el, classToRemove) {
-    el.classList.remove(classToRemove);
-    el.classList.add('collapsing');
-  }
+			this._prepareCollapseTransition(collapseEl, 'show');
 
-  _setCollapseHeight(el) {
-    el.style.height = `${el.scrollHeight}px`;
-  }
+			collapseEl.style.height = '';
+		}
+	}
+
+	_prepareCollapseTransition(el, classToRemove) {
+		el.classList.remove(classToRemove);
+		el.classList.add('collapsing');
+	}
+
+	_setCollapseHeight(el) {
+		el.style.height = `${el.scrollHeight}px`;
+	}
 }
