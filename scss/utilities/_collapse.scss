@@ -10,7 +10,7 @@
 	transition: height 0.35s ease;
 }
 
-.collapsing.collapse-horizontal {
+.collapsing.collapse--horizontal {
 	width: 0;
 	height: auto;
 	transition: width 0.35s ease;
@@ -21,7 +21,8 @@
 	overflow: hidden;
 }
 
-.is-collapsing.collapse-horizontal {
+.is-collapsing.collapse--horizontal {
 	width: 0;
 	height: auto;
+	transition: width 0.35s ease;
 }

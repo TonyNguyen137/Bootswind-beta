@@ -1,22 +1,272 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div class="container collapseRootEl">
-      <div class="collapseEl collapse" aria-hidden="false">
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad doloremque cumque natus quidem! Quos assumenda
-          impedit obcaecati modi consequuntur! Blanditiis similique aspernatur beatae iure a assumenda exercitationem
-          rem laboriosam incidunt.
-        </p>
-      </div>
-      <button class="btn--toggler" aria-expanded="false" aria-controls="toggleableArea">
-        <span class="text-label">toggle</span>
-      </button>
-    </div>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="src/scss/style.scss" />
+		<script type="module" src="/index.js"></script>
+		<title>vite-project</title>
+		<style>
+			body {
+				min-height: 200vh;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Collapse Examples</h1>
+
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 1: Basic collapse</h2>
+				<div class="inline-flex mb-3">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement1"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement1">
+						Button 1
+					</button>
+				</div>
+
+				<div class="collapse" id="collapseElement1">
+					<div class="p-5 border border-1 rounded-4 border-primary">
+						Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum error
+						expedita delectus illo. Aperiam voluptate cum doloribus dolores unde
+						assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+						Voluptatum?
+					</div>
+				</div>
+			</div>
+
+			<br /><br />
+
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 2: Same Target</h2>
+				<div class="inline-flex mb-3 gap-2">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement2"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement2">
+						Button 2
+					</button>
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement2"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement2">
+						Button 3
+					</button>
+				</div>
+
+				<div class="collapse" id="collapseElement2">
+					<div class="p-5 border border-1 rounded-4 border-primary">
+						<div>Collapse 🤩</div>
+						Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum error
+						expedita delectus illo. Aperiam voluptate cum doloribus dolores unde
+						assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+						Voluptatum?
+					</div>
+				</div>
+			</div>
+			<br /><br />
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 3: Multiple Targets</h2>
+				<div class="inline-flex mb-3 gap-2">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement4 collapseElement 5"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target=".multi">
+						Button 4
+					</button>
+				</div>
+
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<div class="collapse multi" id="collapseElement4">
+							<div class="p-5 border border-1 rounded-4 border-primary">
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum
+								error expedita delectus illo. Aperiam voluptate cum doloribus dolores
+								unde assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+								Voluptatum?
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="collapse multi" id="collapseElement5">
+							<div class="p-5 border border-1 rounded-4 border-primary">
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum
+								error expedita delectus illo. Aperiam voluptate cum doloribus dolores
+								unde assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+								Voluptatum?
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<br /><br />
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 4: Same Multiple Targets</h2>
+				<div class="inline-flex mb-3 gap-2">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement6 collapseElement 7"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target=".multi2">
+						Button 5
+					</button>
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement6 collapseElement 7"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target=".multi2">
+						Button 6
+					</button>
+				</div>
+
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<div class="collapse multi2" id="collapseElement6">
+							<div class="p-5 border border-1 rounded-4 border-primary">
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum
+								error expedita delectus illo. Aperiam voluptate cum doloribus dolores
+								unde assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+								Voluptatum?
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="collapse multi2" id="collapseElement7">
+							<div class="p-5 border border-1 rounded-4 border-primary">
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum
+								error expedita delectus illo. Aperiam voluptate cum doloribus dolores
+								unde assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+								Voluptatum?
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<br /><br />
+
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 5: Horizontal Collapse</h2>
+				<div class="inline-flex mb-3 gap-2">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement8"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement8">
+						Button 5
+					</button>
+				</div>
+
+				<div class="collapse collapse--horizontal" id="collapseElement8">
+					<div class="p-5 border border-1 rounded-4 border-primary" style="width: 600px">
+						Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum error
+						expedita delectus illo. Aperiam voluptate cum doloribus dolores unde
+						assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+						Voluptatum?
+					</div>
+				</div>
+			</div>
+
+			<br /><br />
+
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 6: Close Btn</h2>
+				<div class="inline-flex mb-3 gap-2">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement9"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement9"
+						data-bw-close=".btn--closeCollapse">
+						Button 6
+					</button>
+				</div>
+
+				<div class="collapse" id="collapseElement9">
+					<div class="p-5 border border-1 rounded-4 border-primary">
+						<button class="btn btn--closeCollapse">X</button>
+						<div>
+							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus earum
+							error expedita delectus illo. Aperiam voluptate cum doloribus dolores unde
+							assumenda amet, repudiandae, beatae nemo quam, enim corporis ipsa.
+							Voluptatum?
+						</div>
+					</div>
+				</div>
+			</div>
+			<br /><br />
+
+			<div class="border border-1 py-5 px-4 rounded-4 border-neutral">
+				<h2 class="mt-0 fw-500">Example 7: Close Target Before Open</h2>
+				<div class="inline-flex mb-3 gap-2">
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement10"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement10"
+						data-bw-close=".btn--closeCollapse"
+						data-bw-closeTarget="collapseElement11">
+						Button 7
+					</button>
+					<button
+						aria-expanded="false"
+						aria-controls="collapseElement11"
+						class="btn btn--primary"
+						data-bw-toggle="collapse"
+						data-bw-target="#collapseElement11"
+						data-bw-close=".btn--closeCollapse"
+						data-bw-closeTarget="collapseElement10">
+						Button 8
+					</button>
+				</div>
+
+				<div class="grid grid-cols-2 gap-4">
+					<div class="grid-col">
+						<div class="collapse" id="collapseElement10">
+							<div class="p-5 border border-1 rounded-4 border-primary">
+								<button class="btn btn--closeCollapse">X</button>
+								<div>
+									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus
+									earum error expedita delectus illo. Aperiam voluptate cum doloribus
+									dolores unde assumenda amet, repudiandae, beatae nemo quam, enim
+									corporis ipsa. Voluptatum?
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="grid-col">
+						<div class="collapse" id="collapseElement11">
+							<div class="p-5 border border-1 rounded-4 border-primary bg-primary">
+								<button class="btn btn--closeCollapse">X</button>
+								<div class="text-white">
+									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus
+									earum error expedita delectus illo. Aperiam voluptate cum doloribus
+									dolores unde assumenda amet, repudiandae, beatae nemo quam, enim
+									corporis ipsa. Voluptatum?
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
